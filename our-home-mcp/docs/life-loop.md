@@ -30,10 +30,13 @@ Hermes 可以调用 MCP 工具参与推理和执行，但不是 Life Loop 的必
 - `home.add_routine`：保存用户声明的生活时间段；不会创建 Hermes Cron。
 - `home.get_life_context`：读取观察、时间表、心跳和待处理主动消息。
 - `home.schedule_proactive_message`：创建待投递的主动消息候选。
-- `src/worker.ts`：独立心跳、处理到期候选、调用通知适配器。
+- `src/worker.ts`：独立心跳、把生活上下文交给可替换的决策适配器、处理到期候选、调用通知适配器。
+- `POST /v1/phone/heartbeat` 和 `POST /v1/observations`：接收手机端明确授权上报的状态与观察。
 - JSON store：当前是原型持久化层，后续可替换数据库。
 
-当前 worker 只处理“已经产生的候选消息”，不会凭空推断用户状态，也不会自动读取手机屏幕。
+配置决策 Webhook 后，worker 会把结构化 `LifeContext` 发给外部决策服务；决策服务返回候选消息，worker 再负责去重、到期判断和投递。这样可以接入任意模型或已有 Agent，但本项目本身不假装内置了一个模型。
+
+手机端只提供数据入口，不代表服务已经获得手机权限。真正的屏幕、日历、位置或通知能力，仍需要手机 companion/app 在系统授权后采集，并将摘要发送到这些接口。
 
 ## 自我唤醒的准确含义
 
