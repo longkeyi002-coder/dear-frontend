@@ -97,6 +97,202 @@ export function createOurHomeServer(store: JsonStore): McpServer {
   );
 
   server.registerTool(
+    "home.get_life_context",
+    {
+      title: "Get life-loop context",
+      description: "Read recent observations, enabled routine windows, heartbeats, and pending proactive candidates. Do not infer facts that are not present in these records.",
+      inputSchema: {},
+      outputSchema: z.object({
+        observedAt: z.string(),
+        dataSource: z.literal("local-mock"),
+        observations: z.array(z.record(z.string(), z.unknown())),
+        routines: z.array(z.record(z.string(), z.unknown())),
+        recentHeartbeats: z.array(z.record(z.string(), z.unknown())),
+        pendingProactiveMessages: z.array(z.record(z.string(), z.unknown())),
+      }),
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    },
+    async () => {
+      const data = store.snapshot();
+      const timestamp = new Date().toISOString();
+      const activeObservations = data.observations.filter(
+        (item) => !item.expiresAt || item.expiresAt >= timestamp,
+      );
+      return structured({
+        observedAt: timestamp,
+        dataSource: "local-mock" as const,
+        observations: activeObservations.slice(0, 50),
+        routines: data.routines.filter((item) => item.enabled),
+        recentHeartbeats: data.heartbeats.slice(0, 10),
+        pendingProactiveMessages: data.proactiveQueue
+          .filter((item) => item.status === "pending")
+          .slice(0, 20),
+      });
+    },
+  );
+
+  server.registerTool(
+    "home.record_observation",
+    {
+      title: "Record a life observation",
+      description: "Store an explicitly supplied observation from the user, phone, screen, calendar, or another adapter. This tool does not claim the observation is independently verified.",
+      inputSchema: {
+        kind: z.enum(["manual_status", "device_presence", "screen_app", "calendar", "weather", "note"]),
+        label: z.string().trim().min(1).max(200),
+        value: z.string().trim().max(2_000).optional(),
+        observedAt: dateSchema,
+        source: z.enum(["user", "phone", "screen", "calendar", "system", "mock"]),
+        confidence: z.enum(["observed", "declared", "inferred"]),
+        expiresAt: dateSchema.optional(),
+      },
+      outputSchema: z.object({ observation: z.record(z.string(), z.unknown()), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ kind, label, value, observedAt, source, confidence, expiresAt }) => {
+      try {
+        const observation = await store.recordObservation({ kind, label, value, observedAt, source, confidence, expiresAt });
+        return structured({ observation, dataSource: "local-mock" as const });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "home.list_observations",
+    {
+      title: "List life observations",
+      description: "List explicitly recorded life observations. Expired observations are excluded by default.",
+      inputSchema: {
+        kind: z.enum(["manual_status", "device_presence", "screen_app", "calendar", "weather", "note"]).optional(),
+        source: z.enum(["user", "phone", "screen", "calendar", "system", "mock"]).optional(),
+        includeExpired: z.boolean().default(false),
+        limit: z.number().int().min(1).max(200).default(50),
+      },
+      outputSchema: z.object({ observations: z.array(z.record(z.string(), z.unknown())), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ kind, source, includeExpired, limit }) => {
+      const timestamp = new Date().toISOString();
+      const observations = store
+        .snapshot()
+        .observations
+        .filter((item) => !kind || item.kind === kind)
+        .filter((item) => !source || item.source === source)
+        .filter((item) => includeExpired || !item.expiresAt || item.expiresAt >= timestamp)
+        .slice(0, limit);
+      return structured({ observations, dataSource: "local-mock" as const });
+    },
+  );
+
+  const localTimeSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Expected local time in HH:MM format");
+  server.registerTool(
+    "home.add_routine",
+    {
+      title: "Add a routine window",
+      description: "Store a user-declared routine window for context. This creates no Hermes cron job and sends no message by itself.",
+      inputSchema: {
+        label: z.string().trim().min(1).max(200),
+        weekdays: z.array(z.number().int().min(0).max(6)).min(1).max(7),
+        startLocal: localTimeSchema,
+        endLocal: localTimeSchema,
+        timezone: z.string().trim().min(1).max(100),
+        note: z.string().trim().max(2_000).optional(),
+      },
+      outputSchema: z.object({ routine: z.record(z.string(), z.unknown()), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ label, weekdays, startLocal, endLocal, timezone, note }) => {
+      try {
+        const routine = await store.addRoutine({ label, weekdays: [...new Set(weekdays)].sort(), startLocal, endLocal, timezone, note });
+        return structured({ routine, dataSource: "local-mock" as const });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "home.list_routines",
+    {
+      title: "List routine windows",
+      description: "List user-declared routine windows used as context by the independent life loop.",
+      inputSchema: { includeDisabled: z.boolean().default(false) },
+      outputSchema: z.object({ routines: z.array(z.record(z.string(), z.unknown())), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ includeDisabled }) => {
+      const routines = store.snapshot().routines.filter((item) => includeDisabled || item.enabled);
+      return structured({ routines, dataSource: "local-mock" as const });
+    },
+  );
+
+  server.registerTool(
+    "home.schedule_proactive_message",
+    {
+      title: "Schedule a proactive message",
+      description: "Create a message candidate for the independent life-loop worker. It is not delivered until a notifier is configured and a worker cycle succeeds.",
+      inputSchema: {
+        title: z.string().trim().min(1).max(200),
+        message: z.string().trim().min(1).max(5_000),
+        reason: z.string().trim().min(1).max(1_000),
+        dueAt: dateSchema,
+      },
+      outputSchema: z.object({ candidate: z.record(z.string(), z.unknown()), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ title, message, reason, dueAt }) => {
+      try {
+        const candidate = await store.scheduleProactiveMessage({ title, message, reason, dueAt });
+        return structured({ candidate, dataSource: "local-mock" as const });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "home.list_proactive_messages",
+    {
+      title: "List proactive message candidates",
+      description: "List pending, delivered, or dismissed proactive message candidates maintained by the independent life loop.",
+      inputSchema: {
+        status: z.enum(["pending", "delivered", "dismissed"]).optional(),
+        limit: z.number().int().min(1).max(100).default(50),
+      },
+      outputSchema: z.object({ candidates: z.array(z.record(z.string(), z.unknown())), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ status, limit }) => {
+      const candidates = store
+        .snapshot()
+        .proactiveQueue
+        .filter((item) => !status || item.status === status)
+        .slice(0, limit);
+      return structured({ candidates, dataSource: "local-mock" as const });
+    },
+  );
+
+  server.registerTool(
+    "home.dismiss_proactive_message",
+    {
+      title: "Dismiss a proactive message",
+      description: "Dismiss a pending proactive message candidate without delivering it.",
+      inputSchema: { candidateId: z.string().trim().min(1) },
+      outputSchema: z.object({ candidate: z.record(z.string(), z.unknown()), dataSource: z.literal("local-mock") }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+    },
+    async ({ candidateId }) => {
+      try {
+        const candidate = await store.resolveProactiveMessage(candidateId, "dismissed");
+        return structured({ candidate, dataSource: "local-mock" as const });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
     "home.list_diary",
     {
       title: "List diary entries",
