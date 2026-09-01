@@ -88,6 +88,8 @@ export interface LifeObservation {
   source: ObservationSource;
   confidence: ObservationConfidence;
   expiresAt?: string;
+  deviceId?: string;
+  metadata?: Record<string, string | number | boolean>;
 }
 
 export interface RoutineWindow {
@@ -124,6 +126,15 @@ export interface ProactiveCandidate {
   lastAttemptAt?: string;
   lastError?: string;
   source: "AGENT_LIFE" | "HOME_STATE";
+  dedupeKey?: string;
+}
+
+export interface LifeContext {
+  observedAt: string;
+  observations: LifeObservation[];
+  routines: RoutineWindow[];
+  recentHeartbeats: HeartbeatRecord[];
+  pendingProactiveMessages: ProactiveCandidate[];
 }
 
 export interface OurHomeData {
