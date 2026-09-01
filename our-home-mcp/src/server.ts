@@ -113,20 +113,11 @@ export function createOurHomeServer(store: JsonStore): McpServer {
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
     },
     async () => {
-      const data = store.snapshot();
       const timestamp = new Date().toISOString();
-      const activeObservations = data.observations.filter(
-        (item) => !item.expiresAt || item.expiresAt >= timestamp,
-      );
+      const context = store.getLifeContext(timestamp);
       return structured({
-        observedAt: timestamp,
         dataSource: "local-mock" as const,
-        observations: activeObservations.slice(0, 50),
-        routines: data.routines.filter((item) => item.enabled),
-        recentHeartbeats: data.heartbeats.slice(0, 10),
-        pendingProactiveMessages: data.proactiveQueue
-          .filter((item) => item.status === "pending")
-          .slice(0, 20),
+        ...context,
       });
     },
   );
@@ -144,13 +135,15 @@ export function createOurHomeServer(store: JsonStore): McpServer {
         source: z.enum(["user", "phone", "screen", "calendar", "system", "mock"]),
         confidence: z.enum(["observed", "declared", "inferred"]),
         expiresAt: dateSchema.optional(),
+        deviceId: z.string().trim().max(200).optional(),
+        metadata: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
       },
       outputSchema: z.object({ observation: z.record(z.string(), z.unknown()), dataSource: z.literal("local-mock") }),
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
     },
-    async ({ kind, label, value, observedAt, source, confidence, expiresAt }) => {
+    async ({ kind, label, value, observedAt, source, confidence, expiresAt, deviceId, metadata }) => {
       try {
-        const observation = await store.recordObservation({ kind, label, value, observedAt, source, confidence, expiresAt });
+        const observation = await store.recordObservation({ kind, label, value, observedAt, source, confidence, expiresAt, deviceId, metadata });
         return structured({ observation, dataSource: "local-mock" as const });
       } catch (error) {
         return toolError(error);
@@ -237,13 +230,14 @@ export function createOurHomeServer(store: JsonStore): McpServer {
         message: z.string().trim().min(1).max(5_000),
         reason: z.string().trim().min(1).max(1_000),
         dueAt: dateSchema,
+        dedupeKey: z.string().trim().max(500).optional(),
       },
       outputSchema: z.object({ candidate: z.record(z.string(), z.unknown()), dataSource: z.literal("local-mock") }),
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
     },
-    async ({ title, message, reason, dueAt }) => {
+    async ({ title, message, reason, dueAt, dedupeKey }) => {
       try {
-        const candidate = await store.scheduleProactiveMessage({ title, message, reason, dueAt });
+        const candidate = await store.scheduleProactiveMessage({ title, message, reason, dueAt, dedupeKey });
         return structured({ candidate, dataSource: "local-mock" as const });
       } catch (error) {
         return toolError(error);
