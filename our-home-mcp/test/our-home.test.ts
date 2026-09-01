@@ -1,4 +1,4 @@
-import { mkdtemp, readFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -7,6 +7,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { createOurHomeServer } from "../src/server.js";
 import { JsonStore } from "../src/store.js";
+import { runProactiveCycle } from "../src/worker.js";
 
 async function connectedClient(store: JsonStore) {
   const server = createOurHomeServer(store);
@@ -122,4 +123,65 @@ test("major relationship events require both approvals", async () => {
 
   await client.close();
   await server.close();
+});
+
+test("migrates a v1 data file without losing existing records", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "our-home-mcp-"));
+  const filePath = join(directory, "our-home.json");
+  await writeFile(filePath, JSON.stringify({
+    schemaVersion: 1,
+    diaries: [],
+    relationshipEvents: [],
+    actions: [],
+    activities: [],
+    proactiveMessages: [],
+    homeState: { presence: "unknown", updatedAt: "2026-09-01T00:00:00.000Z", source: "HOME_STATE" },
+  }), "utf8");
+
+  const store = await JsonStore.open(filePath, false);
+  const snapshot = store.snapshot();
+  assert.equal(snapshot.schemaVersion, 2);
+  assert.deepEqual(snapshot.observations, []);
+  assert.deepEqual(snapshot.proactiveQueue, []);
+});
+
+test("independent life-loop cycle delivers due candidates without Hermes", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "our-home-mcp-"));
+  const store = await JsonStore.open(join(directory, "our-home.json"), false);
+  const candidate = await store.scheduleProactiveMessage({
+    title: "心跳测试",
+    message: "这条消息由独立 Life Loop 投递。",
+    reason: "测试到期候选消息",
+    dueAt: "2026-09-01T00:00:00Z",
+  });
+  const delivered: string[] = [];
+  const result = await runProactiveCycle(store, {
+    deliver: async (item) => delivered.push(item.id),
+  }, new Date("2026-09-01T00:01:00Z"));
+
+  assert.equal(result.dueCount, 1);
+  assert.equal(result.deliveredCount, 1);
+  assert.deepEqual(delivered, [candidate.id]);
+  assert.equal(store.snapshot().proactiveQueue[0]?.status, "delivered");
+  assert.equal(store.snapshot().heartbeats.length, 1);
+});
+
+test("failed proactive delivery remains pending for retry", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "our-home-mcp-"));
+  const store = await JsonStore.open(join(directory, "our-home.json"), false);
+  const candidate = await store.scheduleProactiveMessage({
+    title: "失败测试",
+    message: "这条消息应当保留待重试。",
+    reason: "测试通知失败",
+    dueAt: "2026-09-01T00:00:00Z",
+  });
+  const result = await runProactiveCycle(store, {
+    deliver: async () => { throw new Error("channel unavailable"); },
+  }, new Date("2026-09-01T00:01:00Z"));
+  const saved = store.snapshot().proactiveQueue.find((item) => item.id === candidate.id);
+
+  assert.equal(result.failedCount, 1);
+  assert.equal(saved?.status, "pending");
+  assert.equal(saved?.attempts, 1);
+  assert.equal(saved?.lastError, "channel unavailable");
 });
