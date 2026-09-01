@@ -6,6 +6,7 @@ import type {
   ActionStatus,
   Actor,
   HeartbeatRecord,
+  LifeContext,
   LifeObservation,
   ObservationConfidence,
   ObservationKind,
@@ -185,6 +186,21 @@ export class JsonStore {
     return structuredClone(this.data);
   }
 
+  getLifeContext(observedAt = now()): LifeContext {
+    const data = this.snapshot();
+    return {
+      observedAt,
+      observations: data.observations.filter(
+        (item) => !item.expiresAt || item.expiresAt >= observedAt,
+      ).slice(0, 50),
+      routines: data.routines.filter((item) => item.enabled),
+      recentHeartbeats: data.heartbeats.slice(0, 10),
+      pendingProactiveMessages: data.proactiveQueue
+        .filter((item) => item.status === "pending")
+        .slice(0, 20),
+    };
+  }
+
   async update(mutator: (data: OurHomeData) => void): Promise<OurHomeData> {
     mutator(this.data);
     await this.persist();
@@ -244,6 +260,8 @@ export class JsonStore {
     source: ObservationSource;
     confidence: ObservationConfidence;
     expiresAt?: string;
+    deviceId?: string;
+    metadata?: Record<string, string | number | boolean>;
   }): Promise<LifeObservation> {
     const observation: LifeObservation = { id: randomUUID(), ...input };
     await this.update((data) => {
@@ -305,7 +323,14 @@ export class JsonStore {
     message: string;
     reason: string;
     dueAt: string;
+    dedupeKey?: string;
   }): Promise<ProactiveCandidate> {
+    if (input.dedupeKey) {
+      const existing = this.data.proactiveQueue.find(
+        (item) => item.status === "pending" && item.dedupeKey === input.dedupeKey,
+      );
+      if (existing) return structuredClone(existing);
+    }
     const candidate: ProactiveCandidate = {
       id: randomUUID(),
       ...input,
