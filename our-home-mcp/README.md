@@ -1,8 +1,14 @@
 # Our Home MCP
 
-独立的 Our Home 生活系统 MCP，供 Hermes Agent 调用。它不修改 Hermes 核心，也不包含前端。
+独立的 Our Home 生活系统 MCP 和 Life Loop，既可以供 Hermes Agent 调用，也可以独立运行。它不修改 Hermes 核心，也不包含前端。
 
-当前版本使用本地 JSON 数据层，目的是先固定 MCP 工具契约和数据真实性边界。真实 Home Backend 接入后，可以替换 `JsonStore`，不需要改变 Hermes 侧工具名称。
+当前版本使用本地 JSON 数据层，目的是先固定 MCP 工具契约、持续上下文和数据真实性边界。真实 Home Backend 接入后，可以替换 `JsonStore`，不需要改变 Hermes 侧工具名称。
+
+## 重要边界
+
+MCP 是工具接口；它本身不会凭空产生意识，也不会在没有进程运行时唤醒 AI。`src/worker.ts` 是独立的常驻 Life Loop：它用自己的心跳读取数据、处理主动消息候选，不依赖 Hermes Cron，也不会为每次心跳创建 Hermes session。
+
+当前 worker 能独立投递“已经生成的主动消息候选”。它不会凭空推断你在做什么；手机状态、屏幕使用情况、日历和天气必须由明确的数据适配器写入 observation，并带来源与置信级别。
 
 ## 能力
 
@@ -10,6 +16,11 @@
 
 - `home.get_today`
 - `home.get_status`
+- `home.get_life_context`
+- `home.record_observation`
+- `home.list_observations`
+- `home.add_routine`
+- `home.list_routines`
 - `home.list_diary`
 - `home.list_messages`
 - `home.list_actions`
@@ -20,6 +31,9 @@
 
 - `home.write_diary`
 - `home.leave_message`
+- `home.schedule_proactive_message`
+- `home.list_proactive_messages`
+- `home.dismiss_proactive_message`
 - `home.create_action`
 - `home.update_action`
 - `home.propose_relationship_event`
@@ -34,6 +48,30 @@
 npm install
 npm run check
 ```
+
+## 独立 Life Loop
+
+先构建，再启动一个长期运行的独立 worker：
+
+```bash
+npm run build
+OUR_HOME_DATA_FILE=./data/our-home.json \
+OUR_HOME_WORKER_INTERVAL_MS=60000 \
+npm run worker
+```
+
+这个 worker 只做三件事：记录心跳、查找已到期的主动消息候选、交给通知适配器。它不调用 Hermes，也不创建 Hermes session。
+
+没有配置通知地址时，候选消息会保持 `pending` 并重试，不会被假装成“已发送”。配置一个接收 JSON POST 的通知适配器：
+
+```bash
+OUR_HOME_NOTIFY_WEBHOOK_URL='https://your-notifier.example/webhook' \
+OUR_HOME_NOTIFY_WEBHOOK_TOKEN='optional-token' \
+OUR_HOME_RUN_WORKER=true \
+npm run dev:worker
+```
+
+发送出去的事件类型是 `our_home.proactive_message`。它是通用 Webhook，不绑定 Telegram、微信或其他具体渠道；后续可以单独增加手机通知适配器。
 
 ## 给 Hermes 使用：stdio
 
