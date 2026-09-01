@@ -1,0 +1,52 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  <Box style={{ height: '100%', flexDirection: 'column' }}>
+    <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+      <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>先搞懂一件事</Text>
+      <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>一句话说清：DEAR 是什么</Text>
+    </Box>
+
+    <Box style={{ height: 540, padding: '16px 72px', flexDirection: 'row', gap: 48, alignItems: 'center' }}>
+      <Box style={{ flex: 1, flexDirection: 'column', gap: 16 }}>
+        <Text style={{ fontSize: 20, color: '#1E2B24', lineHeight: 1.7 }}>
+          DEAR 是<span style={{ color: '#2E9E6F', fontWeight: 'bold' }}>你自己的 AI 驾驶舱</span>——不是别人的客户端，是你按自己喜好重新搭的壳。
+        </Text>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 10 }} />
+          <Text style={{ fontSize: 19, color: '#5E6E66', lineHeight: 1.6 }}>手机优先：先为一加 12 这种手机设计，电脑只是「放大版」。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 10 }} />
+          <Text style={{ fontSize: 19, color: '#5E6E66', lineHeight: 1.6 }}><span style={{ color: '#1E2B24', fontWeight: 'bold' }}>聊天是「家」</span>：打开就在聊天，它是永远在的那一页。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 10 }} />
+          <Text style={{ fontSize: 19, color: '#5E6E66', lineHeight: 1.6 }}>其它功能都是<span style={{ color: '#2E9E6F', fontWeight: 'bold' }}>浮在聊天上的小窗</span>，掀开用、关掉就回家。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 10 }} />
+          <Text style={{ fontSize: 19, color: '#5E6E66', lineHeight: 1.6 }}>背后的能力（模型、连接、记忆）是接进来的，不用你管。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ width: 300, alignItems: 'center', gap: 16 }}>
+        <svg width={240} height={470} viewBox='0 0 260 500'>
+          <rect x='10' y='10' width='240' height='480' rx='34' fill='#E3EFE8' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='22' y='26' width='216' height='432' rx='20' fill='#F5F9F6' />
+          <rect x='22' y='26' width='216' height='42' rx='20' fill='#2E9E6F' />
+          <rect x='40' y='96' width='130' height='46' rx='14' fill='#E3EFE8' />
+          <rect x='108' y='158' width='118' height='42' rx='14' fill='#2E9E6F' opacity='0.18' />
+          <rect x='40' y='216' width='150' height='46' rx='14' fill='#E3EFE8' />
+          <rect x='40' y='408' width='180' height='38' rx='19' fill='#FFFFFF' stroke='#CFE0D6' strokeWidth='2' />
+        </svg>
+        <Box style={{ padding: '8px 18px', background: '#2E9E6F', borderRadius: 999 }}>
+          <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>聊天 = 家，永远在</Text>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>02 / 11</Text>
+    </Box>
+  </Box>
+</Slide>

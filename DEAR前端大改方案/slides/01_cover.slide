@@ -1,0 +1,22 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6', position: 'relative', overflow: 'hidden' }}>
+  <Box style={{ position: 'absolute', top: 0, right: 0, width: 300, height: '100%', background: 'linear-gradient(160deg,#2E9E6F 0%,#6FD3A8 100%)' }} />
+  <Box style={{ position: 'absolute', top: 90, right: 70, width: 130, height: 130, borderRadius: 999, background: 'rgba(255,255,255,0.16)' }} />
+  <Box style={{ position: 'absolute', bottom: 110, right: 130, width: 76, height: 76, borderRadius: 999, background: 'rgba(255,255,255,0.12)' }} />
+
+  <Box style={{ position: 'relative', zIndex: 1, height: '100%', padding: '72px 104px', flexDirection: 'column', justifyContent: 'center' }}>
+    <Text style={{ fontSize: 18, color: '#2E9E6F', fontWeight: '600', letterSpacing: 2, marginBottom: 16 }}>给文科生看的 · 不烧脑说明书</Text>
+    <Text style={{ fontSize: 64, fontWeight: 'bold', color: '#1E2B24', lineHeight: 1.15, marginBottom: 24 }}>
+      DEAR 功能页<br />怎么摆？
+    </Text>
+    <Box style={{ width: 64, height: 6, background: '#2E9E6F', borderRadius: 3, marginBottom: 24 }} />
+    <Text style={{ fontSize: 22, color: '#5E6E66', lineHeight: 1.7 }}>
+      9 个功能页的分配逻辑<br />3 种布局方案对比<br />现在到底要不要大改
+    </Text>
+    <Box style={{ marginTop: 44, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+      <Box style={{ width: 38, height: 38, borderRadius: 999, background: '#2E9E6F', alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>连</Text>
+      </Box>
+      <Text style={{ fontSize: 16, color: '#5E6E66' }}>镜音连 · 用大白话给你讲</Text>
+    </Box>
+  </Box>
+</Slide>

@@ -1,0 +1,58 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  <Box style={{ height: '100%', flexDirection: 'column' }}>
+    <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+      <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>动线逻辑</Text>
+      <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>聊天是家，其它都是浮层</Text>
+    </Box>
+
+    <Box style={{ height: 540, padding: '16px 72px', flexDirection: 'row', gap: 44, alignItems: 'center' }}>
+      <Box style={{ width: 330, alignItems: 'center' }}>
+        <svg width={300} height={460} viewBox='0 0 300 480'>
+          <rect x='20' y='10' width='210' height='460' rx='30' fill='#E3EFE8' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='32' y='24' width='186' height='430' rx='16' fill='#F5F9F6' />
+          <rect x='48' y='70' width='110' height='40' rx='12' fill='#E3EFE8' />
+          <rect x='100' y='128' width='100' height='36' rx='12' fill='#2E9E6F' opacity='0.18' />
+          <rect x='48' y='182' width='120' height='40' rx='12' fill='#E3EFE8' />
+          <rect x='48' y='402' width='150' height='34' rx='17' fill='#FFFFFF' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='118' y='58' width='152' height='300' rx='16' fill='#FFFFFF' stroke='#2E9E6F' strokeWidth='2' />
+          <rect x='136' y='78' width='90' height='16' rx='8' fill='#2E9E6F' opacity='0.25' />
+          <rect x='136' y='110' width='114' height='12' rx='6' fill='#CFE0D6' />
+          <rect x='136' y='132' width='114' height='12' rx='6' fill='#CFE0D6' />
+          <rect x='136' y='168' width='70' height='42' rx='10' fill='#E3EFE8' />
+          <circle cx='252' cy='78' r='11' fill='#2E9E6F' />
+          <path d='M247 73 L257 83 M257 73 L247 83' stroke='#fff' strokeWidth='2.5' />
+        </svg>
+        <Text style={{ fontSize: 15, color: '#5E6E66', marginTop: 6 }}>掀开一个功能小窗，聊天还在底下</Text>
+      </Box>
+
+      <Box style={{ flex: 1, flexDirection: 'column', gap: 14 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#1E2B24' }}>为什么这么想？</Text>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>聊天是你天天用的，不能让它被「冲掉」。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>功能页是偶尔才开的，掀开看一眼就关。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>同一时刻只掀一个，不会叠一堆乱糟糟。</Text>
+        </Box>
+
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#1E2B24', marginTop: 8 }}>回家四法</Text>
+        <Box style={{ flexDirection: 'row', gap: 12, flexWrap: 'wrap' }}>
+          <Box style={{ padding: '10px 16px', border: '1.5px solid #2E9E6F', borderRadius: 999 }}><Text style={{ fontSize: 16, color: '#2E9E6F', fontWeight: '600' }}>双击聊天区</Text></Box>
+          <Box style={{ padding: '10px 16px', border: '1.5px solid #2E9E6F', borderRadius: 999 }}><Text style={{ fontSize: 16, color: '#2E9E6F', fontWeight: '600' }}>按 Esc</Text></Box>
+          <Box style={{ padding: '10px 16px', border: '1.5px solid #2E9E6F', borderRadius: 999 }}><Text style={{ fontSize: 16, color: '#2E9E6F', fontWeight: '600' }}>点一下空白处</Text></Box>
+          <Box style={{ padding: '10px 16px', border: '1.5px solid #2E9E6F', borderRadius: 999 }}><Text style={{ fontSize: 16, color: '#2E9E6F', fontWeight: '600' }}>再点当前图标</Text></Box>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>04 / 11</Text>
+    </Box>
+  </Box>
+</Slide>

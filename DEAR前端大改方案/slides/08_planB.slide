@@ -1,0 +1,50 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  <Box style={{ height: '100%', flexDirection: 'column' }}>
+    <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+      <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>方案 B</Text>
+      <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>底部上滑抽屉：最极简</Text>
+    </Box>
+
+    <Box style={{ height: 540, padding: '16px 72px', flexDirection: 'row', gap: 48, alignItems: 'center' }}>
+      <Box style={{ flex: 1, flexDirection: 'column', gap: 14 }}>
+        <Text style={{ fontSize: 19, color: '#1E2B24', lineHeight: 1.65 }}>
+          聊天<span style={{ color: '#2E9E6F', fontWeight: 'bold' }}>全屏铺满</span>，底部一条小横杠；往上一滑，9 个功能像抽屉一样弹出来。
+        </Text>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>优点：聊天更满屏、更沉浸；平时干干净净。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>注意：多一步「上滑」才看到功能；上滑手势别和聊天滚动打架。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ width: 300, alignItems: 'center' }}>
+        <svg width={240} height={470} viewBox='0 0 260 500'>
+          <rect x='10' y='10' width='240' height='480' rx='34' fill='#E3EFE8' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='22' y='26' width='216' height='420' rx='20' fill='#F5F9F6' />
+          <rect x='40' y='64' width='130' height='42' rx='14' fill='#E3EFE8' />
+          <rect x='108' y='120' width='110' height='38' rx='14' fill='#2E9E6F' opacity='0.18' />
+          <rect x='22' y='300' width='216' height='202' rx='20' fill='#FFFFFF' stroke='#2E9E6F' strokeWidth='2' />
+          <rect x='110' y='314' width='40' height='6' rx='3' fill='#CFE0D6' />
+          <rect x='44' y='336' width='44' height='40' rx='10' fill='#2E9E6F' />
+          <rect x='100' y='336' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='156' y='336' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='44' y='392' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='100' y='392' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='156' y='392' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='44' y='448' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='100' y='448' width='44' height='40' rx='10' fill='#E3EFE8' />
+          <rect x='156' y='448' width='44' height='40' rx='10' fill='#E3EFE8' />
+        </svg>
+        <Text style={{ fontSize: 15, color: '#5E6E66', marginTop: 8 }}>上滑唤出功能抽屉（九宫格）</Text>
+      </Box>
+    </Box>
+
+    <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>08 / 11</Text>
+    </Box>
+  </Box>
+</Slide>

@@ -1,0 +1,40 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  {(() => {
+    const groups = [
+      { t: '常看', s: '像日记本，常翻', items: ['日记', '日历', '周期', '数据'] },
+      { t: '工具', s: '给 AI 加料', items: ['人格', '技能', 'MCP'] },
+      { t: '设置', s: '调后台，藏深点', items: ['记忆', '系统'] },
+    ];
+    const col = (g) => (
+      <Box style={{ flex: 1, flexDirection: 'column', background: '#E3EFE8', borderRadius: 16, padding: '22px 22px' }}>
+        <Box style={{ padding: '8px 16px', background: '#2E9E6F', borderRadius: 999, alignSelf: 'flex-start' }}>
+          <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>{g.t}</Text>
+        </Box>
+        <Text style={{ fontSize: 14, color: '#5E6E66', marginTop: 8, marginBottom: 14 }}>{g.s}</Text>
+        {g.items.map((it, i) => (
+          <Box key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, padding: '12px 0', borderTop: '1px solid #CFE0D6' }}>
+            <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F' }} />
+            <Text style={{ fontSize: 19, color: '#1E2B24', fontWeight: '600' }}>{it}</Text>
+          </Box>
+        ))}
+      </Box>
+    );
+    return (
+      <Box style={{ height: '100%', flexDirection: 'column' }}>
+        <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+          <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>怎么分组</Text>
+          <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>9 个功能，分成三堆</Text>
+        </Box>
+
+        <Box style={{ height: 540, padding: '22px 72px', flexDirection: 'row', gap: 22, alignItems: 'stretch' }}>
+          {col(groups[0])}{col(groups[1])}{col(groups[2])}
+        </Box>
+
+        <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+          <Text style={{ fontSize: 14, color: '#5E6E66' }}>05 / 11</Text>
+        </Box>
+      </Box>
+    );
+  })()}
+</Slide>

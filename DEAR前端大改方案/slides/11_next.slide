@@ -1,0 +1,33 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  <Box style={{ height: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 110px' }}>
+    <Text style={{ fontSize: 44, fontWeight: 'bold', color: '#1E2B24', textAlign: 'center' }}>所以，放心——不用推倒重来</Text>
+    <Text style={{ fontSize: 21, color: '#5E6E66', marginTop: 16, textAlign: 'center', lineHeight: 1.6 }}>
+      先按 A 方案把「浮层逻辑」修好，剩下的照着视觉规矩慢慢填。
+    </Text>
+
+    <Box style={{ flexDirection: 'row', gap: 22, marginTop: 40, width: '100%' }}>
+      <Box style={{ flex: 1, flexDirection: 'column', alignItems: 'center', background: '#E3EFE8', borderRadius: 16, padding: '24px 20px' }}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#2E9E6F' }}>①</Text>
+        <Text style={{ fontSize: 19, color: '#1E2B24', fontWeight: 'bold', marginTop: 10 }}>修浮层</Text>
+        <Text style={{ fontSize: 16, color: '#5E6E66', textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>落实「回家四法」，掀开不叠、关得掉。</Text>
+      </Box>
+      <Box style={{ flex: 1, flexDirection: 'column', alignItems: 'center', background: '#E3EFE8', borderRadius: 16, padding: '24px 20px' }}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#2E9E6F' }}>②</Text>
+        <Text style={{ fontSize: 19, color: '#1E2B24', fontWeight: 'bold', marginTop: 10 }}>摆 Tab</Text>
+        <Text style={{ fontSize: 16, color: '#5E6E66', textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>底部一排 Tab，把 9 个功能放上去。</Text>
+      </Box>
+      <Box style={{ flex: 1, flexDirection: 'column', alignItems: 'center', background: '#E3EFE8', borderRadius: 16, padding: '24px 20px' }}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#2E9E6F' }}>③</Text>
+        <Text style={{ fontSize: 19, color: '#1E2B24', fontWeight: 'bold', marginTop: 10 }}>填空格</Text>
+        <Text style={{ fontSize: 16, color: '#5E6E66', textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>照颜色/字号规矩，把每个页做对。</Text>
+      </Box>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 44 }}>
+      <Box style={{ width: 34, height: 34, borderRadius: 999, background: '#2E9E6F', alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>连</Text>
+      </Box>
+      <Text style={{ fontSize: 17, color: '#5E6E66' }}>镜音连 · 哪页想改，随时喊我</Text>
+    </Box>
+  </Box>
+</Slide>

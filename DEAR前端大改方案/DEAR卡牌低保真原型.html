@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEAR · 卡牌低保真原型（一加 12 · 百变小樱）</title>
+<style>
+  /* ============ 设计令牌：昼 / 夜 同树换肤 ============ */
+  :root{
+    --bg-base:#FDF6F9;        /* 奶粉底（昼） */
+    --bg-elev-1:rgba(43,43,51,.04);
+    --bg-elev-2:rgba(43,43,51,.07);
+    --border-soft:rgba(43,43,51,.10);
+    --border-strong:rgba(43,43,51,.18);
+    --text-1:#2B2B33;         /* 墨 */
+    --text-2:#6B6B75;
+    --text-3:#9A9AA2;
+    --accent:#E8729A;         /* 樱粉 */
+    --gold:#E8C36B;           /* 卡牌金线 */
+    --ai-bubble:rgba(232,195,107,.16);
+    --user-bubble:rgba(232,114,154,.16);
+    --sys-bubble:rgba(43,43,51,.05);
+    --screen-bg:#FDF6F9;
+    --status-online:#4ADE80; --status-offline:#9AA0A6; --status-err:#F87171;
+    --fs-display:24px; --fs-h1:20px; --fs-h2:17px; --fs-body:15px; --fs-sm:13px; --fs-xs:12px;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px;
+    --r-sm:8px; --r-md:14px; --r-lg:20px; --r-pill:999px;
+    --shadow-1:0 2px 8px rgba(43,43,51,.12);
+    --shadow-2:0 10px 34px rgba(43,43,51,.22);
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Segoe UI",sans-serif;
+  }
+  [data-theme="night"]{
+    --bg-base:#16121A;        /* 近黑（夜） */
+    --bg-elev-1:rgba(255,255,255,.05);
+    --bg-elev-2:rgba(255,255,255,.09);
+    --border-soft:rgba(255,255,255,.10);
+    --border-strong:rgba(255,255,255,.18);
+    --text-1:#EDE6E0;        /* 暖白 */
+    --text-2:#B7AEB5;
+    --text-3:#7E7680;
+    --accent:#E8729A;
+    --gold:#E8C36B;
+    --ai-bubble:rgba(232,195,107,.18);
+    --user-bubble:rgba(232,114,154,.20);
+    --sys-bubble:rgba(255,255,255,.06);
+    --screen-bg:#16121A;
+    --shadow-1:0 2px 8px rgba(0,0,0,.4);
+    --shadow-2:0 10px 34px rgba(0,0,0,.55);
+  }
+  /* 8 类卡牌配色 */
+  .cat-home{--c:#E8C36B} .cat-record{--c:#E8729A} .cat-tool{--c:#7FB5E6}
+  .cat-orchestrate{--c:#6FD3A8} .cat-connect{--c:#B79CE0} .cat-security{--c:#F0A868}
+  .cat-system{--c:#A8B0AE} .cat-own{--c:#E8607A}
+
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--font-sans);background:#1c1c22;color:#ddd;display:flex;flex-direction:column;align-items:center;
+       justify-content:center;min-height:100vh;padding:24px;gap:14px}
+  .stage-label{font-size:13px;color:#9a9aa2;letter-spacing:.5px}
+  .stage-label b{color:#E8729A}
+
+  /* ============ 一加 12 设备框（20:9，顶部居中挖孔）============ */
+  .device{position:relative;width:400px;height:888px;background:#0c0c0f;border-radius:46px;
+          padding:14px;box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 0 2px #2a2a30}
+  .screen{position:relative;width:100%;height:100%;background:var(--screen-bg);border-radius:34px;
+          overflow:hidden;display:flex;flex-direction:column;transition:background .4s}
+  .punch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:13px;height:13px;
+         border-radius:50%;background:#050507;z-index:60;box-shadow:inset 0 0 2px #222}
+
+  /* 状态栏（真实状态：连接点/模型/权限） */
+  .statusbar{display:flex;align-items:center;gap:8px;padding:22px 16px 8px;font-size:var(--fs-xs);color:var(--text-2);z-index:40}
+  .statusbar .time{font-weight:600;color:var(--text-1)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--status-online);box-shadow:0 0 6px var(--status-online)}
+  .statusbar .grow{flex:1}
+  .sb-btn{background:var(--bg-elev-1);border:1px solid var(--border-soft);border-radius:var(--r-pill);
+          min-width:34px;height:28px;padding:0 8px;font-size:15px;color:var(--text-1);cursor:pointer}
+  .sb-btn:active{transform:scale(.94)}
+
+  /* 聊天（家） */
+  .chat{flex:1;overflow-y:auto;padding:10px 14px 6px;display:flex;flex-direction:column;gap:10px}
+  .chat.dblhint::after{content:"双击聊天区 = 回家";position:absolute;bottom:120px;left:50%;
+          transform:translateX(-50%);font-size:11px;color:var(--text-3);opacity:.7;pointer-events:none}
+  .bubble{max-width:78%;padding:10px 13px;border-radius:var(--r-lg);font-size:var(--fs-body);line-height:1.5;
+          word-break:break-word;animation:pop .25s ease}
+  .bubble.ai{align-self:flex-start;background:var(--ai-bubble);border:1px solid var(--border-soft)}
+  .bubble.me{align-self:flex-end;background:var(--user-bubble)}
+  .bubble.sys{align-self:center;background:var(--sys-bubble);color:var(--text-2);font-size:var(--fs-xs);
+          border-radius:var(--r-pill);padding:5px 12px;border:1px dashed var(--border-soft)}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* 输入条 */
+  .composer{display:flex;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));align-items:center}
+  .composer input{flex:1;background:var(--bg-elev-2);border:1px solid var(--border-soft);border-radius:var(--r-pill);
+          padding:11px 16px;font-size:var(--fs-body);color:var(--text-1);outline:none}
+  .composer .send{background:var(--accent);color:#fff;border:none;border-radius:var(--r-pill);height:42px;
+          min-width:42px;font-size:18px;cursor:pointer}
+
+  /* Dock（底部常驻 4 张） */
+  .dock{display:flex;justify-content:space-around;padding:8px 10px 14px;background:var(--bg-elev-1);
+        border-top:1px solid var(--border-soft)}
+  .dock .card{width:64px;cursor:pointer}
+  .dock .card.active .frame{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+
+  /* 上滑唤出牌册 */
+  .handle{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 2px;cursor:pointer;
+          color:var(--text-3);font-size:11px}
+  .handle .bar{width:40px;height:4px;border-radius:2px;background:var(--border-strong)}
+
+  /* ============ 卡牌视觉（百变小樱语法，原创不描原画）============ */
+  .frame{position:relative;aspect-ratio:3/4;border-radius:12px;
+         background:linear-gradient(160deg,var(--bg-base),var(--bg-elev-2));
+         border:2px solid var(--c,var(--gold));padding:7px;overflow:hidden;
+         box-shadow:var(--shadow-1);transition:transform .15s}
+  .frame::before{content:"";position:absolute;inset:3px;border:1px solid var(--c,var(--gold));border-radius:9px;opacity:.6}
+  .star{position:absolute;width:9px;height:9px;color:var(--c,var(--gold));font-size:9px;line-height:9px}
+  .star.tl{top:5px;left:5px}.star.tr{top:5px;right:5px}.star.bl{bottom:5px;left:5px}.star.br{bottom:5px;right:5px}
+  .sunmoon{display:flex;justify-content:space-between;padding:2px 4px 0;font-size:11px;opacity:.85}
+  .sigil{display:flex;align-items:center;justify-content:center;font-size:30px;margin-top:6px}
+  .ribbon{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:11px;font-weight:600;
+          color:var(--text-1);padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .corner-dot{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;
+          background:var(--c,var(--gold))}
+
+  /* ============ 牌册抽屉（底部 sheet）============ */
+  .drawer{position:absolute;left:0;right:0;bottom:0;max-height:82%;background:var(--bg-base);
+          border-top-left-radius:24px;border-top-right-radius:24px;box-shadow:var(--shadow-2);
+          transform:translateY(102%);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:50;
+          display:flex;flex-direction:column}
+  .drawer.open{transform:translateY(0)}
+  .drawer .grip{display:flex;justify-content:center;padding:10px 0 4px}
+  .drawer .grip .bar{width:44px;height:5px;border-radius:3px;background:var(--border-strong)}
+  .drawer h3{text-align:center;font-size:var(--fs-h2);color:var(--text-1);margin-bottom:8px}
+  .tabs{display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto}
+  .tab{flex:0 0 auto;padding:7px 13px;border-radius:var(--r-pill);background:var(--bg-elev-1);
+       border:1px solid var(--border-soft);color:var(--text-2);font-size:var(--fs-sm);cursor:pointer;white-space:nowrap}
+  .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:4px 16px 20px}
+  .grid .card{cursor:pointer}
+  .grid .card:active .frame{transform:scale(.95)}
+  .grid .name{text-align:center;font-size:11px;color:var(--text-2);margin-top:5px;white-space:nowrap;
+             overflow:hidden;text-overflow:ellipsis}
+
+  /* ============ 单一浮层（功能页占位）============ */
+  .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;
+            transition:opacity .3s;z-index:55}
+  .backdrop.open{opacity:1;pointer-events:auto}
+  .overlay{position:absolute;left:0;right:0;bottom:0;max-height:90%;background:var(--bg-base);
+           border-top-left-radius:24px;border-top-right-radius:24px;box-shadow:var(--shadow-2);
+           transform:translateY(102%) rotateY(8deg);transform-origin:bottom center;
+           transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:56;padding:18px 18px 26px;
+           display:flex;flex-direction:column}
+  .overlay.open{transform:translateY(0) rotateY(0)}
+  .overlay .ov-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .overlay .ov-head .mini{width:46px;height:60px;flex:0 0 auto}
+  .overlay .ov-head .t{font-size:var(--fs-h1);color:var(--text-1);font-weight:600}
+  .overlay .ov-head .s{font-size:var(--fs-sm);color:var(--text-2)}
+  .overlay .close{align-self:flex-start;background:var(--bg-elev-1);border:1px solid var(--border-soft);
+          border-radius:var(--r-pill);height:30px;min-width:30px;color:var(--text-1);cursor:pointer;font-size:16px}
+  .overlay .desc{background:var(--bg-elev-1);border:1px solid var(--border-soft);border-radius:var(--r-md);
+          padding:14px;font-size:var(--fs-body);line-height:1.6;color:var(--text-1);margin:6px 0 14px}
+  .overlay .placeholder{border:1px dashed var(--border-strong);border-radius:var(--r-md);padding:22px;
+          color:var(--text-3);font-size:var(--fs-sm);text-align:center;flex:1}
+  .overlay .openbtn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-pill);height:46px;
+          font-size:var(--fs-body);cursor:pointer;margin-top:12px}
+
+  /* 首次轻柔引导 */
+  .guide{position:absolute;top:64px;left:14px;right:14px;background:var(--accent);color:#fff;border-radius:var(--r-md);
+         padding:12px 14px;font-size:var(--fs-sm);line-height:1.5;z-index:58;box-shadow:var(--shadow-2);
+         display:flex;gap:8px;align-items:flex-start}
+  .guide b{font-weight:600}
+  .guide .x{margin-left:auto;cursor:pointer;font-size:16px;line-height:1}
+</style>
+</head>
+<body>
+  <div class="stage-label">📱 <b>一加 12</b> · 3168×1440 · 20:9 · 顶部居中挖孔 ｜ DEAR 卡牌低保真原型（可点击）</div>
+
+  <div class="device">
+    <div class="screen" id="screen">
+      <div class="punch"></div>
+
+      <!-- 状态栏：真实状态（连接点 / 模型 / 权限） -->
+      <div class="statusbar">
+        <span class="time">11:56</span>
+        <span class="dot" id="connDot"></span>
+        <span id="connText">在线</span>
+        <span style="opacity:.5">·</span>
+        <span>模型 <b id="modelName" style="color:var(--text-1)">gpt-4o</b></span>
+        <span style="opacity:.5">·</span>
+        <span>权限 <b id="permLevel" style="color:var(--text-1)">标准</b></span>
+        <span class="grow"></span>
+        <button class="sb-btn" id="themeBtn" title="昼/夜">🌙</button>
+        <button class="sb-btn" id="setBtn" title="设置">⚙</button>
+      </div>
+
+      <!-- 聊天（家） -->
+      <div class="chat dblhint" id="chatHome">
+        <div class="bubble ai">嗨龙龙，我是 DEAR ✨ 聊天是家，常看的功能我钉在底下，偶尔的收进「牌册」。</div>
+        <div class="bubble me">那我点底下的卡就能直接开？</div>
+        <div class="bubble ai">对～ 日记、日历、记忆一键达；其它功能上滑唤出牌册，按类翻牌。任何时候双击聊天区 / 按 Esc / 点空白 都能回家，对话不丢。</div>
+        <div class="bubble sys">📅 已建闹铃 · 明早 8:00</div>
+        <div class="bubble ai">试试看 👇 上滑那道小横杠，或点底部 Dock 的卡。</div>
+      </div>
+
+      <!-- 上滑唤出牌册 -->
+      <div class="handle" id="handle"><span class="bar"></span><span>上滑唤出「牌册」</span></div>
+
+      <!-- 输入条 -->
+      <div class="composer">
+        <input id="msgInput" placeholder="说点什么…（双击聊天区回家）" />
+        <button class="send" id="sendBtn">➤</button>
+      </div>
+
+      <!-- Dock（常驻 4 张） -->
+      <div class="dock" id="dock"></div>
+
+      <!-- 牌册抽屉 -->
+      <div class="drawer" id="drawer">
+        <div class="grip"><span class="bar"></span></div>
+        <h3>🃏 牌册 · 35 张魔法卡</h3>
+        <div class="tabs" id="tabs"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <!-- 浮层 + 背景 -->
+      <div class="backdrop" id="backdrop"></div>
+      <div class="overlay" id="overlay">
+        <button class="close" id="ovClose">✕</button>
+        <div class="ov-head">
+          <div class="mini" id="ovMini"></div>
+          <div>
+            <div class="t" id="ovTitle"></div>
+            <div class="s" id="ovSub"></div>
+          </div>
+        </div>
+        <div class="desc" id="ovDesc"></div>
+        <div class="placeholder">此处是该功能的真实页面（原型占位）<br/>P0 实现时按《UI与动线设计规格书》接入 Hermes 能力</div>
+        <button class="openbtn">翻开此卡 →</button>
+      </div>
+
+      <!-- 首次轻柔引导 -->
+      <div class="guide" id="guide">
+        <span>👋 <b>轻柔提示：</b>底部是常看功能；上滑那道横杠打开「牌册」看全部 35 张魔法卡。</span>
+        <span class="x" id="guideX">✕</span>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+/* =================== 数据：35 功能 → 魔法卡 =================== */
+const CAT = {
+  home:{label:"伙伴/家",color:"#E8C36B"},
+  record:{label:"记录",color:"#E8729A"},
+  tool:{label:"工具",color:"#7FB5E6"},
+  orchestrate:{label:"编排",color:"#6FD3A8"},
+  connect:{label:"连接",color:"#B79CE0"},
+  security:{label:"安全",color:"#F0A868"},
+  system:{label:"系统",color:"#A8B0AE"},
+  own:{label:"自有",color:"#E8607A"},
+};
+// 7 册
+const ALBUMS = [
+  {key:"record",name:"记录册"},{key:"tool",name:"工具册"},{key:"orchestrate",name:"编排册"},
+  {key:"connect",name:"连接册"},{key:"security",name:"安全册"},{key:"system",name:"系统册"},
+  {key:"own",name:"自有册"},
+];
+// 35 张卡（id, 名, 类, emoji, 册, dock?, 一句话）
+const CARDS = [
+  {id:1,name:"多模型对话",cat:"home",emoji:"💬",album:"record",dock:true,desc:"和 AI 聊天，随时换模型。这是 DEAR 的「家」。"},
+  {id:12,name:"提示记忆",cat:"record",emoji:"🧠",album:"record",dock:true,desc:"随时塞给 AI 的备忘，它下次就记得。"},
+  {id:28,name:"日记",cat:"record",emoji:"📓",album:"record",dock:true,desc:"写日记，AI 陪你聊、帮你回顾。"},
+  {id:29,name:"日历",cat:"record",emoji:"📅",album:"record",dock:true,desc:"日程与提醒，自动化结果会插进来。"},
+  {id:13,name:"翻旧聊天",cat:"record",emoji:"🔍",album:"record",desc:"翻历史对话，找回上下文。"},
+  {id:14,name:"自进化技能",cat:"record",emoji:"🌱",album:"record",desc:"AI 在用的过程中自己长出的技能。"},
+  {id:15,name:"用户画像",cat:"record",emoji:"🪞",album:"record",desc:"AI 眼中的你，越用越懂。"},
+  {id:19,name:"技能管理页",cat:"record",emoji:"🃏",album:"record",desc:"管理可用技能库，开/关/装。"},
+  {id:26,name:"用户画像页",cat:"record",emoji:"🗂️",album:"record",desc:"查看 / 编辑你的画像卡片。"},
+  {id:4,name:"工具箱",cat:"tool",emoji:"📦",album:"tool",desc:"给 AI 配的手工工具集。"},
+  {id:6,name:"接 MCP",cat:"tool",emoji:"🔌",album:"tool",desc:"接外部 MCP 服务，扩展能力。"},
+  {id:20,name:"MCP 管理页",cat:"tool",emoji:"🧩",album:"tool",desc:"增删改你的 MCP 连接。"},
+  {id:7,name:"并行小弟",cat:"orchestrate",emoji:"👥",album:"orchestrate",desc:"派多个子代理并行干活。"},
+  {id:8,name:"定目标 /goal",cat:"orchestrate",emoji:"🎯",album:"orchestrate",desc:"定个目标，让它自己冲。"},
+  {id:9,name:"会话搬运 /handoff",cat:"orchestrate",emoji:"🔁",album:"orchestrate",desc:"把当前会话交给另一个代理。"},
+  {id:10,name:"定时 cron",cat:"orchestrate",emoji:"⏰",album:"orchestrate",desc:"定时自动跑任务。"},
+  {id:22,name:"看板 Kanban",cat:"orchestrate",emoji:"📊",album:"orchestrate",desc:"卡片式任务看板。"},
+  {id:23,name:"子代理监控",cat:"orchestrate",emoji:"📡",album:"orchestrate",desc:"看并行小弟们干得咋样。"},
+  {id:24,name:"自动化管理",cat:"orchestrate",emoji:"⚙️",album:"orchestrate",desc:"管理常驻自动化流程。"},
+  {id:16,name:"多平台入口",cat:"connect",emoji:"🌐",album:"connect",desc:"一键进微信 / 飞书等平台。"},
+  {id:25,name:"连接器管理",cat:"connect",emoji:"🔗",album:"connect",desc:"管理平台连接器。"},
+  {id:17,name:"密钥保险箱",cat:"security",emoji:"🔐",album:"security",desc:"存 API Key，加密不裸奔。"},
+  {id:18,name:"安全扫描",cat:"security",emoji:"🛡️",album:"security",desc:"后台定期扫安全隐患。"},
+  {id:3,name:"一键换模型",cat:"system",emoji:"🔄",album:"system",desc:"点一下换底层大模型。"},
+  {id:5,name:"选运行环境",cat:"system",emoji:"🖥️",album:"system",desc:"切本地 / 云端运行环境。"},
+  {id:11,name:"权限档位",cat:"system",emoji:"🚦",album:"system",desc:"给 AI 设能碰什么的边界。"},
+  {id:21,name:"系统控制台",cat:"system",emoji:"🛠️",album:"system",desc:"看服务状态、日志、重启。"},
+  {id:27,name:"人格 soul",cat:"own",emoji:"💗",album:"own",desc:"DEAR 的个性与灵魂设定（桃心红 = 自有）。"},
+  {id:30,name:"周期",cat:"own",emoji:"🌸",album:"own",desc:"记录你的周期节律。"},
+  {id:31,name:"数据",cat:"own",emoji:"💾",album:"own",desc:"你的长期数据沉淀。"},
+];
+// 补两张「灵魂双卡」占位文案（小樱原创牌：爱/希望），不计入 35 但点得出
+CARDS.push({id:27.1,name:"爱·心牌",cat:"own",emoji:"💖",album:"own",desc:"DEAR 的灵魂双卡之一：以「陪伴」为内核。"});
+CARDS.push({id:35,name:"希望牌",cat:"home",emoji:"✨",album:"record",desc:"首次轻柔引导用的希望牌，点亮就出发。"});
+
+/* =================== 卡牌 HTML =================== */
+function cardHTML(c, opts={}){
+  const mini = opts.mini ? "mini" : "";
+  return `<div class="frame cat-${c.cat} ${mini}" data-id="${c.id}">
+    <span class="star tl">✦</span><span class="star tr">✦</span>
+    <span class="star bl">✦</span><span class="star br">✦</span>
+    <span class="corner-dot"></span>
+    <div class="sunmoon"><span>☀</span><span>☾</span></div>
+    <div class="sigil">${c.emoji}</div>
+    <div class="ribbon">${c.name}</div>
+  </div>`;
+}
+
+/* =================== 渲染 Dock =================== */
+const dock = document.getElementById("dock");
+CARDS.filter(c=>c.dock).forEach(c=>{
+  const el = document.createElement("div");
+  el.className = "card cat-"+c.cat;
+  el.dataset.id = c.id;
+  el.innerHTML = cardHTML(c) + `<div class="name" style="text-align:center;font-size:11px;color:var(--text-2);margin-top:5px">${c.name}</div>`;
+  el.addEventListener("click",()=>onCardClick(c, el));
+  dock.appendChild(el);
+});
+
+/* =================== 渲染牌册 =================== */
+const tabsEl = document.getElementById("tabs");
+const gridEl = document.getElementById("grid");
+let curAlbum = ALBUMS[0].key;
+ALBUMS.forEach((a,i)=>{
+  const t = document.createElement("div");
+  t.className = "tab"+(i===0?" active":"");
+  t.textContent = a.name;
+  t.addEventListener("click",()=>{curAlbum=a.key;renderGrid();document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");});
+  tabsEl.appendChild(t);
+});
+function renderGrid(){
+  gridEl.innerHTML="";
+  CARDS.filter(c=>c.album===curAlbum).forEach(c=>{
+    const el=document.createElement("div");
+    el.className="card cat-"+c.cat;
+    el.innerHTML=cardHTML(c)+`<div class="name">${c.name}</div>`;
+    el.addEventListener("click",()=>onCardClick(c,null));
+    gridEl.appendChild(el);
+  });
+}
+renderGrid();
+
+/* =================== 单一浮层注册表 =================== */
+let currentOverlay = null;   // 同一时刻至多一个
+let openedByNav = null;      // 记录是谁打开的（用于「再点回家」）
+const overlay = document.getElementById("overlay");
+const backdrop = document.getElementById("backdrop");
+
+function openOverlay(c){
+  // 先关旧的（单一注册表）
+  overlay.classList.remove("open");
+  backdrop.classList.remove("open");
+  // 填内容
+  document.getElementById("ovMini").innerHTML = cardHTML(c,{mini:true});
+  document.getElementById("ovTitle").textContent = c.name;
+  document.getElementById("ovSub").textContent = CAT[c.cat].label + " · " + (ALBUMS.find(a=>a.key===c.album)?.name||"");
+  document.getElementById("ovDesc").textContent = c.desc;
+  // 开新的
+  currentOverlay = c;
+  requestAnimationFrame(()=>{overlay.classList.add("open");backdrop.classList.add("open");});
+}
+function closeOverlay(){
+  overlay.classList.remove("open");
+  backdrop.classList.remove("open");
+  currentOverlay=null; openedByNav=null;
+  document.querySelectorAll(".dock .card.active").forEach(x=>x.classList.remove("active"));
+  drawer.classList.remove("open");
+}
+function onCardClick(c, dockEl){
+  // 再点当前已激活导航 = 回家
+  if(currentOverlay && openedByNav===c.id){ closeOverlay(); return; }
+  if(dockEl) dockEl.classList.add("active");
+  openedByNav = c.id;
+  openOverlay(c);
+}
+
+/* 回家四法 */
+document.getElementById("chatHome").addEventListener("dblclick", closeOverlay);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeOverlay(); });
+backdrop.addEventListener("click", closeOverlay);
+document.getElementById("ovClose").addEventListener("click", closeOverlay);
+
+/* =================== 牌册抽屉 =================== */
+const drawer = document.getElementById("drawer");
+const handle = document.getElementById("handle");
+function toggleDrawer(force){
+  const open = force!==undefined?force:!drawer.classList.contains("open");
+  drawer.classList.toggle("open",open);
+  if(open) closeOverlay();
+}
+handle.addEventListener("click",()=>toggleDrawer());
+// 简易上滑手势（注意：screen 是浏览器内置对象，必须用 getElementById 取手机屏 div）
+let ty=0;
+const screenEl=document.getElementById("screen");
+screenEl.addEventListener("touchstart",e=>{ if(e.touches[0]) ty=e.touches[0].clientY; });
+screenEl.addEventListener("touchend",e=>{ if(ty-e.changedTouches[0].clientY>60) toggleDrawer(true); });
+
+/* =================== 设置 =================== */
+document.getElementById("setBtn").addEventListener("click",()=>{
+  openOverlay({id:"set",name:"设置",cat:"system",emoji:"⚙️",album:"system",
+    desc:"换模型 / 选运行环境 / 权限档位 / 密钥保险箱 / 系统控制台 —— 藏深点，从这儿进。"});
+});
+
+/* =================== 昼 / 夜 =================== */
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const night = document.documentElement.getAttribute("data-theme")==="night";
+  document.documentElement.setAttribute("data-theme", night?"":"night");
+  document.getElementById("themeBtn").textContent = night?"🌙":"☀️";
+});
+
+/* =================== 首次引导 =================== */
+document.getElementById("guideX").addEventListener("click",()=>document.getElementById("guide").style.display="none");
+
+/* =================== 发消息（原型演示：占位回复） =================== */
+function sendMsg(){
+  const inp=document.getElementById("msgInput");
+  const v=inp.value.trim(); if(!v)return;
+  const chat=document.getElementById("chatHome");
+  const m=document.createElement("div"); m.className="bubble me"; m.textContent=v;
+  chat.appendChild(m); inp.value=""; chat.scrollTop=1e9;
+  setTimeout(()=>{
+    const a=document.createElement("div"); a.className="bubble ai";
+    a.textContent="收到～（这是原型占位回复，P0 接 Hermes 后这里会是真实 AI 对话）";
+    chat.appendChild(a); chat.scrollTop=1e9;
+  },500);
+}
+document.getElementById("sendBtn").addEventListener("click",sendMsg);
+document.getElementById("msgInput").addEventListener("keydown",e=>{ if(e.key==="Enter") sendMsg(); });
+</script>
+</body>
+</html>

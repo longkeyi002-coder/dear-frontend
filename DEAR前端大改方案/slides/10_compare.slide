@@ -1,0 +1,54 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  {(() => {
+    const rows = [
+      { k: '单手好点', a: '优', b: '中', c: '优（手机）' },
+      { k: '聊天沉浸', a: '中', b: '优', c: '中' },
+      { k: '实现成本', a: '低', b: '中', c: '高' },
+      { k: '适合谁', a: '大众', b: '极简党', c: '常坐电脑' },
+    ];
+    const cell = (txt, hi) => (
+      <Box style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: '14px 8px', background: hi ? 'rgba(46,158,111,0.12)' : '#E3EFE8', border: hi ? '1.5px solid #2E9E6F' : '1px solid #CFE0D6', borderRadius: 10 }}>
+        <Text style={{ fontSize: 17, color: hi ? '#2E9E6F' : '#1E2B24', fontWeight: hi ? 'bold' : 'normal' }}>{txt}</Text>
+      </Box>
+    );
+    return (
+      <Box style={{ height: '100%', flexDirection: 'column' }}>
+        <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+          <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>三方案摆一起看</Text>
+          <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>对比 + 我的建议</Text>
+        </Box>
+
+        <Box style={{ height: 540, padding: '16px 72px', flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
+          <Box style={{ flexDirection: 'row', gap: 12 }}>
+            <Box style={{ width: 220, alignItems: 'center', justifyContent: 'center', padding: '14px 8px', background: '#2E9E6F', borderRadius: 10 }}>
+              <Text style={{ fontSize: 17, color: '#fff', fontWeight: 'bold' }}>维度</Text>
+            </Box>
+            {cell('A · 底部 Tab', true)}
+            {cell('B · 上滑抽屉', false)}
+            {cell('C · 双形态', false)}
+          </Box>
+          {rows.map((r, i) => (
+            <Box key={i} style={{ flexDirection: 'row', gap: 12 }}>
+              <Box style={{ width: 220, alignItems: 'center', justifyContent: 'center', padding: '14px 8px', background: '#FFFFFF', border: '1px solid #CFE0D6', borderRadius: 10 }}>
+                <Text style={{ fontSize: 17, color: '#1E2B24', fontWeight: '600' }}>{r.k}</Text>
+              </Box>
+              {cell(r.a, true)}
+              {cell(r.b, false)}
+              {cell(r.c, false)}
+            </Box>
+          ))}
+
+          <Box style={{ marginTop: 6, padding: '16px 22px', background: 'rgba(46,158,111,0.12)', border: '1.5px solid #2E9E6F', borderRadius: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <Text style={{ fontSize: 20, color: '#2E9E6F', fontWeight: 'bold' }}>我的建议</Text>
+            <Text style={{ fontSize: 19, color: '#1E2B24', lineHeight: 1.5 }}>先做 A（底部 Tab）——最稳、最像常用 App；B/C 等你用顺了再考虑。</Text>
+          </Box>
+        </Box>
+
+        <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+          <Text style={{ fontSize: 14, color: '#5E6E66' }}>10 / 11</Text>
+        </Box>
+      </Box>
+    );
+  })()}
+</Slide>

@@ -1,0 +1,50 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  <Box style={{ height: '100%', flexDirection: 'column' }}>
+    <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+      <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>方案 A · 推荐</Text>
+      <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>手机底部 Tab：最稳的那一版</Text>
+    </Box>
+
+    <Box style={{ height: 540, padding: '16px 72px', flexDirection: 'row', gap: 48, alignItems: 'center' }}>
+      <Box style={{ width: 300, alignItems: 'center' }}>
+        <svg width={240} height={470} viewBox='0 0 260 500'>
+          <rect x='10' y='10' width='240' height='480' rx='34' fill='#E3EFE8' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='22' y='26' width='216' height='420' rx='20' fill='#F5F9F6' />
+          <rect x='40' y='70' width='130' height='44' rx='14' fill='#E3EFE8' />
+          <rect x='108' y='132' width='118' height='40' rx='14' fill='#2E9E6F' opacity='0.18' />
+          <rect x='40' y='190' width='140' height='44' rx='14' fill='#E3EFE8' />
+          <rect x='40' y='406' width='180' height='34' rx='17' fill='#FFFFFF' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='22' y='452' width='216' height='46' rx='16' fill='#FFFFFF' stroke='#CFE0D6' strokeWidth='2' />
+          <rect x='36' y='462' width='30' height='26' rx='8' fill='#2E9E6F' />
+          <rect x='80' y='464' width='26' height='22' rx='7' fill='#CFE0D6' />
+          <rect x='120' y='464' width='26' height='22' rx='7' fill='#CFE0D6' />
+          <rect x='160' y='464' width='26' height='22' rx='7' fill='#CFE0D6' />
+          <rect x='198' y='464' width='26' height='22' rx='7' fill='#CFE0D6' />
+        </svg>
+        <Text style={{ fontSize: 15, color: '#5E6E66', marginTop: 8 }}>9 个功能收到底部一排小图标</Text>
+      </Box>
+
+      <Box style={{ flex: 1, flexDirection: 'column', gap: 14 }}>
+        <Box style={{ alignSelf: 'flex-start', padding: '8px 16px', background: '#2E9E6F', borderRadius: 999 }}>
+          <Text style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>★ 我最推荐</Text>
+        </Box>
+        <Text style={{ fontSize: 19, color: '#1E2B24', lineHeight: 1.65 }}>
+          9 个功能收到底部一排小图标，<span style={{ color: '#2E9E6F', fontWeight: 'bold' }}>大拇指一够就着</span>。聊天占满整屏，点图标才掀开别的功能。
+        </Text>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>优点：单手好点（一加 12 大屏也稳）；最像常用 App，不饶弯。</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <Box style={{ width: 8, height: 8, borderRadius: 999, background: '#2E9E6F', marginTop: 9 }} />
+          <Text style={{ fontSize: 18, color: '#5E6E66', lineHeight: 1.55 }}>注意：9 个塞一排会挤，可藏成「更多 ▾」。</Text>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+      <Text style={{ fontSize: 14, color: '#5E6E66' }}>07 / 11</Text>
+    </Box>
+  </Box>
+</Slide>

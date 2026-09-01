@@ -1,0 +1,25 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  <Box style={{ height: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 96px' }}>
+    <svg width={120} height={120} viewBox='0 0 120 120'>
+      <circle cx='60' cy='60' r='56' fill='#2E9E6F' />
+      <path d='M38 62 L54 78 L84 44' fill='none' stroke='#fff' strokeWidth='8' strokeLinecap='round' strokeLinejoin='round' />
+    </svg>
+    <Text style={{ fontSize: 46, fontWeight: 'bold', color: '#1E2B24', marginTop: 22 }}>现在不用大改，只调细节</Text>
+    <Text style={{ fontSize: 20, color: '#5E6E66', marginTop: 12, marginBottom: 36 }}>大框架（聊天是家 + 浮层小窗）已经站得住，剩下的都是「修修补补」</Text>
+
+    <Box style={{ flexDirection: 'row', gap: 22, width: '100%' }}>
+      <Box style={{ flex: 1, flexDirection: 'column', background: '#E3EFE8', borderRadius: 16, padding: '22px 22px' }}>
+        <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#2E9E6F' }}>① 家已经对了</Text>
+        <Text style={{ fontSize: 17, color: '#5E6E66', lineHeight: 1.6, marginTop: 10 }}>聊天是常驻主页，这个不用动，天天用着顺手。</Text>
+      </Box>
+      <Box style={{ flex: 1, flexDirection: 'column', background: '#E3EFE8', borderRadius: 16, padding: '22px 22px' }}>
+        <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#2E9E6F' }}>② 浮层补逻辑</Text>
+        <Text style={{ fontSize: 17, color: '#5E6E66', lineHeight: 1.6, marginTop: 10 }}>原来「掀开小窗会叠住、关不掉」的毛病，修好逻辑就行，不是重做。</Text>
+      </Box>
+      <Box style={{ flex: 1, flexDirection: 'column', background: '#E3EFE8', borderRadius: 16, padding: '22px 22px' }}>
+        <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#2E9E6F' }}>③ 视觉有规矩</Text>
+        <Text style={{ fontSize: 17, color: '#5E6E66', lineHeight: 1.6, marginTop: 10 }}>颜色、字号、重点字都定好统一标准了，照着填即可。</Text>
+      </Box>
+    </Box>
+  </Box>
+</Slide>

@@ -1,0 +1,43 @@
+<Slide style={{ width: '1280px', height: '720px', background: '#F5F9F6' }}>
+  {(() => {
+    const items = [
+      { n: '人格', d: '给 AI 定「人设」：它叫什么、什么性格、怎么跟你说话。' },
+      { n: '技能', d: 'AI 的「拿手好戏」清单：写代码、查资料、做图……（接进来的能力）。' },
+      { n: 'MCP', d: '给 AI 接外挂的「插头」：连日历、连数据库都靠它。' },
+      { n: '日记', d: '你随手记的事，按时间排好，AI 也能读。' },
+      { n: '系统', d: '控制面板：选哪个模型、开多大权限、连得通不通。' },
+      { n: '记忆', d: 'AI 记住你的事：偏好、习惯、说过的话，跨次都在。' },
+      { n: '日历', d: '你的日程表，AI 能看、能提醒。' },
+      { n: '周期', d: '记录身体节奏（如生理周期），做趋势回顾。' },
+      { n: '数据', d: '把记下的东西汇成图表，一眼看趋势。' },
+    ];
+    const cell = (it) => (
+      <Box style={{ flex: 1, flexDirection: 'column', background: '#E3EFE8', borderRadius: 14, padding: '16px 18px' }}>
+        <Box style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Box style={{ width: 10, height: 10, borderRadius: 999, background: '#2E9E6F' }} />
+          <Text style={{ fontSize: 21, fontWeight: 'bold', color: '#1E2B24' }}>{it.n}</Text>
+        </Box>
+        <Text style={{ fontSize: 15, color: '#5E6E66', lineHeight: 1.55, marginTop: 10 }}>{it.d}</Text>
+      </Box>
+    );
+    return (
+      <Box style={{ height: '100%', flexDirection: 'column' }}>
+        <Box style={{ height: 110, padding: '26px 72px 0', justifyContent: 'flex-end' }}>
+          <Text style={{ fontSize: 14, color: '#2E9E6F', fontWeight: '600', letterSpacing: 1 }}>9 个功能页，都是谁</Text>
+          <Text style={{ fontSize: 34, fontWeight: 'bold', color: '#1E2B24' }}>用大白话翻译一遍</Text>
+        </Box>
+
+        <Box style={{ height: 540, padding: '18px 72px', flexDirection: 'column', gap: 14 }}>
+          <Box style={{ flex: 1, flexDirection: 'row', gap: 14 }}>{cell(items[0])}{cell(items[1])}{cell(items[2])}</Box>
+          <Box style={{ flex: 1, flexDirection: 'row', gap: 14 }}>{cell(items[3])}{cell(items[4])}{cell(items[5])}</Box>
+          <Box style={{ flex: 1, flexDirection: 'row', gap: 14 }}>{cell(items[6])}{cell(items[7])}{cell(items[8])}</Box>
+        </Box>
+
+        <Box style={{ height: 60, padding: '0 72px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#5E6E66' }}>DEAR 功能页布局方案</Text>
+          <Text style={{ fontSize: 14, color: '#5E6E66' }}>03 / 11</Text>
+        </Box>
+      </Box>
+    );
+  })()}
+</Slide>
