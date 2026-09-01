@@ -5,11 +5,19 @@ import type {
   ActionItem,
   ActionStatus,
   Actor,
+  HeartbeatRecord,
+  LifeObservation,
+  ObservationConfidence,
+  ObservationKind,
+  ObservationSource,
   DiaryEntry,
   DiaryVisibility,
   OurHomeData,
+  ProactiveCandidate,
+  ProactiveCandidateStatus,
   ProactiveMessage,
   RelationshipEvent,
+  RoutineWindow,
 } from "./types.js";
 
 const now = () => new Date().toISOString();
@@ -33,7 +41,7 @@ function appendActivity(
 function emptyData(): OurHomeData {
   const timestamp = now();
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     diaries: [],
     relationshipEvents: [],
     actions: [],
@@ -44,13 +52,17 @@ function emptyData(): OurHomeData {
       updatedAt: timestamp,
       source: "HOME_STATE",
     },
+    observations: [],
+    routines: [],
+    heartbeats: [],
+    proactiveQueue: [],
   };
 }
 
 function seedData(): OurHomeData {
   const timestamp = now();
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     diaries: [
       {
         id: "diary_seed_welcome",
@@ -92,22 +104,56 @@ function seedData(): OurHomeData {
       updatedAt: timestamp,
       source: "HOME_STATE",
     },
+    observations: [],
+    routines: [],
+    heartbeats: [],
+    proactiveQueue: [],
   };
 }
 
-function validateData(value: unknown): OurHomeData {
+function migrateData(value: unknown): OurHomeData {
   if (!value || typeof value !== "object") {
     throw new Error("Our Home data file must contain a JSON object");
   }
-  const candidate = value as Partial<OurHomeData>;
+  const candidate = value as {
+    schemaVersion?: unknown;
+    diaries?: OurHomeData["diaries"];
+    relationshipEvents?: OurHomeData["relationshipEvents"];
+    actions?: OurHomeData["actions"];
+    activities?: OurHomeData["activities"];
+    proactiveMessages?: OurHomeData["proactiveMessages"];
+    homeState?: OurHomeData["homeState"];
+    observations?: OurHomeData["observations"];
+    routines?: OurHomeData["routines"];
+    heartbeats?: OurHomeData["heartbeats"];
+    proactiveQueue?: OurHomeData["proactiveQueue"];
+  };
+  const hasBaseShape =
+    Array.isArray(candidate.diaries) &&
+    Array.isArray(candidate.relationshipEvents) &&
+    Array.isArray(candidate.actions) &&
+    Array.isArray(candidate.activities) &&
+    Array.isArray(candidate.proactiveMessages) &&
+    Boolean(candidate.homeState);
+  if (!hasBaseShape) {
+    throw new Error("Unsupported or corrupt Our Home data file");
+  }
+  if (candidate.schemaVersion === 1) {
+    return {
+      ...(candidate as Omit<OurHomeData, "schemaVersion" | "observations" | "routines" | "heartbeats" | "proactiveQueue">),
+      schemaVersion: 2,
+      observations: [],
+      routines: [],
+      heartbeats: [],
+      proactiveQueue: [],
+    };
+  }
   if (
-    candidate.schemaVersion !== 1 ||
-    !Array.isArray(candidate.diaries) ||
-    !Array.isArray(candidate.relationshipEvents) ||
-    !Array.isArray(candidate.actions) ||
-    !Array.isArray(candidate.activities) ||
-    !Array.isArray(candidate.proactiveMessages) ||
-    !candidate.homeState
+    candidate.schemaVersion !== 2 ||
+    !Array.isArray(candidate.observations) ||
+    !Array.isArray(candidate.routines) ||
+    !Array.isArray(candidate.heartbeats) ||
+    !Array.isArray(candidate.proactiveQueue)
   ) {
     throw new Error("Unsupported or corrupt Our Home data file");
   }
@@ -126,7 +172,7 @@ export class JsonStore {
     const resolvedPath = resolve(filePath);
     try {
       const raw = await readFile(resolvedPath, "utf8");
-      return new JsonStore(resolvedPath, validateData(JSON.parse(raw)));
+      return new JsonStore(resolvedPath, migrateData(JSON.parse(raw)));
     } catch (error: unknown) {
       if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
       const store = new JsonStore(resolvedPath, seed ? seedData() : emptyData());
@@ -188,6 +234,128 @@ export class JsonStore {
       });
     });
     return entry;
+  }
+
+  async recordObservation(input: {
+    kind: ObservationKind;
+    label: string;
+    value?: string;
+    observedAt: string;
+    source: ObservationSource;
+    confidence: ObservationConfidence;
+    expiresAt?: string;
+  }): Promise<LifeObservation> {
+    const observation: LifeObservation = { id: randomUUID(), ...input };
+    await this.update((data) => {
+      data.observations.unshift(observation);
+      appendActivity(data, {
+        kind: "observation_recorded",
+        title: "记录一条生活观察",
+        summary: observation.label,
+        source: "HOME_STATE",
+      });
+    });
+    return observation;
+  }
+
+  async addRoutine(input: {
+    label: string;
+    weekdays: number[];
+    startLocal: string;
+    endLocal: string;
+    timezone: string;
+    note?: string;
+  }): Promise<RoutineWindow> {
+    const timestamp = now();
+    const routine: RoutineWindow = {
+      id: randomUUID(),
+      ...input,
+      enabled: true,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+    await this.update((data) => {
+      data.routines.unshift(routine);
+      appendActivity(data, {
+        kind: "routine_created",
+        title: "建立一段生活时间表",
+        summary: routine.label,
+        source: "HOME_STATE",
+      });
+    });
+    return routine;
+  }
+
+  async recordHeartbeat(summary: string): Promise<HeartbeatRecord> {
+    const heartbeat: HeartbeatRecord = {
+      id: randomUUID(),
+      occurredAt: now(),
+      summary,
+      source: "system",
+    };
+    await this.update((data) => {
+      data.heartbeats.unshift(heartbeat);
+      data.heartbeats = data.heartbeats.slice(0, 200);
+    });
+    return heartbeat;
+  }
+
+  async scheduleProactiveMessage(input: {
+    title: string;
+    message: string;
+    reason: string;
+    dueAt: string;
+  }): Promise<ProactiveCandidate> {
+    const candidate: ProactiveCandidate = {
+      id: randomUUID(),
+      ...input,
+      status: "pending",
+      createdAt: now(),
+      attempts: 0,
+      source: "AGENT_LIFE",
+    };
+    await this.update((data) => {
+      data.proactiveQueue.unshift(candidate);
+      appendActivity(data, {
+        kind: "proactive_candidate_scheduled",
+        title: "安排一条主动消息",
+        summary: candidate.title,
+        source: "AGENT_LIFE",
+      });
+    });
+    return candidate;
+  }
+
+  listDueProactiveMessages(asOf = new Date().toISOString()): ProactiveCandidate[] {
+    return this.snapshot().proactiveQueue
+      .filter((item) => item.status === "pending" && item.dueAt <= asOf)
+      .sort((left, right) => left.dueAt.localeCompare(right.dueAt));
+  }
+
+  async recordProactiveAttempt(id: string, error?: string): Promise<ProactiveCandidate> {
+    let result: ProactiveCandidate | undefined;
+    await this.update((data) => {
+      result = data.proactiveQueue.find((item) => item.id === id);
+      if (!result) throw new Error(`Proactive candidate not found: ${id}`);
+      result.attempts += 1;
+      result.lastAttemptAt = now();
+      result.lastError = error;
+    });
+    if (!result) throw new Error(`Proactive candidate not found: ${id}`);
+    return result;
+  }
+
+  async resolveProactiveMessage(id: string, status: Exclude<ProactiveCandidateStatus, "pending">): Promise<ProactiveCandidate> {
+    let result: ProactiveCandidate | undefined;
+    await this.update((data) => {
+      result = data.proactiveQueue.find((item) => item.id === id);
+      if (!result) throw new Error(`Proactive candidate not found: ${id}`);
+      result.status = status;
+      if (status === "delivered") result.deliveredAt = now();
+      if (status === "dismissed") result.dismissedAt = now();
+    });
+    if (!result) throw new Error(`Proactive candidate not found: ${id}`);
+    return result;
   }
 
   async addAction(input: {
