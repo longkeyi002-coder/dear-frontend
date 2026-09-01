@@ -60,7 +60,9 @@ OUR_HOME_WORKER_INTERVAL_MS=60000 \
 npm run worker
 ```
 
-这个 worker 只做三件事：记录心跳、查找已到期的主动消息候选、交给通知适配器。它不调用 Hermes，也不创建 Hermes session。
+这个 worker 只做几件事：记录心跳、读取生活上下文、可选地调用独立决策适配器生成候选、查找已到期的候选并交给通知适配器。它不调用 Hermes，也不创建 Hermes session。
+
+如果配置 `OUR_HOME_DECISION_WEBHOOK_URL`，worker 会把 `home.get_life_context` 同样的结构化上下文 POST 给决策服务。决策服务必须返回 `{"candidates": [...]}`；返回内容会经过 schema 校验并进入主动消息队列。这样模型可以根据真实 observation 做判断，但模型本身仍然是可替换的，不绑定 Hermes。
 
 没有配置通知地址时，候选消息会保持 `pending` 并重试，不会被假装成“已发送”。配置一个接收 JSON POST 的通知适配器：
 
@@ -72,6 +74,18 @@ npm run dev:worker
 ```
 
 发送出去的事件类型是 `our_home.proactive_message`。它是通用 Webhook，不绑定 Telegram、微信或其他具体渠道；后续可以单独增加手机通知适配器。
+
+手机端可以通过受保护的 HTTP API 上报状态：
+
+```http
+POST /v1/phone/heartbeat
+Authorization: Bearer <OUR_HOME_INGEST_TOKEN>
+Content-Type: application/json
+
+{"deviceId":"android-main","status":"screen_on","batteryPercent":82}
+```
+
+也可以批量上报 `POST /v1/observations`，例如 `screen_app`、`device_presence` 或 `calendar`。服务端会强制把这些记录标为 `source=phone`、`confidence=observed`，不会接受手机端把它们伪装成其他来源。
 
 ## 给 Hermes 使用：stdio
 
