@@ -9,6 +9,16 @@ export type Actor = "user" | "agent";
 export type DiaryVisibility = "private" | "shared";
 export type ActionStatus = "todo" | "in_progress" | "done";
 export type RelationshipApprovalStatus = "proposed" | "approved" | "rejected";
+export type ObservationKind =
+  | "manual_status"
+  | "device_presence"
+  | "screen_app"
+  | "calendar"
+  | "weather"
+  | "note";
+export type ObservationSource = "user" | "phone" | "screen" | "calendar" | "system" | "mock";
+export type ObservationConfidence = "observed" | "declared" | "inferred";
+export type ProactiveCandidateStatus = "pending" | "delivered" | "dismissed";
 
 export interface DiaryEntry {
   id: string;
@@ -69,14 +79,65 @@ export interface HomeState {
   source: "HOME_STATE";
 }
 
+export interface LifeObservation {
+  id: string;
+  kind: ObservationKind;
+  label: string;
+  value?: string;
+  observedAt: string;
+  source: ObservationSource;
+  confidence: ObservationConfidence;
+  expiresAt?: string;
+}
+
+export interface RoutineWindow {
+  id: string;
+  label: string;
+  weekdays: number[];
+  startLocal: string;
+  endLocal: string;
+  timezone: string;
+  note?: string;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HeartbeatRecord {
+  id: string;
+  occurredAt: string;
+  summary: string;
+  source: "system";
+}
+
+export interface ProactiveCandidate {
+  id: string;
+  title: string;
+  message: string;
+  reason: string;
+  dueAt: string;
+  status: ProactiveCandidateStatus;
+  createdAt: string;
+  deliveredAt?: string;
+  dismissedAt?: string;
+  attempts: number;
+  lastAttemptAt?: string;
+  lastError?: string;
+  source: "AGENT_LIFE" | "HOME_STATE";
+}
+
 export interface OurHomeData {
-  schemaVersion: 1;
+  schemaVersion: 2;
   diaries: DiaryEntry[];
   relationshipEvents: RelationshipEvent[];
   actions: ActionItem[];
   activities: AgentActivity[];
   proactiveMessages: ProactiveMessage[];
   homeState: HomeState;
+  observations: LifeObservation[];
+  routines: RoutineWindow[];
+  heartbeats: HeartbeatRecord[];
+  proactiveQueue: ProactiveCandidate[];
 }
 
 export interface DataStatus {
