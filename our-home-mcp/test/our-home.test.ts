@@ -1,3 +1,4 @@
+import { createServer } from "node:http";
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -7,7 +8,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { createOurHomeServer } from "../src/server.js";
 import { JsonStore } from "../src/store.js";
-import { runProactiveCycle } from "../src/worker.js";
+import { WebhookDecisionEngine, runProactiveCycle } from "../src/worker.js";
 
 async function connectedClient(store: JsonStore) {
   const server = createOurHomeServer(store);
@@ -184,4 +185,51 @@ test("failed proactive delivery remains pending for retry", async () => {
   assert.equal(saved?.status, "pending");
   assert.equal(saved?.attempts, 1);
   assert.equal(saved?.lastError, "channel unavailable");
+});
+
+test("decision webhook receives life context and creates a deduplicated candidate", async () => {
+  const received: Array<{ type: string; context: { observations: unknown[] } }> = [];
+  const httpServer = createServer(async (request, response) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of request) chunks.push(Buffer.from(chunk));
+    received.push(JSON.parse(Buffer.concat(chunks).toString("utf8")) as typeof received[number]);
+    response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({
+      candidates: [{
+        title: "根据观察生成的候选",
+        message: "这是决策适配器生成的候选消息。",
+        reason: "测试 phone observation 上下文",
+        dueAt: "2026-09-01T00:00:00Z",
+        dedupeKey: "decision-test",
+      }],
+    }));
+  });
+  await new Promise<void>((resolve) => httpServer.listen(0, "127.0.0.1", resolve));
+  const address = httpServer.address();
+  const port = typeof address === "object" && address ? address.port : 0;
+
+  const directory = await mkdtemp(join(tmpdir(), "our-home-mcp-"));
+  const store = await JsonStore.open(join(directory, "our-home.json"), false);
+  await store.recordObservation({
+    kind: "screen_app",
+    label: "当前前台应用",
+    value: "示例应用",
+    observedAt: "2026-09-01T00:00:00Z",
+    source: "phone",
+    confidence: "observed",
+  });
+  const receivedMessages: string[] = [];
+  const result = await runProactiveCycle(
+    store,
+    { deliver: async (candidate) => receivedMessages.push(candidate.message) },
+    new Date("2026-09-01T00:01:00Z"),
+    new WebhookDecisionEngine(`http://127.0.0.1:${port}/decide`),
+  );
+
+  assert.equal(received[0]?.type, "our_home.life_context");
+  assert.equal(received[0]?.context.observations.length, 1);
+  assert.equal(result.deliveredCount, 1);
+  assert.deepEqual(receivedMessages, ["这是决策适配器生成的候选消息。"]);
+  assert.equal(store.snapshot().proactiveQueue.length, 1);
+
+  httpServer.close();
 });
