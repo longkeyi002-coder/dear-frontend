@@ -1,0 +1,2 @@
+import orb from '../assets/orb_01.png'; import ring from '../assets/orb_01_ring.png';
+export function Splash({onEnter}:{onEnter:()=>void}) { return <section className="splash"><div className="stars">✦　·　✧　　·　✦　　·　✧</div><div className="orb-wrap"><img className="orb-ring" src={ring}/><img className="orb" src={orb}/><div className="orb-glow"/></div><div className="brand">DEAR<span>♡</span></div><p>你的 AI 生活魔法箱</p><button className="primary enter" onClick={onEnter}>进入 DEAR <span>→</span></button><small>V1 · 离线假数据体验</small></section>; }

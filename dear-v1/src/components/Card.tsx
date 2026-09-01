@@ -1,0 +1,2 @@
+import type { FeatureCard } from '../types/dear';
+export function Card({card,onOpen,small=false}:{card:FeatureCard;onOpen:(id:FeatureCard)=>void;small?:boolean}) { return <button className={`magic-card ${card.category} ${small?'small':''}`} onClick={()=>onOpen(card)}><span className="card-corner">✦</span><span className="card-emoji">{card.emoji}</span><span className="card-name">{card.name}</span><span className="card-corner bottom">✦</span></button>; }
