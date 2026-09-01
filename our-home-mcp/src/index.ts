@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { z } from "zod";
 import { createOurHomeServer } from "./server.js";
 import { JsonStore, parseBoolean } from "./store.js";
 
@@ -8,6 +9,28 @@ const transportMode = process.env.OUR_HOME_MCP_TRANSPORT ?? "stdio";
 const dataFile = process.env.OUR_HOME_DATA_FILE ?? "./data/our-home.json";
 const seed = parseBoolean(process.env.OUR_HOME_SEED, true);
 const store = await JsonStore.open(dataFile, seed);
+
+const phoneObservationSchema = z.object({
+  kind: z.enum(["manual_status", "device_presence", "screen_app", "calendar", "weather", "note"]),
+  label: z.string().trim().min(1).max(200),
+  value: z.string().trim().max(2_000).optional(),
+  observedAt: z.string().datetime({ offset: true }).optional(),
+  expiresAt: z.string().datetime({ offset: true }).optional(),
+  deviceId: z.string().trim().min(1).max(200).optional(),
+  metadata: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
+});
+
+const phoneObservationEnvelopeSchema = z.union([
+  phoneObservationSchema,
+  z.object({ observations: z.array(phoneObservationSchema).min(1).max(50) }),
+]);
+
+const phoneHeartbeatSchema = z.object({
+  deviceId: z.string().trim().min(1).max(200),
+  status: z.enum(["online", "screen_on", "screen_off", "idle"]).default("online"),
+  batteryPercent: z.number().min(0).max(100).optional(),
+  observedAt: z.string().datetime({ offset: true }).optional(),
+});
 
 if (transportMode === "stdio") {
   const server = createOurHomeServer(store);
@@ -43,8 +66,18 @@ async function startHttpServer(): Promise<void> {
 
     if (request.method === "GET" && request.url === "/healthz") {
       response.writeHead(200, { "content-type": "application/json" }).end(
-        JSON.stringify({ ok: true, service: "our-home", schemaVersion: 1 }),
+        JSON.stringify({ ok: true, service: "our-home", schemaVersion: 2 }),
       );
+      return;
+    }
+
+    if (request.url === "/v1/observations" && request.method === "POST") {
+      await handlePhoneObservations(request, response);
+      return;
+    }
+
+    if (request.url === "/v1/phone/heartbeat" && request.method === "POST") {
+      await handlePhoneHeartbeat(request, response);
       return;
     }
 
@@ -59,7 +92,7 @@ async function startHttpServer(): Promise<void> {
     }
 
     try {
-      const body = await readJsonBody(request);
+      const body = await readJsonBody(request, 1_000_000);
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: undefined,
         enableJsonResponse: true,
@@ -83,10 +116,88 @@ async function startHttpServer(): Promise<void> {
   });
 }
 
-async function readJsonBody(request: import("node:http").IncomingMessage): Promise<unknown> {
+async function handlePhoneObservations(
+  request: import("node:http").IncomingMessage,
+  response: import("node:http").ServerResponse,
+): Promise<void> {
+  const ingestToken = process.env.OUR_HOME_INGEST_TOKEN;
+  if (!ingestToken) {
+    response.writeHead(503, { "content-type": "application/json" }).end(JSON.stringify({ error: "Phone ingestion is not configured" }));
+    return;
+  }
+  if (request.headers.authorization !== `Bearer ${ingestToken}`) {
+    response.writeHead(401, { "content-type": "application/json", "www-authenticate": "Bearer" }).end(JSON.stringify({ error: "Unauthorized" }));
+    return;
+  }
+  try {
+    const parsed = phoneObservationEnvelopeSchema.safeParse(await readJsonBody(request, 256_000));
+    if (!parsed.success) {
+      response.writeHead(400, { "content-type": "application/json" }).end(JSON.stringify({ error: parsed.error.issues }));
+      return;
+    }
+    const items = "observations" in parsed.data ? parsed.data.observations : [parsed.data];
+    const observations = [];
+    for (const item of items) {
+      observations.push(await store.recordObservation({
+        ...item,
+        observedAt: item.observedAt ?? new Date().toISOString(),
+        source: "phone",
+        confidence: "observed",
+      }));
+    }
+    response.writeHead(201, { "content-type": "application/json" }).end(JSON.stringify({ observations, dataSource: "phone-ingest" }));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Phone observation failed";
+    response.writeHead(400, { "content-type": "application/json" }).end(JSON.stringify({ error: message }));
+  }
+}
+
+async function handlePhoneHeartbeat(
+  request: import("node:http").IncomingMessage,
+  response: import("node:http").ServerResponse,
+): Promise<void> {
+  const ingestToken = process.env.OUR_HOME_INGEST_TOKEN;
+  if (!ingestToken) {
+    response.writeHead(503, { "content-type": "application/json" }).end(JSON.stringify({ error: "Phone ingestion is not configured" }));
+    return;
+  }
+  if (request.headers.authorization !== `Bearer ${ingestToken}`) {
+    response.writeHead(401, { "content-type": "application/json", "www-authenticate": "Bearer" }).end(JSON.stringify({ error: "Unauthorized" }));
+    return;
+  }
+  try {
+    const parsed = phoneHeartbeatSchema.safeParse(await readJsonBody(request, 32_000));
+    if (!parsed.success) {
+      response.writeHead(400, { "content-type": "application/json" }).end(JSON.stringify({ error: parsed.error.issues }));
+      return;
+    }
+    const observation = await store.recordObservation({
+      kind: "device_presence",
+      label: `手机 ${parsed.data.status}`,
+      value: parsed.data.status,
+      observedAt: parsed.data.observedAt ?? new Date().toISOString(),
+      source: "phone",
+      confidence: "observed",
+      deviceId: parsed.data.deviceId,
+      metadata: parsed.data.batteryPercent === undefined ? undefined : { batteryPercent: parsed.data.batteryPercent },
+    });
+    response.writeHead(201, { "content-type": "application/json" }).end(JSON.stringify({ observation, dataSource: "phone-ingest" }));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Phone heartbeat failed";
+    response.writeHead(400, { "content-type": "application/json" }).end(JSON.stringify({ error: message }));
+  }
+}
+
+async function readJsonBody(request: import("node:http").IncomingMessage, maxBytes: number): Promise<unknown> {
   if (request.method === "GET" || request.method === "DELETE") return undefined;
   const chunks: Buffer[] = [];
-  for await (const chunk of request) chunks.push(Buffer.from(chunk));
+  let byteLength = 0;
+  for await (const chunk of request) {
+    const buffer = Buffer.from(chunk);
+    byteLength += buffer.byteLength;
+    if (byteLength > maxBytes) throw new Error(`Request body exceeds ${maxBytes} bytes`);
+    chunks.push(buffer);
+  }
   if (chunks.length === 0) return undefined;
   const raw = Buffer.concat(chunks).toString("utf8");
   return JSON.parse(raw);
