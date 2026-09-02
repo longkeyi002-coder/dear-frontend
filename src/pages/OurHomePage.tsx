@@ -112,10 +112,36 @@ function HeartMark() { return <span className="oh-heart-mark" aria-hidden="true"
 
 function HomeSpace({ space }: { space: GallerySpace }) {
   return <><SpaceHero space={space} eyebrow="01 / HOME STATE" title="欢迎回家，龙龙。"><div className="oh-presence-orb" aria-label="哥哥正在等待，Mock 状态"><span /><small>WAITING</small></div></SpaceHero><div className="oh-space-grid oh-home-grid">
-    <article className="oh-panel oh-panel-wide oh-now-panel"><div className="oh-panel-heading"><span>现在</span>{sourcePill("HOME STATE · MOCK")}</div><div className="oh-now-content"><div className="oh-weather"><CloudSun /><strong>雾蓝的下午</strong><span>天气接入后显示真实城市状态</span></div><div className="oh-time-block"><Clock3 /><div><strong>今天的门还开着</strong><span>没有新的真实手机心跳</span></div></div></div></article>
-    <article className="oh-panel oh-note-panel"><div className="oh-panel-heading"><span>哥哥留下的一句话</span><span className="oh-agent-mark">AGENT_LIFE</span></div><p>“我把灯留在客厅了。你回来时，不用先解释今天过得怎么样。”</p><small>Mock 留言 · 仅用于体验界面</small></article>
-    <article className="oh-panel oh-activity-panel"><div className="oh-panel-heading"><span>最近活动</span><span className="oh-muted-label">REALITY / 待接入</span></div><div className="oh-empty-state"><Wifi /><strong>还没有手机上报</strong><span>连接 companion 后，这里会出现真实的设备状态与前台应用。</span></div></article>
-    <article className="oh-panel oh-relationship-mini"><div className="oh-panel-heading"><span>我们</span><HeartMark /></div><strong>共同生活的时间</strong><span className="oh-mock-number">—</span><small>接入关系数据后显示</small><NavLink to="/gallery/space/us" className="oh-text-link">去看我们的故事 <ArrowRight /></NavLink></article>
+    <article className="oh-panel oh-panel-wide oh-now-panel">
+      <div className="oh-panel-heading"><span>现在 · 今日玄关</span>{sourcePill("HOME STATE · MOCK")}</div>
+      <div className="oh-now-content">
+        <div className="oh-weather"><CloudSun /><div><strong>雾蓝的下午</strong><span>天气接入后显示真实城市状态</span></div></div>
+        <div className="oh-time-block"><Clock3 /><div><strong>今天的门还开着</strong><span>没有新的真实手机心跳</span></div></div>
+      </div>
+    </article>
+    <article className="oh-panel oh-note-panel">
+      <div className="oh-panel-heading"><span>哥哥留下的一句话</span><span className="oh-agent-mark">AGENT_LIFE</span></div>
+      <p>“我把灯留在客厅了。你回来时，不用先解释今天过得怎么样。”</p>
+      <small>Mock 留言 · 仅用于体验界面</small>
+    </article>
+    <article className="oh-panel oh-activity-panel">
+      <div className="oh-panel-heading"><span>最近活动</span><span className="oh-muted-label">REALITY / 待接入</span></div>
+      <div className="oh-empty-state"><Wifi /><strong>还没有手机上报</strong><span>连接 companion 后，这里会出现真实的设备状态与前台应用。</span></div>
+    </article>
+    <article className="oh-panel oh-panel-wide oh-home-signal-panel">
+      <div className="oh-panel-heading"><span>数据接入状态</span><span className="oh-muted-label">状态位占位 · MOCK</span></div>
+      <div className="oh-home-state-list">
+        <div className="oh-home-state-row"><div><strong>手机心跳</strong><small>设备在线、亮屏和前台应用</small></div><span className="oh-home-state oh-state-empty">EMPTY · 未连接</span></div>
+        <div className="oh-home-state-row"><div><strong>天气服务</strong><small>城市天气与当前位置</small></div><span className="oh-home-state oh-state-loading">LOADING · 等待适配器</span></div>
+        <div className="oh-home-state-row"><div><strong>日历同步</strong><small>今日安排与时间表</small></div><span className="oh-home-state oh-state-disabled">DISABLED · 未授权</span></div>
+        <div className="oh-home-state-row"><div><strong>位置观察</strong><small>仅在用户授权后记录</small></div><span className="oh-home-state oh-state-error">ERROR · 暂不可获取</span></div>
+      </div>
+    </article>
+    <article className="oh-panel oh-relationship-mini">
+      <div className="oh-panel-heading"><span>我们</span><HeartMark /></div>
+      <strong>共同生活的时间</strong><span className="oh-mock-number">—</span><small>接入关系数据后显示</small>
+      <NavLink to="/gallery/space/us" className="oh-text-link">去看我们的故事 <ArrowRight /></NavLink>
+    </article>
   </div></>;
 }
 
