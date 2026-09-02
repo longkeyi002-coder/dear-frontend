@@ -379,3 +379,21 @@
   .oh-book-right .oh-directory-row { grid-template-columns: 30px 38px 1fr 16px; }
   .oh-book-right .oh-directory-row-copy small { display: none; }
 }
+
+
+/* Home / Sleep Lilies Low-Fi V0.1 */
+.oh-home-signal-panel{min-height:0}
+.oh-home-state-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin-top:16px}
+.oh-home-state-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:70px;padding:13px 0;border-bottom:1px solid var(--oh-line)}
+.oh-home-state-row:nth-last-child(-n+2){border-bottom:0}
+.oh-home-state-row strong,.oh-home-state-row small{display:block}
+.oh-home-state-row strong{color:var(--oh-ink);font-size:13px;font-weight:600}
+.oh-home-state-row small{margin-top:5px;color:var(--oh-muted);font-size:11px;line-height:1.45}
+.oh-home-state{flex:0 0 auto;font:10px "DM Mono",monospace;letter-spacing:.02em}
+.oh-state-empty{color:#a78369}.oh-state-loading{color:#8d8b67}.oh-state-disabled{color:#9aa29e}.oh-state-error{color:#ad6251}
+@media (max-width:640px){
+  .oh-home-state-list{grid-template-columns:1fr}
+  .oh-home-state-row:nth-last-child(-n+2){border-bottom:1px solid var(--oh-line)}
+  .oh-home-state-row:last-child{border-bottom:0}
+  .oh-home-state{font-size:9px}
+}
