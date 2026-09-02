@@ -229,14 +229,4 @@ function gallery(){return `<div class="page oh-wall-v03"><div class="main">${hea
     function render(){const hash=location.hash.slice(1)||'gallery';const [kind,id]=hash.split('/');document.getElementById('app').innerHTML=kind==='directory'?directory():kind==='space'?space(id):gallery()}addEventListener('hashchange',render);render();
   </script>
 </body>
-</html>    function gallery(){return `<div class="page oh-wall-v03"><div class="main">${header()}<section class="gallery-room"><div class="room-catalogue"><a href="#directory">VIEW CATALOGUE <span>/ DIRECTORY</span></a></div><section class="wall">${frame(spaces[0],true)}${frame(spaces[1])}${frame(spaces[2])}${frame(spaces[3])}${frame(spaces[4])}</section></section></div><div class="footer">MONET GALLERY · OUR HOME / DESKTOP EXHIBITION · ORIGINAL ART</div></div>`}
-    function directory(){return `<div class="page oh-directory-v02"><div class="main">${header('directory')}<section class="directory-list">${spaces.map(s=>`<a class="row" href="#space/${s.id}"><span class="num">${s.n}</span><span class="icon" style="--accent:${s.a}">○</span><span class="rowcopy"><strong>${s.title}</strong><small>${s.en} · ${s.sub}</small></span><b>→</b></a>`).join('')}</section></div></div>`}
-    function space(id){const s=spaces.find(x=>x.id===id);if(!s)return gallery();let content={home:['欢迎回家，龙龙。','这里会放时间、手机状态、天气、留言和最近活动。','还没有手机上报。连接 companion 后，这里会出现真实设备状态。'],chat:['日出以后，继续聊天。','Mock 聊天空间：主动留言会和普通对话放在同一条时间线。','哥哥：龙龙，欢迎回来。今天的生活系统还在用 Mock 数据，不过我已经把客厅留给你了。'],us:['我们的故事，还在继续。','关系时间线、日记、纪念日与共同确认的事件。','这里暂时没有真实关系事件，等待 Our Home 数据接入。'],goals:['想做的事，先放在这里。','把目标和行动放在眼前，不制造压力。','☐ 把手机 Companion 连上\n☑ 做出独立 Our Home MCP\n☐ 继续更新生活系统 UI'],usage:['看清楚，才知道怎么继续。','模型、Token、费用和工具调用的资源空间。','总 Token（示例）：24.8k\n工具调用（示例）：18\n费用：暂不可获取']}[id];return `<div class="page"><div class="main">${header()}<div class="space-top"><button class="back" onclick="location.hash='gallery'">← 返回画廊</button></div><main class="space-main"><div class="kicker">${s.n} / ${s.en.toUpperCase()} · MOCK</div><h1>${content[0]}</h1><p>${s.desc}</p><div class="panel"><h2>${content[1]}</h2><p class="empty">${content[2].replace(/\n/g,'<br>')}</p>${id==='chat'?'<div class="composer"><input id="draft" placeholder="说点什么，或输入 / 查看命令" /><button onclick="send()">发送</button></div>':''}</div></main></div></div>`}
-    function send(){const input=document.getElementById('draft');if(input&&input.value.trim()){input.value='';alert('Mock 消息已加入体验状态。')}}
-    function render(){const hash=location.hash.slice(1)||'gallery';const [kind,id]=hash.split('/');document.getElementById('app').innerHTML=kind==='directory'?directory():kind==='space'?space(id):gallery()}addEventListener('hashchange',render);render();
-  </script>
-</body>
-</html>
-</script>
-</body>
 </html>
