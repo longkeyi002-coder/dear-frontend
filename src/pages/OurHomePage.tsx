@@ -62,15 +62,16 @@ function SpaceLabel({ space }: { space: GallerySpace }) {
   return <div className="oh-space-label"><span className="oh-space-number">{space.number}</span><span className="oh-space-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span><strong>{space.title}</strong><small>{space.subtitle}</small></span></div>;
 }
 
-function AbstractPainting({ space, large = false }: { space: GallerySpace; large?: boolean }) {
+function OriginalPainting({ space, large = false }: { space: GallerySpace; large?: boolean }) {
   return <div className={`oh-painting oh-painting-${space.id} ${large ? "oh-painting-large" : ""}`} style={{ "--painting-accent": space.accent, "--painting-soft": space.softAccent } as CSSProperties}>
-    <span className="oh-painting-sun" /><span className="oh-painting-horizon" /><span className="oh-painting-leaf oh-painting-leaf-one" /><span className="oh-painting-leaf oh-painting-leaf-two" /><span className="oh-painting-brush oh-painting-brush-one" /><span className="oh-painting-brush oh-painting-brush-two" /><span className="oh-painting-stamp">{space.number}</span>
+    <img src={space.paintingImage} alt={space.paintingAlt} loading={large ? "eager" : "lazy"} decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: space.paintingPosition }} />
+    <span className="oh-painting-stamp">{space.paintingCredit}</span>
   </div>;
 }
 
 function GalleryFrame({ space, featured = false }: { space: GallerySpace; featured?: boolean }) {
   return <NavLink to={`/gallery/space/${space.id}`} className={`oh-gallery-frame oh-gallery-frame-${space.id} ${featured ? "oh-gallery-frame-featured" : ""}`} aria-label={`进入 ${space.englishTitle}：${space.subtitle}`} style={{ "--painting-accent": space.accent } as CSSProperties}>
-    <div className="oh-frame-inner"><AbstractPainting space={space} large={featured} /></div><div className="oh-frame-caption"><SpaceLabel space={space} /><ArrowRight aria-hidden="true" /></div>
+    <div className="oh-frame-inner"><OriginalPainting space={space} large={featured} /></div><div className="oh-frame-caption"><SpaceLabel space={space} /><ArrowRight aria-hidden="true" /></div>
   </NavLink>;
 }
 
@@ -80,17 +81,17 @@ function GalleryWall() {
   return <div className="oh-page oh-wall-page">
     <GalleryHeader mode="wall" />
     <main className="oh-wall-main">
-      <section className="oh-wall-intro"><div><p className="oh-kicker">EAST WING / 01—05</p><h1>我们的家，<em>今天</em>也开着门。</h1><p className="oh-intro-copy">五个可以停留的生活空间。画廊负责观看，目录负责抵达。</p></div><div className="oh-intro-note"><Leaf aria-hidden="true" /><span>先从一幅画开始</span><small>所有内容目前来自 Mock Adapter</small></div></section>
+      <section className="oh-wall-intro"><div><p className="oh-kicker">EAST WING / 01—05</p><h1>我们的家，<em>今天</em>也开着门。</h1><p className="oh-intro-copy">五个可以停留的生活空间。画廊负责观看，目录负责抵达。</p></div><div className="oh-intro-note"><Leaf aria-hidden="true" /><span>先从一幅画开始</span><small>生活数据仍来自 Mock Adapter</small></div></section>
       <section className="oh-gallery-wall" aria-label="东馆画廊墙"><GalleryFrame space={home} featured /><div className="oh-gallery-stack">{rest.slice(0, 2).map((space) => <GalleryFrame key={space.id} space={space} />)}</div><div className="oh-gallery-stack oh-gallery-stack-offset">{rest.slice(2).map((space) => <GalleryFrame key={space.id} space={space} />)}<NavLink to="/directory" className="oh-directory-card"><BookOpen aria-hidden="true" /><span><strong>打开目录</strong><small>按功能快速进入</small></span><ArrowRight aria-hidden="true" /></NavLink></div></section>
     </main>
-    <footer className="oh-wall-footer"><span>MONET GALLERY · OUR HOME</span><span>桌面版画廊墙 <span className="oh-footer-divider">/</span> 低保真体验</span></footer><AmbientBackdrop />
+    <footer className="oh-wall-footer"><span>MONET GALLERY · OUR HOME</span><span>Desktop Gallery V0.3 <span className="oh-footer-divider">/</span> 原画展示</span></footer><AmbientBackdrop />
   </div>;
 }
 
 function DirectoryPage() {
   return <div className="oh-page oh-directory-page"><GalleryHeader mode="directory" /><main className="oh-directory-main">
     <section className="oh-open-book" aria-label="东馆画册目录">
-      <div className="oh-book-page oh-book-left"><div className="oh-book-page-inner"><p className="oh-kicker">EAST WING / 01—05</p><h1>画册<br /><em>目录</em></h1><p className="oh-book-intro">这里不是一张功能列表。每一页，都是一个可以停留的地方。</p><div className="oh-book-meta"><span>MONET GALLERY</span><span>OUR HOME · V0.2</span></div><div className="oh-book-page-number">01</div></div></div>
+      <div className="oh-book-page oh-book-left"><div className="oh-book-page-inner"><p className="oh-kicker">EAST WING / 01—05</p><h1>画册<br /><em>目录</em></h1><p className="oh-book-intro">这里不是一张功能列表。每一页，都是一个可以停留的地方。</p><div className="oh-book-meta"><span>MONET GALLERY</span><span>OUR HOME · V0.3</span></div><div className="oh-book-page-number">01</div></div></div>
       <div className="oh-book-spine" aria-hidden="true"><span>DEAR</span></div>
       <div className="oh-book-page oh-book-right"><div className="oh-book-page-inner"><div className="oh-book-right-heading"><div><span className="oh-kicker">SPACES</span><h2>东馆的五个房间</h2></div>{sourcePill()}</div><div className="oh-directory-list" aria-label="生活空间目录">{EAST_WING_SPACES.map((space) => { const Icon = space.icon; return <NavLink key={space.id} to={`/gallery/space/${space.id}`} className={`oh-directory-row oh-directory-row-${space.id}`}><span className="oh-directory-row-number">{space.number}</span><span className="oh-directory-row-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span className="oh-directory-row-copy"><strong>{space.title}</strong><span>{space.englishTitle} · {space.subtitle}</span><small>{space.description}</small></span><ArrowRight aria-hidden="true" /></NavLink>; })}</div><div className="oh-book-page-number">02</div></div></div>
     </section>
