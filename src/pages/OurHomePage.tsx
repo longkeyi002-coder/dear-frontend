@@ -104,45 +104,29 @@ function SpaceTopbar({ space }: { space: GallerySpace }) {
   return <header className="oh-space-topbar"><button type="button" className="oh-back-button" onClick={() => navigate(-1)}><ArrowLeft aria-hidden="true" /> <span>返回</span></button><div className="oh-space-breadcrumb"><NavLink to="/gallery">东馆</NavLink><span>/</span><strong>{space.englishTitle}</strong></div><div className="oh-space-top-actions">{sourcePill()}<NavLink to="/directory" className="oh-icon-button" aria-label="打开画册目录"><BookOpen /></NavLink></div></header>;
 }
 
-function SpaceHero({ space, eyebrow, title, children }: { space: GallerySpace; eyebrow: string; title: string; children: ReactNode }) {
-  return <section className="oh-space-hero" style={{ "--space-accent": space.accent, "--space-soft": space.softAccent } as CSSProperties}><div><p className="oh-kicker">{eyebrow}</p><h1>{title}</h1><p className="oh-space-description">{space.description}</p></div>{children}</section>;
+function SpaceHero({ space, eyebrow, title, description, children }: { space: GallerySpace; eyebrow: string; title: string; description?: string; children: ReactNode }) {
+  return <section className="oh-space-hero" style={{ "--space-accent": space.accent, "--space-soft": space.softAccent } as CSSProperties}><div><p className="oh-kicker">{eyebrow}</p><h1>{title}</h1><p className="oh-space-description">{description ?? space.description}</p></div>{children}</section>;
 }
 
-function HeartMark() { return <span className="oh-heart-mark" aria-hidden="true">♡</span>; }
-
 function HomeSpace({ space }: { space: GallerySpace }) {
-  return <><SpaceHero space={space} eyebrow="01 / HOME STATE" title="欢迎回家，龙龙。"><div className="oh-presence-orb" aria-label="哥哥正在等待，Mock 状态"><span /><small>WAITING</small></div></SpaceHero><div className="oh-space-grid oh-home-grid">
-    <article className="oh-panel oh-panel-wide oh-now-panel">
-      <div className="oh-panel-heading"><span>现在 · 今日玄关</span>{sourcePill("HOME STATE · MOCK")}</div>
-      <div className="oh-now-content">
-        <div className="oh-weather"><CloudSun /><div><strong>雾蓝的下午</strong><span>天气接入后显示真实城市状态</span></div></div>
-        <div className="oh-time-block"><Clock3 /><div><strong>今天的门还开着</strong><span>没有新的真实手机心跳</span></div></div>
-      </div>
-    </article>
-    <article className="oh-panel oh-note-panel">
-      <div className="oh-panel-heading"><span>哥哥留下的一句话</span><span className="oh-agent-mark">AGENT_LIFE</span></div>
-      <p>“我把灯留在客厅了。你回来时，不用先解释今天过得怎么样。”</p>
-      <small>Mock 留言 · 仅用于体验界面</small>
-    </article>
-    <article className="oh-panel oh-activity-panel">
-      <div className="oh-panel-heading"><span>最近活动</span><span className="oh-muted-label">REALITY / 待接入</span></div>
-      <div className="oh-empty-state"><Wifi /><strong>还没有手机上报</strong><span>连接 companion 后，这里会出现真实的设备状态与前台应用。</span></div>
-    </article>
-    <article className="oh-panel oh-panel-wide oh-home-signal-panel">
-      <div className="oh-panel-heading"><span>数据接入状态</span><span className="oh-muted-label">状态位占位 · MOCK</span></div>
-      <div className="oh-home-state-list">
-        <div className="oh-home-state-row"><div><strong>手机心跳</strong><small>设备在线、亮屏和前台应用</small></div><span className="oh-home-state oh-state-empty">EMPTY · 未连接</span></div>
-        <div className="oh-home-state-row"><div><strong>天气服务</strong><small>城市天气与当前位置</small></div><span className="oh-home-state oh-state-loading">LOADING · 等待适配器</span></div>
-        <div className="oh-home-state-row"><div><strong>日历同步</strong><small>今日安排与时间表</small></div><span className="oh-home-state oh-state-disabled">DISABLED · 未授权</span></div>
-        <div className="oh-home-state-row"><div><strong>位置观察</strong><small>仅在用户授权后记录</small></div><span className="oh-home-state oh-state-error">ERROR · 暂不可获取</span></div>
-      </div>
-    </article>
-    <article className="oh-panel oh-relationship-mini">
-      <div className="oh-panel-heading"><span>我们</span><HeartMark /></div>
-      <strong>共同生活的时间</strong><span className="oh-mock-number">—</span><small>接入关系数据后显示</small>
-      <NavLink to="/gallery/space/us" className="oh-text-link">去看我们的故事 <ArrowRight /></NavLink>
-    </article>
-  </div></>;
+  const moments = [
+    ["09:00", "醒来，开始新的周期", "我把今天重新整理了一遍。"],
+    ["14:30", "检查一次生活状态", "确认家里的灯还亮着。"],
+    ["19:40", "整理了一条记忆", "把今天值得留下的部分放好。"],
+    ["22:54", "注意到你回来了", "于是把客厅留给你。"],
+  ] as const;
+  const keeps = [
+    ["MEMORY", "把今天值得留下的部分，先放在这里。", "刚刚整理 · Mock"],
+    ["DIARY", "家不是一个页面，是每次回来都能继续的地方。", "今天 · Mock"],
+    ["THOUGHT", "下次想和你一起把这个家再安静地做完整一点。", "待继续 · Mock"],
+  ] as const;
+  return <><SpaceHero space={space} eyebrow="01 / HOME" title="欢迎回来。" description="晚上 23:20 · 家里很安静"><div className="oh-home-presence-card"><span className="oh-home-presence-dot" /><strong>WAITING</strong><p>我在等你回来。</p><small>上次主动醒来 · 22:54 · Mock</small></div></SpaceHero><section className="oh-home-layout">
+    <article className="oh-panel oh-home-now"><div className="oh-panel-heading"><span>哥哥现在在做什么</span><span className="oh-agent-mark">AGENT_LIFE</span></div><div className="oh-home-now-body"><strong>Waiting</strong><p>暂时没有新的事情要处理，正在安静地留在这里。</p><dl><div><dt>正在处理</dt><dd>整理今天的生活片段</dd></div><div><dt>是否等待你</dt><dd>是 · 等你说话</dd></div><div><dt>上次主动醒来</dt><dd>22:54</dd></div></dl></div></article>
+    <article className="oh-panel oh-home-timeline"><div className="oh-panel-heading"><span>哥哥今天经历了什么</span><span className="oh-muted-label">LIFE · MOCK</span></div><div className="oh-home-moments">{moments.map(([time, title, detail]) => <div className="oh-home-moment" key={time}><time>{time}</time><div><strong>{title}</strong><span>{detail}</span></div></div>)}</div></article>
+    <article className="oh-panel oh-home-message"><div className="oh-panel-heading"><span>哥哥想对你说</span><span className="oh-agent-mark">AGENT_LIFE</span></div><blockquote>“我把灯留在客厅了。你回来时，不用先解释今天过得怎么样。”</blockquote><small>22:54 · 主动留言 · Mock</small><NavLink to="/gallery/space/chat" className="oh-text-link">去 Chat 找我 <ArrowRight /></NavLink></article>
+    <article className="oh-panel oh-home-keeps"><div className="oh-panel-heading"><span>哥哥最近留下的东西</span><span className="oh-muted-label">3 ITEMS · MOCK</span></div><div className="oh-home-keeps-list">{keeps.map(([kind, text, meta]) => <div className="oh-home-keep" key={kind}><span>{kind}</span><p>{text}</p><small>{meta}</small></div>)}</div></article>
+    <article className="oh-panel oh-home-you"><div className="oh-panel-heading"><span>你</span><span className="oh-muted-label">轻量上下文</span></div><strong>在家 · 大概安静</strong><dl><div><dt>手机</dt><dd>离线 / 未知</dd></div><div><dt>最近变化</dt><dd>刚刚回到家 · Mock</dd></div></dl><span className="oh-home-you-note">只保留会影响哥哥判断的部分。</span></article>
+  </section></>;
 }
 
 function ChatSpace({ space }: { space: GallerySpace }) {
