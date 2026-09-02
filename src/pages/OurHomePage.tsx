@@ -63,13 +63,13 @@ function SpaceLabel({ space }: { space: GallerySpace }) {
 }
 
 function AbstractPainting({ space, large = false }: { space: GallerySpace; large?: boolean }) {
-  return <div className={`oh-painting ${large ? "oh-painting-large" : ""}`} style={{ "--painting-accent": space.accent, "--painting-soft": space.softAccent } as CSSProperties}>
+  return <div className={`oh-painting oh-painting-${space.id} ${large ? "oh-painting-large" : ""}`} style={{ "--painting-accent": space.accent, "--painting-soft": space.softAccent } as CSSProperties}>
     <span className="oh-painting-sun" /><span className="oh-painting-horizon" /><span className="oh-painting-leaf oh-painting-leaf-one" /><span className="oh-painting-leaf oh-painting-leaf-two" /><span className="oh-painting-brush oh-painting-brush-one" /><span className="oh-painting-brush oh-painting-brush-two" /><span className="oh-painting-stamp">{space.number}</span>
   </div>;
 }
 
 function GalleryFrame({ space, featured = false }: { space: GallerySpace; featured?: boolean }) {
-  return <NavLink to={`/gallery/space/${space.id}`} className={`oh-gallery-frame ${featured ? "oh-gallery-frame-featured" : ""}`} aria-label={`进入 ${space.englishTitle}：${space.subtitle}`} style={{ "--painting-accent": space.accent } as CSSProperties}>
+  return <NavLink to={`/gallery/space/${space.id}`} className={`oh-gallery-frame oh-gallery-frame-${space.id} ${featured ? "oh-gallery-frame-featured" : ""}`} aria-label={`进入 ${space.englishTitle}：${space.subtitle}`} style={{ "--painting-accent": space.accent } as CSSProperties}>
     <div className="oh-frame-inner"><AbstractPainting space={space} large={featured} /></div><div className="oh-frame-caption"><SpaceLabel space={space} /><ArrowRight aria-hidden="true" /></div>
   </NavLink>;
 }
@@ -89,8 +89,11 @@ function GalleryWall() {
 
 function DirectoryPage() {
   return <div className="oh-page oh-directory-page"><GalleryHeader mode="directory" /><main className="oh-directory-main">
-    <section className="oh-directory-heading"><div><p className="oh-kicker">EAST WING / DIRECTORY</p><h1>画册目录</h1><p>不必经过画廊，直接打开你现在要去的空间。</p></div><div className="oh-directory-index">{sourcePill()}<span>5 个生活空间</span></div></section>
-    <section className="oh-directory-list" aria-label="生活空间目录">{EAST_WING_SPACES.map((space) => { const Icon = space.icon; return <NavLink key={space.id} to={`/gallery/space/${space.id}`} className="oh-directory-row"><span className="oh-directory-row-number">{space.number}</span><span className="oh-directory-row-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span className="oh-directory-row-copy"><strong>{space.title}</strong><span>{space.englishTitle} · {space.subtitle}</span><small>{space.description}</small></span><ArrowRight aria-hidden="true" /></NavLink>; })}</section>
+    <section className="oh-open-book" aria-label="东馆画册目录">
+      <div className="oh-book-page oh-book-left"><div className="oh-book-page-inner"><p className="oh-kicker">EAST WING / 01—05</p><h1>画册<br /><em>目录</em></h1><p className="oh-book-intro">这里不是一张功能列表。每一页，都是一个可以停留的地方。</p><div className="oh-book-meta"><span>MONET GALLERY</span><span>OUR HOME · V0.2</span></div><div className="oh-book-page-number">01</div></div></div>
+      <div className="oh-book-spine" aria-hidden="true"><span>DEAR</span></div>
+      <div className="oh-book-page oh-book-right"><div className="oh-book-page-inner"><div className="oh-book-right-heading"><div><span className="oh-kicker">SPACES</span><h2>东馆的五个房间</h2></div>{sourcePill()}</div><div className="oh-directory-list" aria-label="生活空间目录">{EAST_WING_SPACES.map((space) => { const Icon = space.icon; return <NavLink key={space.id} to={`/gallery/space/${space.id}`} className={`oh-directory-row oh-directory-row-${space.id}`}><span className="oh-directory-row-number">{space.number}</span><span className="oh-directory-row-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span className="oh-directory-row-copy"><strong>{space.title}</strong><span>{space.englishTitle} · {space.subtitle}</span><small>{space.description}</small></span><ArrowRight aria-hidden="true" /></NavLink>; })}</div><div className="oh-book-page-number">02</div></div></div>
+    </section>
     <section className="oh-west-placeholder"><div><p className="oh-kicker">WEST WING</p><h2>系统管理仍在另一侧。</h2><p>Sessions、Models、MCP 等 Hermes 能力暂时保留在原管理界面。</p></div><NavLink to="/sessions" className="oh-text-link">进入西馆 <ExternalLink aria-hidden="true" /></NavLink></section>
   </main><AmbientBackdrop /></div>;
 }
