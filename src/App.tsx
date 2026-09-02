@@ -107,6 +107,7 @@ import { isDashboardEmbeddedChatEnabled } from "@/lib/dashboard-flags";
 import { latchChatActivation } from "@/lib/chat-activation";
 import { api } from "@/lib/api";
 import type { StatusResponse, UpdateCheckResponse } from "@/lib/api";
+import { OurHomeExperience } from "@/pages/OurHomePage";
 
 function RouteFallback({ label = "Loading…" }: { label?: string }) {
   return (
@@ -124,7 +125,7 @@ function RouteFallback({ label = "Loading…" }: { label?: string }) {
 }
 
 function RootRedirect() {
-  return <Navigate to="/sessions" replace />;
+  return <Navigate to="/gallery" replace />;
 }
 
 function UnknownRouteFallback({ pluginsLoading }: { pluginsLoading: boolean }) {
@@ -399,6 +400,7 @@ export default function App() {
   const sidebarStatus = useSidebarStatus();
   const isDocsRoute = pathname === "/docs" || pathname === "/docs/";
   const normalizedPath = pathname.replace(/\/$/, "") || "/";
+  const isOurHomeRoute = normalizedPath === "/" || normalizedPath === "/gallery" || normalizedPath === "/directory" || normalizedPath.startsWith("/gallery/space/");
   const isChatRoute = normalizedPath === "/chat";
   const embeddedChat = isDashboardEmbeddedChatEnabled();
   // Defer mounting the persistent chat host (and its xterm chunk) until the
@@ -508,6 +510,10 @@ export default function App() {
     mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
   }, []);
+
+  if (isOurHomeRoute) {
+    return <OurHomeExperience />;
+  }
 
   return (
     <ProfileProvider>
