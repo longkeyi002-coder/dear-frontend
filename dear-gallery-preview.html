@@ -54,6 +54,151 @@
     @media(max-width:760px){
       .oh-wall-v02 .intro{padding-top:54px}
     }
+
+    /* Desktop Gallery V0.5 — quiet museum room */
+    .oh-wall-v03{
+      color:#3d3931;
+      background:
+        radial-gradient(ellipse at 28% 18%,#f0eadc66 0,#f0eadc00 38%),
+        linear-gradient(180deg,#c8c0b2 0%,#b9b0a1 78%,#332a21 78%,#211b16 100%);
+      position:relative;
+      overflow:hidden;
+    }
+    .oh-wall-v03:after{
+      content:'';
+      position:absolute;
+      left:0;right:0;bottom:0;height:22%;
+      pointer-events:none;
+      background:
+        linear-gradient(176deg,#5a4634 0 2px,#30241b 2px 5px,transparent 5px),
+        repeating-linear-gradient(88deg,#4c3829 0 2px,#2a2019 2px 4px,#604a35 4px 7px);
+      opacity:.84;
+    }
+    .oh-wall-v03 .main,.oh-wall-v03 .footer{position:relative;z-index:1}
+    .oh-wall-v03 header{
+      min-height:54px;
+      border-bottom:1px solid #5d554b38;
+      color:#514b42;
+    }
+    .oh-wall-v03 .status{display:none}
+    .oh-wall-v03 .nav{gap:18px;color:#71695e}
+    .oh-wall-v03 .nav a.active{color:#3d3931;border-bottom-color:#8b6048}
+    .oh-wall-v03 .gallery-room{position:relative;padding-top:18px}
+    .oh-wall-v03 .room-catalogue{
+      height:34px;
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      padding-right:4%;
+      color:#6e665a;
+      font:10px/1.2 monospace;
+      letter-spacing:.16em;
+    }
+    .oh-wall-v03 .room-catalogue a{border-bottom:1px solid #6e665a66;padding-bottom:5px}
+    .oh-wall-v03 .room-catalogue span{color:#928778;letter-spacing:.08em}
+    .oh-wall-v03 .wall{
+      position:relative;
+      display:block;
+      height:920px;
+      margin-top:0;
+      padding:0;
+      border:0;
+      background:
+        radial-gradient(ellipse at 17% 16%,#fff8e933 0,#fff8e900 25%),
+        radial-gradient(#756b5b18 .7px,transparent .8px),
+        linear-gradient(108deg,#cec5b7,#bdb3a4);
+      background-size:100% 100%,5px 5px,100% 100%;
+      box-shadow:inset 0 12px 28px #6b5b4820;
+    }
+    .oh-wall-v03 .wall:before{
+      content:'EAST WING  ·  MONET COLLECTION';
+      top:22px;left:2px;
+      color:#62594d99;
+      font:9px monospace;
+      letter-spacing:.16em;
+    }
+    .oh-wall-v03 .wall:after{display:none}
+    .oh-wall-v03 .gallery-piece{
+      position:absolute;
+      z-index:2;
+    }
+    .oh-wall-v03 .piece-home{left:8%;top:86px;width:360px}
+    .oh-wall-v03 .piece-chat{left:43%;top:18px;width:255px}
+    .oh-wall-v03 .piece-us{left:43%;top:500px;width:250px}
+    .oh-wall-v03 .piece-goals{right:7%;top:124px;width:284px}
+    .oh-wall-v03 .piece-usage{right:8%;top:566px;width:300px}
+    .oh-wall-v03 .frame{
+      display:block;
+      padding:12px;
+      border:8px solid;
+      border-color:#4e3727 #5e422c #3d291e #a37b4f;
+      border-radius:0;
+      background:#6b4c32;
+      outline:1px solid #d3ab72;
+      outline-offset:-4px;
+      box-shadow:
+        inset 0 0 0 2px #b88b57,
+        inset 0 0 0 5px #4a301f,
+        7px 9px 0 #33251b33,
+        0 16px 28px #2e241b35;
+    }
+    .oh-wall-v03 .frame:hover{transform:translateY(-3px) rotate(-.18deg)}
+    .oh-wall-v03 .frame:after{
+      content:'';
+      position:absolute;
+      inset:3px;
+      pointer-events:none;
+      border:1px solid #e0bd8466;
+    }
+    .oh-wall-v03 .inner{
+      padding:9px;
+      border:1px solid #a57d52;
+      background:#e6d2ad;
+      box-shadow:inset 0 0 0 2px #fff1d344,0 1px 0 #302216;
+    }
+    .oh-wall-v03 .painting{min-height:0;background:#aeb9ae}
+    .oh-wall-v03 .painting img{
+      position:static;
+      display:block;
+      width:100%;
+      height:auto;
+      object-fit:contain;
+      filter:saturate(.93) sepia(.06) contrast(1.03);
+    }
+    .oh-wall-v03 .painting:after{opacity:.07}
+    .oh-wall-v03 .art-credit{right:8px;bottom:7px;font-size:7px;background:#211a14b8}
+    .oh-wall-v03 .plaque{
+      display:grid;
+      grid-template-columns:27px 1fr;
+      column-gap:8px;
+      width:calc(100% - 18px);
+      margin:13px 9px 0;
+      padding:8px 10px 9px;
+      border:1px solid #75675366;
+      border-left:3px solid #927253;
+      background:#cfc2adcc;
+      box-shadow:0 3px 8px #3c302522;
+      color:#4a4339;
+    }
+    .oh-wall-v03 .plaque-num{
+      grid-row:span 2;
+      padding-top:1px;
+      color:#8d624a;
+      font:10px monospace;
+    }
+    .oh-wall-v03 .plaque strong{font:600 12px/1.35 system-ui,sans-serif}
+    .oh-wall-v03 .plaque small{margin-top:2px;color:#756d61;font-size:9px}
+    .oh-wall-v03 .footer{margin-top:20px;color:#a99d8c}
+    @media(min-width:761px){
+      .oh-wall-v03 .intro{display:none}
+    }
+    @media(max-width:760px){
+      .oh-wall-v03{background:linear-gradient(180deg,#c8c0b2 0%,#b9b0a1 82%,#332a21 82%,#211b16 100%)}
+      .oh-wall-v03 .wall{height:auto;min-height:0;padding:44px 18px 70px}
+      .oh-wall-v03 .gallery-piece{position:relative;left:auto;right:auto;top:auto!important;width:min(100%,360px);margin:0 auto 40px}
+      .oh-wall-v03 .room-catalogue{justify-content:flex-start;padding-left:4px}
+      .oh-wall-v03 .oh-wall-v03 .wall:before{left:20px}
+    }
   </style>
 </head>
 <body>
@@ -69,8 +214,21 @@
     const pill='<span class="pill">MOCK ADAPTER</span>';
     function header(tab='gallery'){return `<header><a class="brand" href="#gallery"><i>◎</i><span>DEAR<small>MONET GALLERY</small></span></a><nav class="nav"><a class="${tab==='gallery'?'active':''}" href="#gallery">画廊</a><a class="${tab==='directory'?'active':''}" href="#directory">目录</a><a href="https://github.com/longkeyi002-coder/dear-frontend">GitHub ↗</a></nav><div class="status">● 本地生活系统 ${pill}</div></header>`}
     function painting(s,large=false){return `<div class="painting ${large?'large':''}"><img src="${s.img}" alt="${s.alt}" style="object-position:${s.pos}" /><span class="art-credit">CLAUDE MONET · PUBLIC DOMAIN</span></div>`}
-    function frame(s,large=false){return `<a class="frame" href="#space/${s.id}"><div class="inner">${painting(s,large)}</div><div class="caption"><div class="label"><span class="num">${s.n}</span><span class="icon" style="--accent:${s.a}">○</span><span><strong>${s.title}</strong><small>${s.sub}</small></span></div><b>→</b></div></a>`}
-    function gallery(){return `<div class="page oh-wall-v02"><div class="main">${header()}<section class="intro"><div><div class="kicker">EAST WING / 01—05</div><h1>我们的家，<em>今天</em>也开着门。</h1><p>五个可以停留的生活空间。画廊负责观看，目录负责抵达。</p></div><div class="note">先从一幅画开始<small>生活数据仍来自 Mock Adapter</small></div></section><section class="wall">${frame(spaces[0],true)}<div class="stack">${frame(spaces[1])}${frame(spaces[2])}</div><div class="stack offset">${frame(spaces[3])}${frame(spaces[4])}<a class="directory" href="#directory">打开目录 <small>按功能快速进入</small><b>→</b></a></div></section></div><div class="footer">MONET GALLERY · OUR HOME / DESKTOP GALLERY V0.3 · ORIGINAL ART</div></div>`}
+    function frame(s,large=false){
+      return `<div class="gallery-piece piece-${s.id} ${large?"is-large":""}">
+        <a class="frame" href="#space/${s.id}" aria-label="${s.title} ${s.en}">
+          <div class="inner">${painting(s,large)}</div>
+        </a>
+        <div class="plaque"><span class="plaque-num">${s.n}</span><strong>${s.title}</strong><small>${s.en} · ${s.sub}</small></div>
+      </div>`;
+    }
+    function directory(){return `<div class="page oh-directory-v02"><div class="main">${header('directory')}<section class="directory-list">${spaces.map(s=>`<a class="row" href="#space/${s.id}"><span class="num">${s.n}</span><span class="icon" style="--accent:${s.a}">○</span><span class="rowcopy"><strong>${s.title}</strong><small>${s.en} · ${s.sub}</small></span><b>→</b></a>`).join('')}</section></div></div>`}
+    function space(id){const s=spaces.find(x=>x.id===id);if(!s)return gallery();let content={home:['欢迎回家，龙龙。','这里会放时间、手机状态、天气、留言和最近活动。','还没有手机上报。连接 companion 后，这里会出现真实设备状态。'],chat:['日出以后，继续聊天。','Mock 聊天空间：主动留言会和普通对话放在同一条时间线。','哥哥：龙龙，欢迎回来。今天的生活系统还在用 Mock 数据，不过我已经把客厅留给你了。'],us:['我们的故事，还在继续。','关系时间线、日记、纪念日与共同确认的事件。','这里暂时没有真实关系事件，等待 Our Home 数据接入。'],goals:['想做的事，先放在这里。','把目标和行动放在眼前，不制造压力。','☐ 把手机 Companion 连上\n☑ 做出独立 Our Home MCP\n☐ 继续更新生活系统 UI'],usage:['看清楚，才知道怎么继续。','模型、Token、费用和工具调用的资源空间。','总 Token（示例）：24.8k\n工具调用（示例）：18\n费用：暂不可获取']}[id];return `<div class="page"><div class="main">${header()}<div class="space-top"><button class="back" onclick="location.hash='gallery'">← 返回画廊</button></div><main class="space-main"><div class="kicker">${s.n} / ${s.en.toUpperCase()} · MOCK</div><h1>${content[0]}</h1><p>${s.desc}</p><div class="panel"><h2>${content[1]}</h2><p class="empty">${content[2].replace(/\n/g,'<br>')}</p>${id==='chat'?'<div class="composer"><input id="draft" placeholder="说点什么，或输入 / 查看命令" /><button onclick="send()">发送</button></div>':''}</div></main></div></div>`}
+    function send(){const input=document.getElementById('draft');if(input&&input.value.trim()){input.value='';alert('Mock 消息已加入体验状态。')}}
+    function render(){const hash=location.hash.slice(1)||'gallery';const [kind,id]=hash.split('/');document.getElementById('app').innerHTML=kind==='directory'?directory():kind==='space'?space(id):gallery()}addEventListener('hashchange',render);render();
+  </script>
+</body>
+</html>    function gallery(){return `<div class="page oh-wall-v03"><div class="main">${header()}<section class="gallery-room"><div class="room-catalogue"><a href="#directory">VIEW CATALOGUE <span>/ DIRECTORY</span></a></div><section class="wall">${frame(spaces[0],true)}${frame(spaces[1])}${frame(spaces[2])}${frame(spaces[3])}${frame(spaces[4])}</section></section></div><div class="footer">MONET GALLERY · OUR HOME / DESKTOP EXHIBITION · ORIGINAL ART</div></div>`}
     function directory(){return `<div class="page oh-directory-v02"><div class="main">${header('directory')}<section class="directory-list">${spaces.map(s=>`<a class="row" href="#space/${s.id}"><span class="num">${s.n}</span><span class="icon" style="--accent:${s.a}">○</span><span class="rowcopy"><strong>${s.title}</strong><small>${s.en} · ${s.sub}</small></span><b>→</b></a>`).join('')}</section></div></div>`}
     function space(id){const s=spaces.find(x=>x.id===id);if(!s)return gallery();let content={home:['欢迎回家，龙龙。','这里会放时间、手机状态、天气、留言和最近活动。','还没有手机上报。连接 companion 后，这里会出现真实设备状态。'],chat:['日出以后，继续聊天。','Mock 聊天空间：主动留言会和普通对话放在同一条时间线。','哥哥：龙龙，欢迎回来。今天的生活系统还在用 Mock 数据，不过我已经把客厅留给你了。'],us:['我们的故事，还在继续。','关系时间线、日记、纪念日与共同确认的事件。','这里暂时没有真实关系事件，等待 Our Home 数据接入。'],goals:['想做的事，先放在这里。','把目标和行动放在眼前，不制造压力。','☐ 把手机 Companion 连上\n☑ 做出独立 Our Home MCP\n☐ 继续更新生活系统 UI'],usage:['看清楚，才知道怎么继续。','模型、Token、费用和工具调用的资源空间。','总 Token（示例）：24.8k\n工具调用（示例）：18\n费用：暂不可获取']}[id];return `<div class="page"><div class="main">${header()}<div class="space-top"><button class="back" onclick="location.hash='gallery'">← 返回画廊</button></div><main class="space-main"><div class="kicker">${s.n} / ${s.en.toUpperCase()} · MOCK</div><h1>${content[0]}</h1><p>${s.desc}</p><div class="panel"><h2>${content[1]}</h2><p class="empty">${content[2].replace(/\n/g,'<br>')}</p>${id==='chat'?'<div class="composer"><input id="draft" placeholder="说点什么，或输入 / 查看命令" /><button onclick="send()">发送</button></div>':''}</div></main></div></div>`}
     function send(){const input=document.getElementById('draft');if(input&&input.value.trim()){input.value='';alert('Mock 消息已加入体验状态。')}}
