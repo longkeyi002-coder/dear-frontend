@@ -5,8 +5,6 @@ import {
   BookOpen,
   Check,
   ChevronDown,
-  Clock3,
-  CloudSun,
   Command,
   ExternalLink,
   Heart,
@@ -18,7 +16,6 @@ import {
   Search,
   Send,
   Sparkles,
-  Wifi,
   X,
 } from "lucide-react";
 import { NavLink, Navigate, useLocation, useNavigate } from "react-router";
