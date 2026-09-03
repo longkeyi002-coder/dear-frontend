@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Hermes local dashboard build output
+../hermes_cli/web_dist/
+
+# Local environment and editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+.vercel/

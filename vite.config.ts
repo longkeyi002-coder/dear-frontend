@@ -8,13 +8,16 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
  *  module — which made the babel pass parse the whole codebase. */
 function compilerPreset() {
   const preset = reactCompilerPreset();
-  preset.rolldown.filter.code = /\/>|<\/|from\s*['"][^'"]*react/;
+  if (preset.rolldown?.filter) {
+    preset.rolldown.filter.code = /\/>|<\/|from\s*['"][^'"]*react/;
+  }
   return preset;
 }
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 const BACKEND = process.env.HERMES_DASHBOARD_URL ?? "http://127.0.0.1:9119";
+const IS_VERCEL_BUILD = process.env.VERCEL === "1";
 
 /**
  * In production the Python `hermes dashboard` server injects a one-shot
@@ -78,7 +81,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@hermes/shared": path.resolve(__dirname, "../apps/shared/src"),
     },
     // When @nous-research/ui is symlinked via `file:../../design-language`,
     // Node's module resolution would pick up shared deps from
@@ -100,7 +102,9 @@ export default defineConfig({
     ],
   },
   build: {
-    outDir: "../hermes_cli/web_dist",
+    // The standalone frontend must emit inside the repository for Vercel.
+    // Hermes' local dashboard keeps its historical sibling output directory.
+    outDir: IS_VERCEL_BUILD ? "dist" : "../hermes_cli/web_dist",
     emptyOutDir: true,
     // Shell stays a bit over Vite's 500 kB default after vendor splits;
     // page/xterm chunks load on demand. Keep a modest ceiling so a true

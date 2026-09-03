@@ -15,11 +15,11 @@
 
 import {
   JsonRpcGatewayClient,
-  buildHermesWebSocketUrl,
   type ConnectionState,
   type GatewayEvent,
   type GatewayEventName,
-} from "@hermes/shared";
+} from "@/lib/hermes-shared/json-rpc-gateway";
+import { buildHermesWebSocketUrl } from "@/lib/hermes-shared/websocket-url";
 
 import { HERMES_BASE_PATH, buildWsAuthParam } from "@/lib/api";
 import { maybeReloadForLoopbackWsAuthFailure } from "@/lib/dashboard-auth-reload";
