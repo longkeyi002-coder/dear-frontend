@@ -49,7 +49,6 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
-  Terminal,
   Users,
   Webhook,
   Wrench,
@@ -135,13 +134,6 @@ function UnknownRouteFallback({ pluginsLoading }: { pluginsLoading: boolean }) {
   }
   return <Navigate to="/sessions" replace />;
 }
-
-const CHAT_NAV_ITEM: NavItem = {
-  path: "/chat",
-  labelKey: "chat",
-  label: "Chat",
-  icon: Terminal,
-};
 
 /**
  * Built-in routes except /chat.  Chat is rendered persistently (outside
@@ -459,13 +451,13 @@ export default function App() {
   );
 
   const builtinNav = useMemo(() => {
-    const base = embeddedChat
-      ? [CHAT_NAV_ITEM, ...BUILTIN_NAV_REST]
-      : BUILTIN_NAV_REST;
+    // The dashboard Chat host remains available internally for Hermes
+    // session/PTY reuse, but the user-facing Chat entry lives in East Wing.
+    const base = BUILTIN_NAV_REST;
     return showTokenAnalytics
       ? base
       : base.filter((n) => n.path !== "/analytics");
-  }, [embeddedChat, showTokenAnalytics]);
+  }, [showTokenAnalytics]);
 
   const sidebarNav = useMemo(
     () => partitionSidebarNav(builtinNav, manifests),
