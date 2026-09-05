@@ -404,9 +404,9 @@
 /* Home /《睡莲》 — pond composition. Content floats on real water; the
    decorative pads are actual crops of the painting (public/assets/decor). */
 .oh-space-home .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 26px 0 60px; }
-.oh-pond-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; padding: 8px 0 30px; }
-.oh-pond-time { margin: 0 0 6px; color: var(--st-muted, #5f756c); font: italic 15px/1.4 Georgia, "Noto Serif SC", serif; }
-.oh-pond-hero h1 { margin: 0; color: var(--st-text, #24413c); font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(38px, 4.4vw, 56px); font-weight: 500; letter-spacing: .01em; }
+.oh-pond-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 24px; }
+.oh-pond-time { margin: 0 0 3px; color: var(--st-muted, #5f756c); font: italic 12.5px/1.5 Georgia, "Noto Serif SC", serif; }
+.oh-pond-hero h1 { margin: 0; color: var(--st-text, #24413c); font-family: Georgia, "Noto Serif SC", serif; font-size: 16px; font-weight: 500; letter-spacing: .04em; }
 .oh-pond { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; padding: 26px 6px 34px; }
 .oh-pond-ripples { position: absolute; inset: -40px; pointer-events: none; background:
   repeating-radial-gradient(circle at 12% 16%, transparent 0 30px, rgba(255, 255, 255, .12) 30px 32px, transparent 32px 62px),
