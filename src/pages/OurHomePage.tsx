@@ -31,7 +31,9 @@ import "@/dear/our-home.css";
 
 type GalleryMode = "wall" | "directory" | "space";
 const mockSourceLabel = "MOCK ADAPTER";
-type ChatMessageKind = "agent" | "user" | "proactive" | "tool" | "thinking";
+type ChatMessageKind = "agent" | "user" | "proactive" | "tool" | "thinking" | "plan";
+
+type PlanStepStatus = "completed" | "in_progress" | "pending";
 
 interface ChatMessage {
   id: string;
@@ -40,6 +42,7 @@ interface ChatMessage {
   content?: string;
   time: string;
   source?: string;
+  steps?: Array<{ text: string; status: PlanStepStatus }>;
 }
 
 interface ChatCommand {
@@ -70,29 +73,21 @@ const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
     time: "23:14",
   },
   {
-    id: "tool-1",
-    kind: "tool",
-    text: "检索并分析 worker.ts 源码",
-    time: "23:15",
-  },
-  {
-    id: "think-2",
-    kind: "thinking",
-    text: "规划稳健的远程文件更新方案",
-    content: "先校验远端清单的哈希，再分块拉取差异；任何一步失败都回滚到上一份完整快照。",
-    time: "23:15",
-  },
-  {
-    id: "tool-2",
-    kind: "tool",
-    text: "更新生命状态冷却逻辑",
-    time: "23:16",
-  },
-  {
     id: "user-1",
     kind: "user",
-    text: "那我们先把这个家一点一点做起来。",
+    text: "那我们先把把这个家一点一点做起来。",
     time: "23:17",
+  },
+  {
+    id: "plan-1",
+    kind: "plan",
+    text: "好，那我们把骨架搭稳：先把状态和更新的路走通，再往上面放生活。",
+    time: "23:17",
+    steps: [
+      { text: "分析 store.ts 状态管理实现", status: "completed" },
+      { text: "规划稳健的远程文件更新方案", status: "in_progress" },
+      { text: "更新生命状态冷却逻辑", status: "pending" },
+    ],
   },
 ];
 
@@ -371,7 +366,6 @@ function ChatSpace() {
     if (!retry && value === "/new") {
       setMessages([]);
       setIsStreaming(false);
-      setToolOpen(false);
       setDraft("");
       setPaletteOpen(false);
       setParameterMode(null);
@@ -453,7 +447,17 @@ function ChatSpace() {
     const isProactive = message.kind === "proactive";
     const isTool = message.kind === "tool";
     if ((message.kind === "tool" || message.kind === "thinking") && !showProcess) return null;
-    if ((message.kind === "tool" || message.kind === "thinking") && !showProcess) return null;
+    if (message.kind === "plan") {
+      const done = message.steps?.filter((step) => step.status === "completed").length ?? 0;
+      return <article key={message.id} className="oh-chat-plan">
+        <div className="oh-chat-plan-head"><span>计划 · {done}/{message.steps?.length ?? 0}</span><small>{message.time} · Mock</small></div>
+        <p className="oh-chat-plan-explanation">{message.text}</p>
+        {message.steps?.map((step) => <div key={step.text} className={`oh-plan-step ${step.status}`}>
+          <span className="oh-plan-glyph" aria-hidden="true">{step.status === "completed" ? "✔" : "□"}</span>
+          <span className="oh-plan-step-text">{step.text}</span>
+        </div>)}
+      </article>;
+    }
     if (isTool || message.kind === "thinking") {
       const Icon = isTool ? Wrench : Brain;
       return <div key={message.id} className={`oh-chat-process-row ${message.kind === "thinking" ? "is-thinking" : ""}`}>

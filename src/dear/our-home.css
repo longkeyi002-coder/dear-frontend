@@ -499,8 +499,19 @@
 .oh-chat-process-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; color: var(--st-muted, #5f6e77); font-size: var(--oh-fs-sm); }
 .oh-chat-process-icon { display: grid; place-items: center; flex: none; width: 22px; height: 22px; color: var(--st-accent, #c95f38); }
 .oh-chat-process-icon svg { width: 14px; }
-.oh-chat-process-text { flex: 1; min-width: 0; }
-.oh-chat-process-row time { flex: none; font: 10px var(--oh-font-mono); color: #8fa2a9; }.oh-chat-process-row.is-thinking .oh-chat-process-text { display: block; }
+.oh-chat-process-text { flex: 1; min-width: 0; font-weight: 500; color: var(--st-text, #26333c); }
+.oh-chat-process-row time { flex: none; font: 10px var(--oh-font-mono); color: #8fa2a9; }
+.oh-chat-plan { max-width: 560px; padding: 14px 16px; border: 1px solid rgba(56, 78, 88, .18); border-radius: 14px; background: rgba(255, 255, 255, .6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.oh-chat-plan-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; color: var(--st-muted, #5f6e77); font: var(--oh-fs-2xs) var(--oh-font-mono); }
+.oh-chat-plan-explanation { margin: 0 0 8px; color: var(--st-text, #26333c); font-size: var(--oh-fs-sm); }
+.oh-plan-step { display: flex; align-items: baseline; gap: 10px; padding: 6px 0; font-size: var(--oh-fs-sm); }
+.oh-plan-glyph { flex: none; font-family: var(--oh-font-mono); }
+.oh-plan-step.completed { color: var(--st-muted, #5f6e77); }
+.oh-plan-step.completed .oh-plan-glyph { color: var(--st-accent, #c95f38); }
+.oh-plan-step.completed .oh-plan-step-text { text-decoration: line-through; }
+.oh-plan-step.in_progress .oh-plan-glyph { color: var(--st-accent, #c95f38); }
+.oh-plan-step.in_progress { color: var(--st-text, #26333c); font-weight: 500; }
+.oh-plan-step.pending { color: var(--st-muted, #5f6e77); opacity: .65; }.oh-chat-process-row.is-thinking .oh-chat-process-text { display: block; }
 .oh-chat-process-text strong { display: block; color: var(--st-text, #26333c); font-size: var(--oh-fs-sm); font-weight: 500; }
 .oh-chat-process-text p { margin: 4px 0 0; color: var(--st-muted, #5f6e77); font-size: var(--oh-fs-sm); line-height: 1.6; }
 .oh-chat-model-button { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid rgba(56, 78, 88, .25) !important; border-radius: 3px; background: transparent; color: var(--oh-chat-ink); font-size: var(--oh-fs-sm); }
