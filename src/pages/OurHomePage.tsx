@@ -3,6 +3,8 @@ import {
   AlertCircle,
   Bot,
   Brain,
+  ChevronDown,
+  History,
   Eye,
   EyeOff,
   RefreshCw,
@@ -35,6 +37,7 @@ interface ChatMessage {
   id: string;
   kind: ChatMessageKind;
   text: string;
+  content?: string;
   time: string;
   source?: string;
 }
@@ -62,7 +65,8 @@ const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
   {
     id: "think-1",
     kind: "thinking",
-    text: "分析 store.ts 状态管理实现",
+    text: "分析了 store.ts 状态管理实现",
+    content: "会话和记忆挂在同一个 store 上，主动消息只是往同一条时间线追加记录，不需要新通道。",
     time: "23:14",
   },
   {
@@ -75,6 +79,7 @@ const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
     id: "think-2",
     kind: "thinking",
     text: "规划稳健的远程文件更新方案",
+    content: "先校验远端清单的哈希，再分块拉取差异；任何一步失败都回滚到上一份完整快照。",
     time: "23:15",
   },
   {
@@ -99,7 +104,14 @@ const CHAT_COMMANDS: ChatCommand[] = [
   { name: "/new", description: "开始一段新的对话", category: "会话" },
 ];
 
-const CHAT_MODELS = ["Hermes / Mock", "GPT / Mock", "自动选择 / Mock"];
+const CHAT_MODELS = ["GPT-5.2 / Mock", "Claude Sonnet / Mock", "GLM-4.7 / Mock", "自动选择 / Mock"];
+
+const CHAT_SESSIONS = [
+  { id: "s1", title: "今天的生活整理", time: "23:17" },
+  { id: "s2", title: "睡莲样板页讨论", time: "昨天" },
+  { id: "s3", title: "our-home-mcp 接口设计", time: "昨天" },
+  { id: "s4", title: "日记：一周的天气", time: "周一" },
+];
 
 const THINKING_KAOMOJI = ["(´･ω･`)", "(｀・ω・´)", "(´• ω •`)", "(˘•ω•˘)", "(｡･ω･｡)", "(￣ω￣)"];
 
@@ -299,6 +311,8 @@ function ChatSpace() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastFailedMessage, setLastFailedMessage] = useState("");
   const [showProcess, setShowProcess] = useState(true);
+  const [sessionsOpen, setSessionsOpen] = useState(false);
+  const [activeSession, setActiveSession] = useState("s1");
   const [activeCommandIndex, setActiveCommandIndex] = useState(0);
   const [kaomojiIndex, setKaomojiIndex] = useState(0);
   const [parameterMode, setParameterMode] = useState<string | null>(null);
@@ -442,9 +456,9 @@ function ChatSpace() {
     if ((message.kind === "tool" || message.kind === "thinking") && !showProcess) return null;
     if (isTool || message.kind === "thinking") {
       const Icon = isTool ? Wrench : Brain;
-      return <div key={message.id} className="oh-chat-process-row">
+      return <div key={message.id} className={`oh-chat-process-row ${message.kind === "thinking" ? "is-thinking" : ""}`}>
         <span className="oh-chat-process-icon"><Icon aria-hidden="true" /></span>
-        <span className="oh-chat-process-text">{message.text}</span>
+        <span className="oh-chat-process-text"><strong>{message.text}</strong>{message.content && <p>{message.content}</p>}</span>
         <time>{message.time}</time>
       </div>;
     }
@@ -458,14 +472,19 @@ function ChatSpace() {
   return <section className="oh-chat-viewport" aria-label="与哥哥的对话">
     <img className="oh-chat-sun" src="/assets/decor/sunrise-sun.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <img className="oh-chat-reflection" src="/assets/decor/sunrise-reflection.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <div className="oh-chat-minibar"><div><strong>Chat</strong><span>与你的生活对话</span></div><div className="oh-chat-minibar-status"><span className="oh-status-dot" />在线 · Mock</div><button type="button" className={`oh-chat-toggle ${showProcess ? "is-on" : ""}`} onClick={() => setShowProcess((visible) => !visible)} aria-pressed={showProcess} title="显示 / 隐藏思考与工具活动">{showProcess ? <Eye /> : <EyeOff />}<span>思考与工具</span></button><button type="button" className="oh-chat-new-button" onClick={() => { setMessages([]); setIsStreaming(false); setErrorMessage(null); setParameterMode(null); }}><Plus />新对话</button></div>
-    <div ref={threadRef} onScroll={handleThreadScroll} className="oh-chat-thread oh-chat-thread-v02" aria-live="polite">
+    <div className="oh-chat-minibar"><button type="button" className="oh-chat-model-button" onClick={() => { setModelOpen((open) => !open); setSessionsOpen(false); }} aria-expanded={modelOpen} title="选择模型">{model}<ChevronDown aria-hidden="true" /></button><button type="button" className={`oh-chat-model-button ${sessionsOpen ? "is-on" : ""}`} onClick={() => { setSessionsOpen((open) => !open); setModelOpen(false); }} aria-expanded={sessionsOpen} title="会话列表"><History aria-hidden="true" /><span>会话</span></button><div><strong>Chat</strong><span>与你的生活对话</span></div><div className="oh-chat-minibar-status"><span className="oh-status-dot" />在线 · Mock</div><button type="button" className={`oh-chat-toggle ${showProcess ? "is-on" : ""}`} onClick={() => setShowProcess((visible) => !visible)} aria-pressed={showProcess} title="显示 / 隐藏思考与工具活动">{showProcess ? <Eye /> : <EyeOff />}<span>思考与工具</span></button><button type="button" className="oh-chat-new-button" onClick={() => { setMessages([]); setIsStreaming(false); setErrorMessage(null); setParameterMode(null); }}><Plus />新对话</button></div>
+    {sessionsOpen && <aside className="oh-chat-sessions" aria-label="会话列表">
+        <div className="oh-chat-sessions-head"><strong>会话</strong><span>Mock</span></div>
+        {CHAT_SESSIONS.map((session) => <button key={session.id} type="button" className={`oh-chat-session-row ${session.id === activeSession ? "is-active" : ""}`} onClick={() => { setActiveSession(session.id); setSessionsOpen(false); }}><strong>{session.title}</strong><small>{session.time}</small></button>)}
+      </aside>}
+      {modelOpen && <div className="oh-model-menu oh-model-menu-v02">{CHAT_MODELS.map((option) => <button key={option} type="button" onClick={() => { setModel(option); setModelOpen(false); }}><span>{option}</span>{option === model && <Check />}</button>)}</div>}
+      <div ref={threadRef} onScroll={handleThreadScroll} className="oh-chat-thread oh-chat-thread-v02" aria-live="polite">
       {messages.length === 0 && !isStreaming && <div className="oh-chat-empty"><Bot /><strong>这里还没有消息</strong><span>从一句简单的话开始，Mock 对话会留在这条时间线上。</span><button type="button" onClick={() => { setDraft("你好，哥哥"); setComposerNotice(null); }}>开始说话</button></div>}
       {messages.map(renderMessage)}
       {isStreaming && <div className="oh-chat-streaming"><span className="oh-chat-kaomoji" aria-hidden="true">{THINKING_KAOMOJI[kaomojiIndex]}</span><span>哥哥正在整理回复…</span><button type="button" onClick={() => setIsStreaming(false)}><X />取消生成</button></div>}
       {errorMessage && <div className="oh-chat-error" role="alert"><AlertCircle /><div><strong>这条消息没有送达</strong><span>{errorMessage}</span></div><button type="button" onClick={() => { setErrorMessage(null); submitMessage(lastFailedMessage, true); }}><RefreshCw />重试</button></div>}
     </div>
-    <div className="oh-chat-composer-area">{paletteOpen && <div className="oh-command-palette oh-command-palette-v02" role="listbox" aria-label="Slash Command"><div className="oh-palette-heading"><Command />命令<span>↑↓ 选择 · Enter 使用</span></div>{filteredCommands.map((command, index) => <button key={command.name} type="button" className={index === activeCommandIndex ? "is-active" : ""} onClick={() => chooseCommand(command)}><strong>{command.name}</strong><span>{command.description}</span><small>{command.category}</small></button>)}</div>}{parameterMode && <div className="oh-command-parameter"><Command /><span>{parameterMode} 需要内容，继续输入后再发送。</span></div>}{modelOpen && <div className="oh-model-menu oh-model-menu-v02">{CHAT_MODELS.map((option) => <button key={option} type="button" onClick={() => { setModel(option); setModelOpen(false); }}><span>{option}</span>{option === model && <Check />}</button>)}</div>}<div className="oh-composer oh-composer-v02"><button type="button" className="oh-composer-icon" aria-label="添加附件" onClick={() => setComposerNotice("附件功能当前为 Mock，占位交互已保留。 ")}><Paperclip /></button><button type="button" className={`oh-composer-icon ${searchEnabled ? "is-selected" : ""}`} aria-label="切换网页搜索" aria-pressed={searchEnabled} onClick={() => setSearchEnabled((enabled) => !enabled)}><Search /></button><input value={draft} onChange={(event) => handleDraft(event.target.value)} onKeyDown={handleComposerKeyDown} placeholder="说点什么，或输入 / 查看命令" aria-label="输入消息" /><button type="button" className="oh-composer-icon" aria-label="语音输入" onClick={() => setComposerNotice("语音输入当前为 Mock，占位交互已保留。 ")}><Mic /></button>{isStreaming ? <button type="button" className="oh-stop-button" onClick={() => setIsStreaming(false)} aria-label="停止生成"><X />停止</button> : <button type="button" className="oh-send-button" onClick={send} aria-label="发送消息"><Send /></button>}</div>{composerNotice && <div className="oh-composer-notice" role="status">{composerNotice}</div>}<div className="oh-composer-hint oh-composer-hint-v02"><span>{searchEnabled ? "搜索已开启 · Mock" : "搜索未开启"}</span><span>主动消息会留在同一条时间线里</span></div></div>
+    <div className="oh-chat-composer-area">{paletteOpen && <div className="oh-command-palette oh-command-palette-v02" role="listbox" aria-label="Slash Command"><div className="oh-palette-heading"><Command />命令<span>↑↓ 选择 · Enter 使用</span></div>{filteredCommands.map((command, index) => <button key={command.name} type="button" className={index === activeCommandIndex ? "is-active" : ""} onClick={() => chooseCommand(command)}><strong>{command.name}</strong><span>{command.description}</span><small>{command.category}</small></button>)}</div>}{parameterMode && <div className="oh-command-parameter"><Command /><span>{parameterMode} 需要内容，继续输入后再发送。</span></div>}<div className="oh-composer oh-composer-v02"><button type="button" className="oh-composer-icon" aria-label="添加附件" onClick={() => setComposerNotice("附件功能当前为 Mock，占位交互已保留。 ")}><Paperclip /></button><button type="button" className={`oh-composer-icon ${searchEnabled ? "is-selected" : ""}`} aria-label="切换网页搜索" aria-pressed={searchEnabled} onClick={() => setSearchEnabled((enabled) => !enabled)}><Search /></button><input value={draft} onChange={(event) => handleDraft(event.target.value)} onKeyDown={handleComposerKeyDown} placeholder="说点什么，或输入 / 查看命令" aria-label="输入消息" /><button type="button" className="oh-composer-icon" aria-label="语音输入" onClick={() => setComposerNotice("语音输入当前为 Mock，占位交互已保留。 ")}><Mic /></button>{isStreaming ? <button type="button" className="oh-stop-button" onClick={() => setIsStreaming(false)} aria-label="停止生成"><X />停止</button> : <button type="button" className="oh-send-button" onClick={send} aria-label="发送消息"><Send /></button>}</div>{composerNotice && <div className="oh-composer-notice" role="status">{composerNotice}</div>}<div className="oh-composer-hint oh-composer-hint-v02"><span>{searchEnabled ? "搜索已开启 · Mock" : "搜索未开启"}</span><span>主动消息会留在同一条时间线里</span></div></div>
   </section>;
 }
 
