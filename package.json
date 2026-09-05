@@ -15,6 +15,7 @@
     "check": "npm run typecheck && npm run test && npm run lint"
   },
   "dependencies": {
+    "@assistant-ui/core": "^0.3.17",
     "@assistant-ui/react": "^0.15.18",
     "@assistant-ui/react-markdown": "^0.14.14",
     "@nous-research/ui": "0.18.2",

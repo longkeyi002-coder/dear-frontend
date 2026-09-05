@@ -9,6 +9,7 @@ import { File } from "@/components/aui/file";
 import { ThreadFollowupSuggestions } from "@/components/aui/follow-up-suggestions.aui";
 import { Image } from "@/components/aui/image";
 import { MarkdownText } from "@/components/aui/markdown-text";
+import { PlanCard, type PlanData } from "@/components/aui/plan-card.aui";
 import {
   Reasoning,
   ReasoningContent,
@@ -439,6 +440,8 @@ const AssistantMessage: FC = () => {
               case "tool-call":
                 return part.toolUI ?? <ToolFallbackComponent {...part} />;
               case "data":
+                if (part.name === "plan")
+                  return <PlanCard data={part.data as PlanData} />;
                 return part.dataRendererUI;
               case "file":
                 return (

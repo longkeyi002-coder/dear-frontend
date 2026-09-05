@@ -42,7 +42,7 @@ function GalleryHeader({ mode }: { mode: GalleryMode }) {
         <NavLink to="/directory" className={mode === "directory" ? "active" : ""}>目录</NavLink>
         <NavLink to="/sessions" className="oh-west-link">西馆 · 管理 <ExternalLink aria-hidden="true" /></NavLink>
       </nav>
-      <div className="oh-header-status"><span className="oh-status-dot" /><span>本地生活系统</span>{sourcePill()}</div>
+      <div className="oh-header-status"><span className="oh-status-dot" /><span>本地生活系统</span></div>
       <button type="button" className="oh-icon-button oh-menu-button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="打开导航菜单">{menuOpen ? <X /> : <Menu />}</button>
       {menuOpen && <div className="oh-mobile-menu"><NavLink to="/gallery" onClick={() => setMenuOpen(false)}>画廊墙</NavLink><NavLink to="/directory" onClick={() => setMenuOpen(false)}>画册目录</NavLink><NavLink to="/sessions" onClick={() => setMenuOpen(false)}>西馆管理</NavLink></div>}
     </header>
@@ -132,7 +132,7 @@ function DirectoryPage() {
     <section className="oh-open-book" aria-label="东馆画册目录">
       <div className="oh-book-page oh-book-left"><div className="oh-book-page-inner"><p className="oh-kicker">EAST WING / 01—05</p><h1>画册<br /><em>目录</em></h1><p className="oh-book-intro">这里不是一张功能列表。每一页，都是一个可以停留的地方。</p><div className="oh-book-meta"><span>MONET GALLERY</span><span>OUR HOME · V0.3</span></div><div className="oh-book-page-number">01</div></div></div>
       <div className="oh-book-spine" aria-hidden="true"><span>DEAR</span></div>
-      <div className="oh-book-page oh-book-right"><div className="oh-book-page-inner"><div className="oh-book-right-heading"><div><span className="oh-kicker">SPACES</span><h2>东馆的五个房间</h2></div>{sourcePill()}</div><div className="oh-directory-list" aria-label="生活空间目录">{EAST_WING_SPACES.map((space) => { const Icon = space.icon; return <NavLink key={space.id} to={`/gallery/space/${space.id}`} className={`oh-directory-row oh-directory-row-${space.id}`}><span className="oh-directory-row-number">{space.number}</span><span className="oh-directory-row-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span className="oh-directory-row-copy"><strong>{space.title}</strong><span>{space.englishTitle} · {space.subtitle}</span><small>{space.description}</small></span><ArrowRight aria-hidden="true" /></NavLink>; })}</div><div className="oh-book-page-number">02</div></div></div>
+      <div className="oh-book-page oh-book-right"><div className="oh-book-page-inner"><div className="oh-book-right-heading"><div><span className="oh-kicker">SPACES</span><h2>东馆的五个房间</h2></div></div><div className="oh-directory-list" aria-label="生活空间目录">{EAST_WING_SPACES.map((space) => { const Icon = space.icon; return <NavLink key={space.id} to={`/gallery/space/${space.id}`} className={`oh-directory-row oh-directory-row-${space.id}`}><span className="oh-directory-row-number">{space.number}</span><span className="oh-directory-row-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span className="oh-directory-row-copy"><strong>{space.title}</strong><span>{space.englishTitle} · {space.subtitle}</span><small>{space.description}</small></span><ArrowRight aria-hidden="true" /></NavLink>; })}</div><div className="oh-book-page-number">02</div></div></div>
     </section>
     <section className="oh-west-placeholder"><div><p className="oh-kicker">WEST WING</p><h2>系统管理仍在另一侧。</h2><p>Sessions、Models、MCP 等 Hermes 能力暂时保留在原管理界面。</p></div><NavLink to="/sessions" className="oh-text-link">进入西馆 <ExternalLink aria-hidden="true" /></NavLink></section>
   </main><AmbientBackdrop /></div>;
@@ -140,7 +140,7 @@ function DirectoryPage() {
 
 function SpaceTopbar({ space }: { space: GallerySpace }) {
   const navigate = useNavigate();
-  return <header className="oh-space-topbar"><button type="button" className="oh-back-button" onClick={() => navigate(-1)}><ArrowLeft aria-hidden="true" /> <span>返回</span></button><div className="oh-space-breadcrumb"><NavLink to="/gallery">东馆</NavLink><span>/</span><strong>{space.englishTitle}</strong></div><div className="oh-space-top-actions">{sourcePill()}<NavLink to="/directory" className="oh-icon-button" aria-label="打开画册目录"><BookOpen /></NavLink></div></header>;
+  return <header className="oh-space-topbar"><button type="button" className="oh-back-button" onClick={() => navigate(-1)}><ArrowLeft aria-hidden="true" /> <span>返回</span></button><div className="oh-space-breadcrumb"><NavLink to="/gallery">东馆</NavLink><span>/</span><strong>{space.englishTitle}</strong></div><div className="oh-space-top-actions"><NavLink to="/directory" className="oh-icon-button" aria-label="打开画册目录"><BookOpen /></NavLink></div></header>;
 }
 
 function SpaceHero({ space, eyebrow, title, description, children }: { space: GallerySpace; eyebrow: string; title: string; description?: string; children: ReactNode }) {

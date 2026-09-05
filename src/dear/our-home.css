@@ -494,7 +494,7 @@
   --color-text-primary: #26333c;
   --color-text-secondary: #5f6e77;
   --color-text-tertiary: #6c818b;
-  --color-border: rgba(56, 78, 88, .18);
+  --color-border: rgba(56, 78, 88, .32);
   --color-input: rgba(56, 78, 88, .25);
   --color-ring: #c95f38;
 }
@@ -751,6 +751,15 @@
 .oh-dc-user { display: flex; flex-direction: column; align-items: flex-end; }
 .oh-dc-user-text { margin: 0; padding: 12px 16px; border-radius: 18px 18px 4px 18px; background: rgba(248, 205, 170, .85); color: var(--st-text, #26333c); font-size: var(--oh-fs-md); line-height: 1.65; max-width: 78%; text-align: left; }
 .oh-chat-layout { display: flex; width: 100%; height: 100%; min-height: 0; }
+/* The official Thread root ships `h-full`, which assumes it is the only
+   child of its container. It sits under nothing here, but flex sizing is
+   still required so the docked composer stays inside the viewport. */
+.oh-chat-main .aui-root { height: auto; flex: 1; min-height: 0; }
+/* The official reasoning box borders with `border` (currentColor in
+   Tailwind v4), which reads near-black against the ink text — soften it to
+   the glass hairline. Same for the composer, whose border-border/60 is
+   nearly invisible on the light card. */
+.oh-space-chat [data-slot="reasoning-root"] { border-color: rgba(56, 78, 88, .2); }
 .oh-chat-sidebar { display: flex; flex: none; flex-direction: column; width: 260px; overflow-y: auto; border-right: 1px solid rgba(56, 78, 88, .14); background: rgba(255, 255, 255, .45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .oh-chat-sidebar-head { padding: 16px 18px 12px; color: var(--st-muted, #5f6e77); font: var(--oh-fs-2xs) var(--oh-font-mono); letter-spacing: .14em; }
 .oh-chat-main { position: relative; display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
