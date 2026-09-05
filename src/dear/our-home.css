@@ -28,6 +28,7 @@
 .oh-status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #6eaa83; box-shadow: 0 0 0 4px rgba(110, 170, 131, .16); }
 .oh-source-pill { display: inline-flex; align-items: center; min-height: 22px; padding: 4px 7px; border: 1px solid rgba(35, 61, 58, .22); border-radius: 4px; color: var(--oh-muted); font: 10px/1 "DM Mono", monospace; letter-spacing: .05em; white-space: nowrap; }
 .oh-menu-button, .oh-mobile-menu { display: none; }
+.oh-header .oh-menu-button { display: none; }
 .oh-icon-button { display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 1px solid var(--oh-line) !important; border-radius: 50%; }
 .oh-icon-button svg { width: 18px; }
 .oh-wall-main, .oh-directory-main, .oh-space-main { width: min(1260px, calc(100% - 48px)); margin: 0 auto; position: relative; z-index: 1; }
@@ -244,6 +245,7 @@
   .oh-brand small { display: none; }
   .oh-header-nav { display: none; }
   .oh-menu-button { display: grid; margin-left: auto; }
+  .oh-header .oh-menu-button { display: grid; }
   .oh-mobile-menu { position: absolute; top: 64px; right: 18px; display: grid; min-width: 160px; padding: 7px; border: 1px solid var(--oh-line); background: #f4f8f3; box-shadow: var(--oh-shadow); }
   .oh-mobile-menu a { padding: 11px; color: var(--oh-muted); font-size: 12px; }
   .oh-mobile-menu a:hover { background: rgba(126, 177, 154, .13); color: var(--oh-ink); }
@@ -587,3 +589,7 @@
   .oh-gallery-stack-offset { padding-top: 0; }
   .oh-frame-lamp { top: -14px; transform: translateX(-50%) scale(.85); }
 }
+
+/* UI audit fixes */
+.oh-home-message > small { display: block; }
+.oh-home-message .oh-text-link { margin-top: 12px; }
