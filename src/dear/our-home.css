@@ -401,53 +401,65 @@
 }
 
 
-/* Home / Sleep Lilies — Desktop Low-Fi V0.1 */
-.oh-space-home .oh-space-main{padding-top:28px;padding-bottom:42px}
-.oh-space-home .oh-space-hero{padding-bottom:24px}
-.oh-space-home .oh-space-hero h1{font-size:clamp(40px,5vw,60px)}
-.oh-space-home .oh-space-description{margin-top:11px}
-.oh-home-presence-card{min-width:215px;padding:16px 18px;border-left:2px solid #ad6251;background:rgba(255,255,255,.2)}
-.oh-home-presence-card strong,.oh-home-presence-card p,.oh-home-presence-card small{display:block}
-.oh-home-presence-card strong{margin-top:-3px;color:#ad6251;font:11px "DM Mono",monospace;letter-spacing:.08em}
-.oh-home-presence-card p{margin:10px 0 8px;color:var(--oh-ink);font-size:15px}
-.oh-home-presence-card small{color:var(--oh-muted);font:10px "DM Mono",monospace}
-.oh-home-presence-dot{display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:#ad6251;vertical-align:1px}
-.oh-home-layout{display:grid;grid-template-columns:minmax(220px,.92fr) minmax(300px,1.28fr) minmax(220px,.9fr);grid-template-areas:"now timeline message" "keeps keeps you";gap:14px;padding-top:16px}
-.oh-home-layout>.oh-panel{min-height:0;padding:19px}
-.oh-home-now{grid-area:now}.oh-home-timeline{grid-area:timeline}.oh-home-message{grid-area:message}.oh-home-keeps{grid-area:keeps}.oh-home-you{grid-area:you}
-.oh-home-now-body>strong{display:block;margin-top:25px;color:var(--oh-ink);font:500 32px/1 Georgia,serif}
-.oh-home-now-body>p{min-height:46px;margin:10px 0 18px;color:var(--oh-muted);font-size:12px;line-height:1.65}
-.oh-home-now-body dl,.oh-home-you dl{margin:0}
-.oh-home-now-body dl div,.oh-home-you dl div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--oh-line)}
-.oh-home-now-body dt,.oh-home-you dt{color:var(--oh-muted);font-size:10px}.oh-home-now-body dd,.oh-home-you dd{margin:0;color:var(--oh-ink);font-size:11px;text-align:right}
-.oh-home-moments{margin-top:10px}
-.oh-home-moment{display:grid;grid-template-columns:48px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--oh-line)}
-.oh-home-moment:last-child{border-bottom:0}
-.oh-home-moment time{color:#ad6251;font:11px "DM Mono",monospace}
-.oh-home-moment strong,.oh-home-moment span{display:block}
-.oh-home-moment strong{color:var(--oh-ink);font-size:12px;font-weight:600}.oh-home-moment span{margin-top:3px;color:var(--oh-muted);font-size:10px;line-height:1.4}
-.oh-home-message{background:#f1e8d9;border-color:rgba(168,93,76,.22)}
-.oh-home-message blockquote{margin:26px 0 13px;color:#5f4e44;font-size:17px;line-height:1.65;letter-spacing:-.02em}
-.oh-home-message>small{color:#a58d7b;font:10px "DM Mono",monospace}
-.oh-home-message .oh-text-link{margin-top:24px}
-.oh-home-keeps-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:17px}
-.oh-home-keep{padding-right:16px;border-right:1px solid var(--oh-line)}.oh-home-keep:last-child{border-right:0}
-.oh-home-keep>span{color:#ad6251;font:10px "DM Mono",monospace}
-.oh-home-keep p{min-height:38px;margin:9px 0;color:var(--oh-ink);font-size:12px;line-height:1.55}
-.oh-home-keep small{color:var(--oh-muted);font-size:10px}
-.oh-home-you{background:rgba(255,255,255,.2)}
-.oh-home-you>strong{display:block;margin:25px 0 17px;color:var(--oh-ink);font-size:14px}
-.oh-home-you-note{display:block;margin-top:15px;color:var(--oh-muted);font-size:10px;line-height:1.5}
-@media (max-width:900px) and (min-width:641px){
-  .oh-home-layout{grid-template-columns:1fr 1fr;grid-template-areas:"now message" "timeline timeline" "keeps keeps" "you you"}
-}
-@media (max-width:640px){
-  .oh-space-home .oh-space-main{padding-top:34px}
-  .oh-home-presence-card{margin-top:24px}
-  .oh-home-layout{display:flex;flex-direction:column}
-  .oh-home-keeps-list{grid-template-columns:1fr}
-  .oh-home-keep{padding:10px 0;border-right:0;border-bottom:1px solid var(--oh-line)}
-  .oh-home-keep:last-child{border-bottom:0}
+/* Home /《睡莲》 — pond composition. Content floats on real water; the
+   decorative pads are actual crops of the painting (public/assets/decor). */
+.oh-space-home .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 26px 0 60px; }
+.oh-pond-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; padding: 8px 0 30px; }
+.oh-pond-time { margin: 0 0 6px; color: var(--st-muted, #5f756c); font: italic 15px/1.4 Georgia, "Noto Serif SC", serif; }
+.oh-pond-hero h1 { margin: 0; color: var(--st-text, #24413c); font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(38px, 4.4vw, 56px); font-weight: 500; letter-spacing: .01em; }
+.oh-pond { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; padding: 26px 6px 34px; }
+.oh-pond-ripples { position: absolute; inset: -40px; pointer-events: none; background:
+  repeating-radial-gradient(circle at 12% 16%, transparent 0 30px, rgba(255, 255, 255, .12) 30px 32px, transparent 32px 62px),
+  repeating-radial-gradient(circle at 88% 72%, transparent 0 26px, rgba(36, 65, 60, .05) 26px 28px, transparent 28px 56px); }
+.oh-lilypad { position: absolute; pointer-events: none; }
+.oh-lilypad-photo { height: auto; border-radius: 46% 54% 40% 60% / 55% 44% 56% 45%; box-shadow: 0 18px 34px rgba(23, 48, 40, .3), 0 0 0 4px rgba(244, 241, 232, .18); opacity: .94; }
+.oh-lilypad-one { width: 240px; right: -30px; bottom: -36px; transform: rotate(3deg); }
+.oh-lilypad-two { width: 190px; left: -46px; top: 4%; transform: rotate(-5deg); border-radius: 56% 44% 52% 48% / 46% 58% 42% 54%; }
+.oh-lilypad-three { width: 300px; left: 30%; bottom: -60px; transform: rotate(-2deg); border-radius: 10px 60px 12px 70px; opacity: .8; }
+.oh-pad { position: relative; z-index: 1; padding: 22px 24px; background: var(--st-raised, #f4f1e8); border-radius: 26px 40px 30px 44px / 40px 28px 44px 30px; box-shadow: 0 18px 40px rgba(28, 56, 47, .18), inset 0 2px 0 rgba(255, 255, 255, .5); }
+.oh-pad-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; color: var(--st-muted, #64796f); font-size: 12px; }
+.oh-pad-head em { color: var(--st-accent, #3e7a68); font: 9px "DM Mono", monospace; font-style: normal; opacity: .65; }
+.oh-pad-now { grid-column: 1 / span 5; margin-top: 34px; border-radius: 34px 26px 40px 30px / 30px 42px 30px 44px; }
+.oh-pad-note { grid-column: 6 / span 4; margin-top: -8px; transform: rotate(-1.6deg); background: #f6e9e6; border-radius: 8px 26px 10px 30px; box-shadow: 0 16px 34px rgba(28, 56, 47, .2); }
+.oh-pad-note blockquote { margin: 8px 0 14px; color: var(--st-text, #24413c); font-size: 17px; line-height: 1.7; }
+.oh-pad-note small { display: block; color: var(--st-muted, #a58d7b); font-size: 10px; }
+.oh-pad-note .oh-text-link { margin-top: 16px; }
+.oh-pad-timeline { grid-column: 10 / span 3; margin-top: 52px; border-radius: 40px 30px 28px 42px / 30px 40px 44px 30px; }
+.oh-pad-keeps { grid-column: 2 / span 7; margin-top: 6px; }
+.oh-pad-you { grid-column: 9 / span 3; margin-top: 40px; border-radius: 30px 42px 34px 28px / 42px 30px 40px 32px; }
+.oh-pad-title { display: block; margin: 4px 0 10px; color: var(--st-text, #24413c); font: 500 30px/1 Georgia, serif; }
+.oh-pad-subtitle { display: block; margin: 0 0 12px; color: var(--st-text, #24413c); font-size: 14px; }
+.oh-pad-copy { margin: 0 0 16px; color: var(--st-muted, #64796f); font-size: 12.5px; line-height: 1.65; }
+.oh-pad-facts { margin: 0; }
+.oh-pad-facts div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid color-mix(in srgb, var(--st-accent, #3e7a68) 16%, transparent); }
+.oh-pad-facts dt { color: var(--st-muted, #64796f); font-size: 10.5px; }
+.oh-pad-facts dd { margin: 0; color: var(--st-text, #24413c); font-size: 11px; text-align: right; }
+.oh-home-presence-card { min-width: 215px; padding: 18px 20px; border-radius: 30px 14px 34px 16px; background: color-mix(in srgb, var(--st-raised, #f4f1e8) 84%, transparent); box-shadow: 0 16px 34px rgba(28, 56, 47, .16); transform: rotate(1.4deg); }
+.oh-home-presence-card strong, .oh-home-presence-card p, .oh-home-presence-card small { display: block; }
+.oh-home-presence-card strong { margin-top: -3px; color: var(--st-accent, #3e7a68); font: 11px "DM Mono", monospace; letter-spacing: .08em; }
+.oh-home-presence-card p { margin: 10px 0 8px; color: var(--st-text, #24413c); font-size: 15px; }
+.oh-home-presence-card small { color: var(--st-muted, #64796f); font: 10px "DM Mono", monospace; }
+.oh-home-presence-dot { display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--st-accent, #3e7a68); vertical-align: 1px; }
+.oh-home-moments { margin-top: 4px; }
+.oh-home-moment { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, var(--st-accent, #3e7a68) 14%, transparent); }
+.oh-home-moment:last-child { border-bottom: 0; }
+.oh-home-moment time { color: var(--st-accent, #3e7a68); font: 11px "DM Mono", monospace; }
+.oh-home-moment strong, .oh-home-moment span { display: block; }
+.oh-home-moment strong { color: var(--st-text, #24413c); font-size: 12px; font-weight: 600; }
+.oh-home-moment span { margin-top: 3px; color: var(--st-muted, #64796f); font-size: 10px; line-height: 1.4; }
+.oh-home-keeps-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 6px; }
+.oh-home-keep { padding-right: 16px; border-right: 1px solid color-mix(in srgb, var(--st-accent, #3e7a68) 14%, transparent); }
+.oh-home-keep:last-child { border-right: 0; }
+.oh-home-keep > span { color: var(--st-accent, #3e7a68); font: 10px "DM Mono", monospace; }
+.oh-home-keep p { min-height: 38px; margin: 9px 0; color: var(--st-text, #24413c); font-size: 12px; line-height: 1.55; }
+.oh-home-keep small { color: var(--st-muted, #64796f); font-size: 10px; }
+.oh-home-you-note { display: block; margin-top: 15px; color: var(--st-muted, #64796f); font-size: 10px; line-height: 1.5; }
+@media (max-width: 980px) {
+  .oh-pond { display: flex; flex-direction: column; gap: 20px; }
+  .oh-pad-now, .oh-pad-note, .oh-pad-timeline, .oh-pad-keeps, .oh-pad-you { margin-top: 0; transform: none; }
+  .oh-lilypad-one { right: -60px; bottom: auto; top: 30%; }
+  .oh-lilypad-two { left: -70px; top: 55%; }
+  .oh-lilypad-three { display: none; }
 }
 
 /* Chat /《日出·印象》 Desktop Low-Fi V0.2. Conversation-first replacement. */
@@ -642,22 +654,19 @@
 
 /* Painting theme — 《睡莲》Home low-fi sample.
    Theme tokens arrive as --st-* vars from SpacePage; remap the generic
-   ink/muted/line tokens so every existing rule picks the palette up. */
+   ink/muted/line tokens so existing rules pick up the palette. The
+   water-mist ambiance layer is a real crop of the painting. */
 .oh-space-home {
   --oh-ink: var(--st-text, #24413c);
   --oh-muted: var(--st-muted, #64796f);
   --oh-line: color-mix(in srgb, var(--st-accent, #3e7a68) 20%, transparent);
-  background: var(--st-background, #eff4ef);
+  position: relative;
+  background:
+    radial-gradient(80% 50% at 82% 0%, rgba(226, 238, 230, .9), transparent 60%),
+    radial-gradient(60% 40% at 8% 16%, rgba(198, 221, 214, .85), transparent 62%),
+    linear-gradient(168deg, #cfe0d6 0%, #bcd3ca 36%, #a9c4bd 68%, #9cb7b2 100%);
 }
+.oh-space-home::before { content: ""; position: absolute; top: 70px; right: 0; width: 54%; height: 460px; pointer-events: none; background: url("/assets/decor/water-mist.jpg") center / cover no-repeat; opacity: .45; filter: blur(1.5px) saturate(.9); -webkit-mask: radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 76%); mask: radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 76%); }
 .oh-space-home .oh-space-topbar { border-bottom-color: var(--oh-line); }
-.oh-space-home .oh-kicker, .oh-space-home .oh-agent-mark, .oh-space-home .oh-text-link, .oh-space-home .oh-timeline-item > span { color: var(--st-accent, #a85d4c) !important; }
-.oh-space-home .oh-panel { background: var(--st-surface, rgba(255, 255, 255, .29)); border-color: var(--oh-line); box-shadow: 0 12px 30px rgba(45, 78, 68, .06); }
+.oh-space-home .oh-kicker, .oh-space-home .oh-agent-mark, .oh-space-home .oh-text-link, .oh-space-home .oh-timeline-item > span { color: var(--st-accent, #3e7a68) !important; }
 .oh-space-home .oh-muted-label { color: var(--st-muted, #97a6a1); }
-.oh-space-home .oh-home-presence-card { border-left-color: var(--st-accent, #ad6251); background: color-mix(in srgb, var(--st-surface, #fff) 55%, transparent); }
-.oh-space-home .oh-home-presence-card strong { color: var(--st-accent, #ad6251); background: none; }
-.oh-space-home .oh-home-presence-dot { color: var(--st-accent, #ad6251); background-color: var(--st-accent, #ad6251); }
-.oh-space-home .oh-home-message { background: var(--st-raised, #f1e8d9); border-color: color-mix(in srgb, var(--st-accent, #ad6251) 24%, transparent); }
-.oh-space-home .oh-home-message blockquote { color: var(--st-text, #5f4e44); }
-.oh-space-home .oh-home-message > small, .oh-space-home .oh-diary-card small { color: var(--st-muted, #a58d7b); }
-.oh-space-home .oh-home-you { background: color-mix(in srgb, var(--st-raised, #fff) 45%, transparent); }
-.oh-space-home .oh-home-now-body > strong { color: var(--st-text, var(--oh-ink)); }
