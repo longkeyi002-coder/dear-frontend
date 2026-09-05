@@ -2,7 +2,9 @@ import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, ty
 import {
   AlertCircle,
   Bot,
-  LoaderCircle,
+  Brain,
+  Eye,
+  EyeOff,
   RefreshCw,
   Wrench,
   ArrowLeft,
@@ -28,7 +30,7 @@ import "@/dear/our-home.css";
 
 type GalleryMode = "wall" | "directory" | "space";
 const mockSourceLabel = "MOCK ADAPTER";
-type ChatMessageKind = "agent" | "user" | "proactive" | "tool";
+type ChatMessageKind = "agent" | "user" | "proactive" | "tool" | "thinking";
 
 interface ChatMessage {
   id: string;
@@ -59,6 +61,12 @@ const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
     source: "AGENT_LIFE",
   },
   {
+    id: "thinking-1",
+    kind: "thinking",
+    text: "想了 12 秒",
+    time: "23:16",
+  },
+  {
     id: "tool-1",
     kind: "tool",
     text: "正在搜索网页",
@@ -81,6 +89,8 @@ const CHAT_COMMANDS: ChatCommand[] = [
 ];
 
 const CHAT_MODELS = ["Hermes / Mock", "GPT / Mock", "自动选择 / Mock"];
+
+const THINKING_KAOMOJI = ["(´･ω･`)", "(｀・ω・´)", "(´• ω •`)", "(˘•ω•˘)", "(｡･ω･｡)", "(￣ω￣)"];
 
 function sourcePill(label = mockSourceLabel) {
   return <span className="oh-source-pill">{label}</span>;
@@ -277,7 +287,10 @@ function ChatSpace() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastFailedMessage, setLastFailedMessage] = useState("");
+  const [showProcess, setShowProcess] = useState(true);
+  const [thinkingOpen, setThinkingOpen] = useState(false);
   const [activeCommandIndex, setActiveCommandIndex] = useState(0);
+  const [kaomojiIndex, setKaomojiIndex] = useState(0);
   const [parameterMode, setParameterMode] = useState<string | null>(null);
   const [searchEnabled, setSearchEnabled] = useState(false);
   const [composerNotice, setComposerNotice] = useState<string | null>(null);
@@ -287,6 +300,15 @@ function ChatSpace() {
   const filteredCommands = CHAT_COMMANDS.filter((command) =>
     command.name.includes(draft.trim().toLowerCase()),
   );
+
+  useEffect(() => {
+    if (!isStreaming) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => {
+      setKaomojiIndex((index) => (index + 1) % THINKING_KAOMOJI.length);
+    }, 700);
+    return () => window.clearInterval(timer);
+  }, [isStreaming]);
 
   useEffect(() => {
     if (!isStreaming) return;
@@ -301,7 +323,7 @@ function ChatSpace() {
         },
       ]);
       setIsStreaming(false);
-    }, 900);
+    }, 2600);
     return () => window.clearTimeout(timer);
   }, [isStreaming]);
 
@@ -406,6 +428,13 @@ function ChatSpace() {
     const isUser = message.kind === "user";
     const isProactive = message.kind === "proactive";
     const isTool = message.kind === "tool";
+    if ((message.kind === "tool" || message.kind === "thinking") && !showProcess) return null;
+    if (message.kind === "thinking") {
+      return <article key={message.id} className="oh-chat-message oh-chat-tool-message">
+        <button type="button" className={`oh-chat-tool-card oh-chat-thinking ${thinkingOpen ? "is-open" : ""}`} onClick={() => setThinkingOpen((open) => !open)} aria-expanded={thinkingOpen}><span className="oh-chat-tool-icon"><Brain /></span><span className="oh-chat-tool-summary"><strong>{message.text}</strong><small>{thinkingOpen ? "已展开 · 思考摘要" : "思考过程 · 已折叠"}</small></span><ChevronDown /></button>
+        {thinkingOpen && <div className="oh-chat-thinking-details"><p>龙龙回来了。先看一眼家里的状态：没有新消息，也没有急事。</p><p>不用急着说话，把灯留在客厅就好。等他先开口，我再接话。</p></div>}
+      </article>;
+    }
     if (isTool) {
       return <article key={message.id} className="oh-chat-message oh-chat-tool-message">
         <button type="button" className={`oh-chat-tool-card oh-chat-tool-event ${toolOpen ? "is-open" : ""}`} onClick={() => setToolOpen((open) => !open)} aria-expanded={toolOpen}><span className="oh-chat-tool-icon"><Wrench /></span><span className="oh-chat-tool-summary"><strong>{message.text}</strong><small>{toolOpen ? "已展开 · home.get_life_context · 238ms" : "工具活动 · 已完成"}</small></span><ChevronDown /></button>
@@ -422,11 +451,11 @@ function ChatSpace() {
   return <section className="oh-chat-viewport" aria-label="与哥哥的对话">
     <img className="oh-chat-sun" src="/assets/decor/sunrise-sun.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <img className="oh-chat-reflection" src="/assets/decor/sunrise-reflection.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <div className="oh-chat-minibar"><div><strong>Chat</strong><span>与你的生活对话</span></div><div className="oh-chat-minibar-status"><span className="oh-status-dot" />在线 · Mock</div><button type="button" className="oh-chat-new-button" onClick={() => { setMessages([]); setIsStreaming(false); setErrorMessage(null); setToolOpen(false); setParameterMode(null); }}><Plus />新对话</button></div>
+    <div className="oh-chat-minibar"><div><strong>Chat</strong><span>与你的生活对话</span></div><div className="oh-chat-minibar-status"><span className="oh-status-dot" />在线 · Mock</div><button type="button" className={`oh-chat-toggle ${showProcess ? "is-on" : ""}`} onClick={() => setShowProcess((visible) => !visible)} aria-pressed={showProcess} title="显示 / 隐藏思考与工具活动">{showProcess ? <Eye /> : <EyeOff />}<span>思考与工具</span></button><button type="button" className="oh-chat-new-button" onClick={() => { setMessages([]); setIsStreaming(false); setErrorMessage(null); setToolOpen(false); setThinkingOpen(false); setParameterMode(null); }}><Plus />新对话</button></div>
     <div ref={threadRef} onScroll={handleThreadScroll} className="oh-chat-thread oh-chat-thread-v02" aria-live="polite">
       {messages.length === 0 && !isStreaming && <div className="oh-chat-empty"><Bot /><strong>这里还没有消息</strong><span>从一句简单的话开始，Mock 对话会留在这条时间线上。</span><button type="button" onClick={() => { setDraft("你好，哥哥"); setComposerNotice(null); }}>开始说话</button></div>}
       {messages.map(renderMessage)}
-      {isStreaming && <div className="oh-chat-streaming"><LoaderCircle /><span>哥哥正在整理回复…</span><button type="button" onClick={() => setIsStreaming(false)}><X />取消生成</button></div>}
+      {isStreaming && <div className="oh-chat-streaming"><span className="oh-chat-kaomoji" aria-hidden="true">{THINKING_KAOMOJI[kaomojiIndex]}</span><span>哥哥正在整理回复…</span><button type="button" onClick={() => setIsStreaming(false)}><X />取消生成</button></div>}
       {errorMessage && <div className="oh-chat-error" role="alert"><AlertCircle /><div><strong>这条消息没有送达</strong><span>{errorMessage}</span></div><button type="button" onClick={() => { setErrorMessage(null); submitMessage(lastFailedMessage, true); }}><RefreshCw />重试</button></div>}
     </div>
     <div className="oh-chat-composer-area">{paletteOpen && <div className="oh-command-palette oh-command-palette-v02" role="listbox" aria-label="Slash Command"><div className="oh-palette-heading"><Command />命令<span>↑↓ 选择 · Enter 使用</span></div>{filteredCommands.map((command, index) => <button key={command.name} type="button" className={index === activeCommandIndex ? "is-active" : ""} onClick={() => chooseCommand(command)}><strong>{command.name}</strong><span>{command.description}</span><small>{command.category}</small></button>)}</div>}{parameterMode && <div className="oh-command-parameter"><Command /><span>{parameterMode} 需要内容，继续输入后再发送。</span></div>}{modelOpen && <div className="oh-model-menu oh-model-menu-v02">{CHAT_MODELS.map((option) => <button key={option} type="button" onClick={() => { setModel(option); setModelOpen(false); }}><span>{option}</span>{option === model && <Check />}</button>)}</div>}<div className="oh-composer oh-composer-v02"><button type="button" className="oh-composer-icon" aria-label="添加附件" onClick={() => setComposerNotice("附件功能当前为 Mock，占位交互已保留。 ")}><Paperclip /></button><button type="button" className={`oh-composer-icon ${searchEnabled ? "is-selected" : ""}`} aria-label="切换网页搜索" aria-pressed={searchEnabled} onClick={() => setSearchEnabled((enabled) => !enabled)}><Search /></button><input value={draft} onChange={(event) => handleDraft(event.target.value)} onKeyDown={handleComposerKeyDown} placeholder="说点什么，或输入 / 查看命令" aria-label="输入消息" /><button type="button" className="oh-composer-icon" aria-label="语音输入" onClick={() => setComposerNotice("语音输入当前为 Mock，占位交互已保留。 ")}><Mic /></button>{isStreaming ? <button type="button" className="oh-stop-button" onClick={() => setIsStreaming(false)} aria-label="停止生成"><X />停止</button> : <button type="button" className="oh-send-button" onClick={send} aria-label="发送消息"><Send /></button>}</div>{composerNotice && <div className="oh-composer-notice" role="status">{composerNotice}</div>}<div className="oh-composer-hint oh-composer-hint-v02"><span>{searchEnabled ? "搜索已开启 · Mock" : "搜索未开启"}</span><span>主动消息会留在同一条时间线里</span></div></div>
