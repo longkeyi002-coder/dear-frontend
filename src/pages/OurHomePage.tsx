@@ -28,7 +28,7 @@ import "@/dear/our-home.css";
 
 type GalleryMode = "wall" | "directory" | "space";
 const mockSourceLabel = "MOCK ADAPTER";
-type ChatMessageKind = "agent" | "user" | "proactive";
+type ChatMessageKind = "agent" | "user" | "proactive" | "tool";
 
 interface ChatMessage {
   id: string;
@@ -57,6 +57,12 @@ const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
     text: "我刚刚替你看了一眼今天的生活状态。没有急着打扰你，等你回来再说。",
     time: "22:54",
     source: "AGENT_LIFE",
+  },
+  {
+    id: "tool-1",
+    kind: "tool",
+    text: "正在搜索网页",
+    time: "23:16",
   },
   {
     id: "user-1",
@@ -399,6 +405,13 @@ function ChatSpace() {
   const renderMessage = (message: ChatMessage) => {
     const isUser = message.kind === "user";
     const isProactive = message.kind === "proactive";
+    const isTool = message.kind === "tool";
+    if (isTool) {
+      return <article key={message.id} className="oh-chat-message oh-chat-tool-message">
+        <button type="button" className={`oh-chat-tool-card oh-chat-tool-event ${toolOpen ? "is-open" : ""}`} onClick={() => setToolOpen((open) => !open)} aria-expanded={toolOpen}><span className="oh-chat-tool-icon"><Wrench /></span><span className="oh-chat-tool-summary"><strong>{message.text}</strong><small>{toolOpen ? "已展开 · home.get_life_context · 238ms" : "工具活动 · 已完成"}</small></span><ChevronDown /></button>
+        {toolOpen && <div className="oh-chat-tool-details"><div><span>工具</span><code>home.get_life_context</code></div><div><span>参数</span><code>{`{ "scope": "today" }`}</code></div><div><span>结果</span><p>已生成一条 Mock 状态摘要，没有连接真实 Hermes。</p></div><div><span>耗时</span><code>238ms · success</code></div></div>}
+      </article>;
+    }
     return <article key={message.id} className={`oh-chat-message oh-chat-message-${message.kind}`}>
       <div className="oh-chat-message-meta"><span>{isUser ? "龙龙" : "哥哥"}</span><time>{message.time}</time>{isProactive && <small>{message.source}</small>}</div>
       <p>{message.text}</p>
@@ -413,8 +426,6 @@ function ChatSpace() {
     <div ref={threadRef} onScroll={handleThreadScroll} className="oh-chat-thread oh-chat-thread-v02" aria-live="polite">
       {messages.length === 0 && !isStreaming && <div className="oh-chat-empty"><Bot /><strong>这里还没有消息</strong><span>从一句简单的话开始，Mock 对话会留在这条时间线上。</span><button type="button" onClick={() => { setDraft("你好，哥哥"); setComposerNotice(null); }}>开始说话</button></div>}
       {messages.map(renderMessage)}
-      {messages.length > 0 && <><button type="button" className={`oh-chat-tool-card oh-chat-tool-event ${toolOpen ? "is-open" : ""}`} onClick={() => setToolOpen((open) => !open)} aria-expanded={toolOpen}><span className="oh-chat-tool-icon"><Wrench /></span><span className="oh-chat-tool-summary"><strong>正在搜索网页</strong><small>{toolOpen ? "已展开 · home.get_life_context · 238ms" : "工具活动 · 已完成"}</small></span><ChevronDown /></button>
-      {toolOpen && <div className="oh-chat-tool-details"><div><span>工具</span><code>home.get_life_context</code></div><div><span>参数</span><code>{`{ "scope": "today" }`}</code></div><div><span>结果</span><p>已生成一条 Mock 状态摘要，没有连接真实 Hermes。</p></div><div><span>耗时</span><code>238ms · success</code></div></div>}</>}
       {isStreaming && <div className="oh-chat-streaming"><LoaderCircle /><span>哥哥正在整理回复…</span><button type="button" onClick={() => setIsStreaming(false)}><X />取消生成</button></div>}
       {errorMessage && <div className="oh-chat-error" role="alert"><AlertCircle /><div><strong>这条消息没有送达</strong><span>{errorMessage}</span></div><button type="button" onClick={() => { setErrorMessage(null); submitMessage(lastFailedMessage, true); }}><RefreshCw />重试</button></div>}
     </div>
