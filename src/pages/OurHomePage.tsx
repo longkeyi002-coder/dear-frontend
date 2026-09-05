@@ -210,7 +210,7 @@ function HomeSpace() {
   </>;
 }
 
-function UsSpace({ space }: { space: GallerySpace }) {
+function UsSpace() {
   const timeline = [
     ["起点", "从一幅画开始的约定", "把我们的日常做成一个可以随时回来的地方。"],
     ["现在", "一起把生活系统搭起来", "画廊、对话和家里的房间，一件一件变成真的。"],
@@ -263,7 +263,7 @@ function UsageSpace({ space }: { space: GallerySpace }) {
 }
 
 function SpacePage({ space }: { space: GallerySpace }) {
-  const body = { home: <HomeSpace />, chat: <DearChat />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
+  const body = { home: <HomeSpace />, chat: <DearChat />, us: <UsSpace />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
   const themeVars = space.theme ? {
     "--st-background": space.theme.background,
     "--st-surface": space.theme.surface,

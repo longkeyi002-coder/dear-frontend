@@ -11,3 +11,4 @@ dist/
 !.env.example
 .DS_Store
 .vercel/
+.aui-official-*
