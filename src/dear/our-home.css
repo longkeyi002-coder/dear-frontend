@@ -750,6 +750,49 @@
 .oh-space-home .oh-kicker, .oh-space-home .oh-agent-mark, .oh-space-home .oh-text-link, .oh-space-home .oh-timeline-item > span { color: var(--st-accent, #3e7a68) !important; }
 .oh-space-home .oh-muted-label { color: var(--st-muted, #97a6a1); }
 
+/* Us /《撑阳伞的女人》 — meadow composition. Same pond language: content
+   floats on frosted sods over the painting; decorations are real crops of
+   the artwork (public/assets/decor/us-*.jpg). */
+.oh-space-us {
+  --oh-ink: var(--st-text, #2c4a3b);
+  --oh-muted: var(--st-muted, #637d67);
+  --oh-line: color-mix(in srgb, var(--st-accent, #4f7ea8) 20%, transparent);
+  position: relative;
+  background: var(--st-background, #d7e3d3);
+}
+.oh-space-us::before { content: ""; position: fixed; inset: -24px; z-index: 0; pointer-events: none; background: url("/assets/paintings/us-woman-with-parasol.jpg") center / cover no-repeat; filter: blur(6px) saturate(1.05) brightness(1.05); transform: scale(1.05); }
+.oh-space-us::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(168deg, rgba(217, 230, 238, .5), rgba(230, 237, 226, .3) 48%, rgba(215, 227, 211, .44)); }
+.oh-space-us .oh-space-main, .oh-space-us .oh-space-topbar { position: relative; z-index: 1; }
+.oh-space-us .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 6px 0 60px; }
+.oh-space-us .oh-space-topbar { border-bottom-color: rgba(255, 255, 255, .4); }
+.oh-space-us .oh-kicker, .oh-space-us .oh-timeline-item > span { color: var(--st-accent, #4f7ea8) !important; }
+.oh-meadow-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 20px; }
+.oh-meadow-greeting { padding: 14px 20px; border: 1px solid rgba(255, 255, 255, .5); border-radius: 18px 24px 16px 26px; background: color-mix(in srgb, var(--st-raised, #f2f0e3) 62%, transparent); backdrop-filter: blur(8px) saturate(1.15); -webkit-backdrop-filter: blur(8px) saturate(1.15); box-shadow: 0 10px 26px rgba(44, 74, 59, .12); }
+.oh-meadow-time { margin: 0 0 3px; color: var(--st-muted, #637d67); font: italic var(--oh-fs-sm)/1.5 var(--oh-font-serif); }
+.oh-meadow-hero h1 { margin: 0; color: var(--st-text, #2c4a3b); font-family: var(--oh-font-serif); font-size: var(--oh-fs-lg); font-weight: 500; letter-spacing: .04em; }
+.oh-meadow-parasol { width: 134px; height: 134px; object-fit: cover; border-radius: 50% 44% 50% 46%; border: 1px solid rgba(255, 255, 255, .55); box-shadow: 0 16px 34px rgba(44, 74, 59, .18), inset 0 1px 0 rgba(255, 255, 255, .5); transform: rotate(2deg); }
+.oh-meadow { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; padding: 26px 6px 34px; }
+.oh-meadow-clouds { position: absolute; inset: -30px; pointer-events: none; background:
+  radial-gradient(closest-side at 18% 12%, rgba(255, 255, 255, .5), transparent 70%),
+  radial-gradient(closest-side at 78% 30%, rgba(217, 230, 238, .55), transparent 70%),
+  radial-gradient(closest-side at 40% 84%, rgba(255, 255, 255, .4), transparent 70%); }
+.oh-meadow-timeline { grid-column: 1 / span 7; margin-top: 26px; }
+.oh-meadow-diary { grid-column: 8 / span 5; margin-top: 48px; border-radius: 34px 26px 40px 30px / 30px 42px 30px 44px; transform: rotate(-1.2deg); }
+.oh-meadow-quote { grid-column: 1 / span 5; margin-top: -4px; background: color-mix(in srgb, var(--st-accent-soft, #d9e6ee) 55%, transparent); border-radius: 8px 26px 10px 30px; transform: rotate(1.1deg); }
+.oh-meadow-quote blockquote { margin: 6px 0 12px; color: var(--st-text, #2c4a3b); font-size: var(--oh-fs-lg); line-height: 1.7; }
+.oh-meadow-quote small { display: block; color: var(--st-muted, #637d67); font: var(--oh-fs-2xs) var(--oh-font-mono); }
+.oh-meadow-dates { grid-column: 6 / span 7; margin-top: 26px; }
+.oh-diary-entry { padding: 11px 0; border-top: 1px solid color-mix(in srgb, var(--st-accent, #4f7ea8) 14%, transparent); }
+.oh-diary-entry:first-of-type { border-top: 0; }
+.oh-diary-entry span { color: var(--st-accent, #4f7ea8); font: var(--oh-fs-2xs) var(--oh-font-mono); }
+.oh-diary-entry p { margin: 6px 0 0; color: var(--st-text, #2c4a3b); font-size: var(--oh-fs-sm); line-height: 1.65; }
+.oh-meadow-diary .oh-outline-button { margin-top: 14px; }
+@media (max-width: 980px) {
+  .oh-meadow { display: flex; flex-direction: column; gap: 20px; }
+  .oh-meadow-hero { flex-direction: column-reverse; align-items: flex-start; }
+  .oh-meadow-parasol { width: 104px; height: 104px; }
+}
+
 /* DearChat v3 — assistant-ui primitives, styled with the pond glass language. */
 .oh-dc-assistant { width: 100%; }
 .oh-dc-meta { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; color: #c96a4a; font: var(--oh-fs-2xs) var(--oh-font-mono); letter-spacing: .05em; }

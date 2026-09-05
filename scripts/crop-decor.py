@@ -27,6 +27,10 @@ CROPS = [
     ("chat-impression-soleil-levant.jpg", "sunrise-sun.jpg", (660, 210, 900, 400), {}),
     ("chat-impression-soleil-levant.jpg", "sunrise-reflection.jpg", (690, 460, 870, 910), {}),
     ("chat-impression-soleil-levant.jpg", "sunrise-boat.jpg", (510, 600, 730, 800), {}),
+    ("us-woman-with-parasol.jpg", "us-sky.jpg", (820, 80, 1240, 520), {"blur": 2}),
+    ("us-woman-with-parasol.jpg", "us-parasol.jpg", (400, 100, 860, 480), {}),
+    ("us-woman-with-parasol.jpg", "us-veil.jpg", (330, 430, 780, 950), {}),
+    ("us-woman-with-parasol.jpg", "us-meadow.jpg", (80, 1130, 760, 1520), {"blur": 2}),
 ]
 
 

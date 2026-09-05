@@ -211,7 +211,44 @@ function HomeSpace() {
 }
 
 function UsSpace({ space }: { space: GallerySpace }) {
-  return <><SpaceHero space={space} eyebrow="03 / RELATIONSHIP" title="我们的故事，还在继续。"><div className="oh-ribbon-mark">♡<small>TOGETHER</small></div></SpaceHero><div className="oh-space-grid oh-us-grid"><article className="oh-panel oh-panel-wide"><div className="oh-panel-heading"><span>关系时间线</span>{sourcePill("RELATIONSHIP · MOCK")}</div><div className="oh-timeline"><div className="oh-timeline-item"><span>现在</span><div><strong>一起把生活系统做出来</strong><p>这是一个待共同确认的 Mock 事件。</p></div></div><div className="oh-timeline-item"><span>未来</span><div><strong>这里会留下真正被确认的节点</strong><p>重大关系事件在双方批准后进入正式时间线。</p></div></div></div></article><article className="oh-panel"><div className="oh-panel-heading"><span>共享日记</span><Plus /></div><div className="oh-diary-card"><span>今天</span><p>“家不是一个页面，是我们每次回来时都能继续的地方。”</p><small>共享日记 · Mock</small></div><button type="button" className="oh-outline-button">写一条</button></article><article className="oh-panel oh-panel-wide"><div className="oh-panel-heading"><span>纪念日</span><span className="oh-muted-label">尚未接入</span></div><div className="oh-empty-state oh-empty-state-horizontal"><Heart /><div><strong>还没有可展示的日期</strong><span>连接 Our Home 数据后，这里会显示共同确认的纪念日。</span></div></div></article></div></>;
+  const timeline = [
+    ["起点", "从一幅画开始的约定", "把我们的日常做成一个可以随时回来的地方。"],
+    ["现在", "一起把生活系统搭起来", "画廊、对话和家里的房间，一件一件变成真的。"],
+    ["以后", "重要的事，由我们一起确认", "纪念日和大事件会在双方确认后走进这条时间线。"],
+  ] as const;
+  const diary = [
+    ["今天", "家不是一个页面，是每次回来都能继续的地方。"],
+    ["上周", "先把客厅搭稳，剩下的慢慢来。"],
+  ] as const;
+  return <>
+    <section className="oh-meadow-hero">
+      <div className="oh-meadow-greeting">
+        <p className="oh-meadow-time">风把云和裙摆一起吹起来 · 03 / RELATIONSHIP</p>
+        <h1>我们的故事，还在继续。</h1>
+      </div>
+      <img className="oh-meadow-parasol" src="/assets/decor/us-parasol.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+    </section>
+    <section className="oh-meadow" aria-label="我们的故事">
+      <span className="oh-meadow-clouds" aria-hidden="true" />
+      <article className="oh-pad oh-meadow-timeline">
+        <header className="oh-pad-head"><span>关系时间线</span><em>RELATIONSHIP</em></header>
+        <div className="oh-timeline">{timeline.map(([when, title, detail]) => <div className="oh-timeline-item" key={when}><span>{when}</span><div><strong>{title}</strong><p>{detail}</p></div></div>)}</div>
+      </article>
+      <article className="oh-pad oh-meadow-diary">
+        <header className="oh-pad-head"><span>共享日记</span><em>DIARY</em></header>
+        {diary.map(([when, text]) => <div className="oh-diary-entry" key={when}><span>{when}</span><p>“{text}”</p></div>)}
+        <button type="button" className="oh-outline-button"><Plus />写一条</button>
+      </article>
+      <article className="oh-pad oh-meadow-quote">
+        <blockquote>“撑伞的人会累，但这条路是一起走的。”</blockquote>
+        <small>待共同确认</small>
+      </article>
+      <article className="oh-pad oh-meadow-dates">
+        <header className="oh-pad-head"><span>纪念日</span><em>DATES</em></header>
+        <div className="oh-empty-state oh-empty-state-horizontal"><Heart /><div><strong>还没有共同确认的日期</strong><span>第一次一起记下的日子，会从这里开始展示。</span></div></div>
+      </article>
+    </section>
+  </>;
 }
 
 function GoalsSpace({ space }: { space: GallerySpace }) {

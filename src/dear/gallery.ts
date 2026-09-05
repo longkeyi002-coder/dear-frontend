@@ -95,6 +95,16 @@ export const EAST_WING_SPACES: GallerySpace[] = [
     paintingPosition: "50% 42%",
     paintingAlt: "克劳德·莫奈《撑阳伞的女人》原作",
     paintingCredit: "CLAUDE MONET · PUBLIC DOMAIN",
+    theme: {
+      // 《撑阳伞的女人》低样板：草地绿、云白、天空蓝、裙纱暖白
+      background: "#d7e3d3",
+      surface: "#e6ede2",
+      surfaceRaised: "#f2f0e3",
+      text: "#2c4a3b",
+      textMuted: "#637d67",
+      accent: "#4f7ea8",
+      accentSoft: "#d9e6ee",
+    },
     icon: Heart,
   },
   {
