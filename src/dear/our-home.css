@@ -4,7 +4,14 @@
    Weights: 400 body, 500 emphasis. No 600/700 in content. */
 .oh-page { --oh-font-sans: var(--theme-font-sans), "Noto Sans SC", system-ui, sans-serif; --oh-font-serif: Georgia, "Noto Serif SC", "Songti SC", serif; --oh-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace; --oh-fs-2xs: 10px; --oh-fs-xs: 11px; --oh-fs-sm: 12.5px; --oh-fs-md: 14px; --oh-fs-lg: 17px; --oh-fs-xl: 21px; --oh-fs-display: 30px; }
 
-.oh-page { --oh-ink: #233d3a; --oh-muted: #6f8580; --oh-line: rgba(35, 61, 58, .16); --oh-shadow: 0 22px 60px rgba(46, 83, 73, .13); min-height: 100dvh; overflow: auto; position: relative; isolation: isolate; color: var(--oh-ink); background: #e9f1e9; font-family: var(--oh-font-sans); }
+.oh-page { --oh-ink: #233d3a; --oh-muted: #6f8580; --oh-line: rgba(35, 61, 58, .16); --oh-shadow: 0 22px 60px rgba(46, 83, 73, .13); min-height: 100dvh; overflow: auto; position: relative; isolation: isolate; color: var(--oh-ink); background: #e9f1e9; font-family: var(--oh-font-sans);
+  /* Desktop design contract: the target is a computer screen — baseline
+     1440×900, expected to hold from 1280 up to 1920 wide. All space pages
+     share one centered content column so topbars and panels align edge to
+     edge; the museum wall is intentionally wider (1560px) for immersion.
+     Type sizes are px-based, so proportions are fixed at every desktop
+     width. Sub-1024 layouts exist but are not the design target. */
+  --oh-content-w: min(1240px, calc(100% - 48px)); }
 .oh-page *, .oh-page *::before, .oh-page *::after { box-sizing: border-box; }
 .oh-page button, .oh-page input { font: inherit; }
 .oh-page a, .oh-page button { -webkit-tap-highlight-color: transparent; }
@@ -18,7 +25,9 @@
 .oh-ambient-ripple { position: absolute; width: 42vw; height: 12vw; border: 1px solid rgba(95, 145, 129, .14); border-radius: 50%; transform: rotate(-13deg); }
 .oh-ambient-ripple-one { right: 4vw; top: 30%; }
 .oh-ambient-ripple-two { left: -12vw; bottom: 16%; transform: rotate(10deg); }
-.oh-header { min-height: 84px; display: flex; align-items: center; gap: 28px; padding: 22px clamp(24px, 4vw, 68px); position: relative; z-index: 5; }
+.oh-header { min-height: 84px; display: flex; align-items: center; gap: 28px; padding: 22px max(24px, calc((100% - var(--oh-content-w)) / 2)); position: relative; z-index: 5; }
+/* On the museum wall the content column is the wider immersive one. */
+.oh-wall-page .oh-header { padding-inline: max(24px, calc((100% - min(1560px, 100% - clamp(48px, 6vw, 120px))) / 2)); }
 .oh-brand { display: flex; align-items: center; gap: 12px; min-width: 200px; }
 .oh-brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--oh-ink); border-radius: 50%; font-size: var(--oh-fs-display); line-height: 1; }
 .oh-brand strong, .oh-brand small { display: block; letter-spacing: .14em; }
@@ -37,7 +46,7 @@
 .oh-header .oh-menu-button { display: none; }
 .oh-icon-button { display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 1px solid var(--oh-line) !important; border-radius: 50%; }
 .oh-icon-button svg { width: 18px; }
-.oh-wall-main, .oh-directory-main, .oh-space-main { width: min(1260px, calc(100% - 48px)); margin: 0 auto; position: relative; z-index: 1; }
+.oh-wall-main, .oh-directory-main, .oh-space-main { width: var(--oh-content-w); margin: 0 auto; position: relative; z-index: 1; }
 .oh-wall-intro { display: flex; align-items: end; justify-content: space-between; gap: 32px; padding: clamp(36px, 7vw, 86px) 0 44px; }
 .oh-kicker { margin: 0 0 15px; color: #a85d4c; font: var(--oh-fs-xs)/1.2 var(--oh-font-mono); letter-spacing: .12em; }
 .oh-wall-intro h1, .oh-directory-heading h1, .oh-space-hero h1 { max-width: 760px; margin: 0; font-size: var(--oh-fs-xl); font-weight: 500; letter-spacing: -.06em; line-height: 1.04; }
@@ -104,7 +113,7 @@
 .oh-text-link { display: inline-flex; align-items: center; gap: 7px; color: #a85d4c !important; font-size: var(--oh-fs-sm); white-space: nowrap; }
 .oh-text-link svg { width: 15px; }
 .oh-space-page { background: #eff4ef; }
-.oh-space-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: min(1260px, calc(100% - 48px)); min-height: 84px; margin: 0 auto; border-bottom: 1px solid var(--oh-line); position: relative; z-index: 2; }
+.oh-space-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: var(--oh-content-w); min-height: 84px; margin: 0 auto; border-bottom: 1px solid var(--oh-line); position: relative; z-index: 2; }
 .oh-back-button { display: inline-flex; align-items: center; gap: 7px; padding: 0; background: transparent; color: var(--oh-muted); font-size: var(--oh-fs-sm); }
 .oh-back-button svg { width: 17px; }
 .oh-space-breadcrumb { display: flex; align-items: center; gap: 9px; color: var(--oh-muted); font: var(--oh-fs-xs) var(--oh-font-mono); }
@@ -352,7 +361,7 @@
 
 /* Directory V0.2: an open book, deliberately unlike the gallery wall. */
 .oh-directory-page { background: #ddd2bc; }
-.oh-directory-main { width: min(1200px, calc(100% - 48px)); padding-top: clamp(28px, 5vw, 56px); }
+.oh-directory-main { width: var(--oh-content-w); padding-top: clamp(28px, 5vw, 56px); }
 .oh-open-book { display: grid; grid-template-columns: 1fr 28px 1fr; min-height: 650px; filter: drop-shadow(0 22px 30px rgba(76, 61, 40, .2)); }
 .oh-book-page { position: relative; background: #f1e6cf; border: 1px solid #bea988; }
 .oh-book-page::before { content: ""; position: absolute; inset: 16px; pointer-events: none; border: 1px solid rgba(133, 104, 66, .16); }
@@ -418,7 +427,7 @@
 
 /* Home /《睡莲》 — pond composition. Content floats on real water; the
    decorative pads are actual crops of the painting (public/assets/decor). */
-.oh-space-home .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 6px 0 60px; }
+.oh-space-home .oh-space-main { width: var(--oh-content-w); padding: 6px 0 60px; }
 .oh-pond-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 20px; }
 .oh-pond-greeting { padding: 12px 18px; border: 1px solid rgba(255, 255, 255, .5); border-radius: 18px 24px 16px 26px; background: color-mix(in srgb, var(--st-raised, #f4f1e8) 62%, transparent); backdrop-filter: blur(8px) saturate(1.15); -webkit-backdrop-filter: blur(8px) saturate(1.15); box-shadow: 0 10px 26px rgba(28, 56, 47, .12); }
 .oh-pond-time { margin: 0 0 3px; color: var(--st-muted, #5f756c); font: italic var(--oh-fs-sm)/1.5 var(--oh-font-serif); }
@@ -511,11 +520,11 @@
 .oh-space-chat::before { content: ""; position: fixed; inset: -24px; z-index: 0; pointer-events: none; background: url("/assets/paintings/chat-impression-soleil-levant.jpg") center / cover no-repeat; filter: blur(8px) saturate(1.08) brightness(1.07); transform: scale(1.05); }
 .oh-space-chat::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(238, 242, 243, .36), rgba(238, 242, 243, .2) 45%, rgba(238, 242, 243, .3)); }
 .oh-space-chat .oh-space-main, .oh-space-chat .oh-space-topbar { position: relative; z-index: 1; }
-.oh-space-chat .oh-space-topbar { width: min(100% - 44px, 1260px); min-height: 68px; border-bottom-color: rgba(56, 78, 88, .18); color: var(--st-text, #26333c); }
+.oh-space-chat .oh-space-topbar { width: var(--oh-content-w); min-height: 68px; border-bottom-color: rgba(56, 78, 88, .18); color: var(--st-text, #26333c); }
 .oh-space-chat .oh-space-topbar a, .oh-space-chat .oh-back-button { color: var(--st-muted, #5f6e77); }
 .oh-space-chat .oh-space-breadcrumb strong { color: var(--st-text, #26333c); }
 .oh-space-chat .oh-space-top-actions .oh-source-pill { border-color: rgba(56, 78, 88, .28); color: var(--st-muted, #5f6e77); }
-.oh-space-chat .oh-space-main { display: flex; width: min(100% - 44px, 1260px); height: calc(100dvh - 68px); min-height: 0; padding: 0 0 18px; }
+.oh-space-chat .oh-space-main { display: flex; width: var(--oh-content-w); height: calc(100dvh - 68px); min-height: 0; padding: 0 0 18px; }
 .oh-chat-viewport { position: relative; display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid rgba(255, 255, 255, .55); background: color-mix(in srgb, var(--st-surface, #d3dadf) 86%, transparent); box-shadow: 0 22px 70px rgba(28, 56, 47, .2); }
 .oh-chat-sun, .oh-chat-reflection { position: absolute; z-index: -1; pointer-events: none; filter: saturate(1.15) blur(1px); }
 .oh-chat-sun { top: -60px; right: -50px; width: 280px; opacity: .55; border-radius: 50%; -webkit-mask: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 74%); mask: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 74%); }
@@ -763,7 +772,7 @@
 .oh-space-us::before { content: ""; position: fixed; inset: -24px; z-index: 0; pointer-events: none; background: url("/assets/paintings/us-woman-with-parasol.jpg") center / cover no-repeat; filter: blur(6px) saturate(1.05) brightness(1.05); transform: scale(1.05); }
 .oh-space-us::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(168deg, rgba(217, 230, 238, .5), rgba(230, 237, 226, .3) 48%, rgba(215, 227, 211, .44)); }
 .oh-space-us .oh-space-main, .oh-space-us .oh-space-topbar { position: relative; z-index: 1; }
-.oh-space-us .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 6px 0 60px; }
+.oh-space-us .oh-space-main { width: var(--oh-content-w); padding: 6px 0 60px; }
 .oh-space-us .oh-space-topbar { border-bottom-color: rgba(255, 255, 255, .4); }
 .oh-space-us .oh-kicker, .oh-space-us .oh-timeline-item > span { color: var(--st-accent, #4f7ea8) !important; }
 .oh-meadow-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 20px; }
