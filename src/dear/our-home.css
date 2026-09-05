@@ -403,8 +403,8 @@
 
 /* Home /《睡莲》 — pond composition. Content floats on real water; the
    decorative pads are actual crops of the painting (public/assets/decor). */
-.oh-space-home .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 26px 0 60px; }
-.oh-pond-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 24px; }
+.oh-space-home .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 6px 0 60px; }
+.oh-pond-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 20px; }
 .oh-pond-time { margin: 0 0 3px; color: var(--st-muted, #5f756c); font: italic 12.5px/1.5 Georgia, "Noto Serif SC", serif; }
 .oh-pond-hero h1 { margin: 0; color: var(--st-text, #24413c); font-family: Georgia, "Noto Serif SC", serif; font-size: 16px; font-weight: 500; letter-spacing: .04em; }
 .oh-pond { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; padding: 26px 6px 34px; }
@@ -412,10 +412,13 @@
   repeating-radial-gradient(circle at 12% 16%, transparent 0 30px, rgba(255, 255, 255, .12) 30px 32px, transparent 32px 62px),
   repeating-radial-gradient(circle at 88% 72%, transparent 0 26px, rgba(36, 65, 60, .05) 26px 28px, transparent 28px 56px); }
 .oh-lilypad { position: absolute; pointer-events: none; }
-.oh-lilypad-photo { height: auto; border-radius: 46% 54% 40% 60% / 55% 44% 56% 45%; box-shadow: 0 18px 34px rgba(23, 48, 40, .3), 0 0 0 4px rgba(244, 241, 232, .18); opacity: .94; }
-.oh-lilypad-one { width: 240px; right: -30px; bottom: -36px; transform: rotate(3deg); }
-.oh-lilypad-two { width: 190px; left: -46px; top: 4%; transform: rotate(-5deg); border-radius: 56% 44% 52% 48% / 46% 58% 42% 54%; }
-.oh-lilypad-three { width: 300px; left: 30%; bottom: -60px; transform: rotate(-2deg); border-radius: 10px 60px 12px 70px; opacity: .8; }
+.oh-lilypad-photo { height: auto; border-radius: 46% 54% 40% 60% / 55% 44% 56% 45%; opacity: .8; filter: saturate(.9); box-shadow: 0 14px 30px rgba(23, 48, 40, .14); -webkit-mask: radial-gradient(72% 72% at 50% 50%, #000 42%, transparent 76%); mask: radial-gradient(72% 72% at 50% 50%, #000 42%, transparent 76%); }
+.oh-lilypad-one { width: 250px; right: -30px; bottom: -40px; transform: rotate(3deg); }
+.oh-lilypad-two { width: 200px; left: -50px; top: 2%; transform: rotate(-5deg); }
+.oh-lilypad-three { width: 320px; left: 28%; bottom: -66px; transform: rotate(-2deg); opacity: .7; }
+.oh-lilypad-four { width: 230px; left: 38%; top: -46px; transform: rotate(4deg); opacity: .68; }
+.oh-lilypad-five { width: 250px; left: 45%; top: 34%; transform: rotate(-3deg); opacity: .62; }
+.oh-lilypad-six { width: 220px; right: 3%; top: 24%; transform: rotate(6deg); opacity: .6; }
 .oh-pad { position: relative; z-index: 1; padding: 22px 24px; background: var(--st-raised, #f4f1e8); border-radius: 26px 40px 30px 44px / 40px 28px 44px 30px; box-shadow: 0 18px 40px rgba(28, 56, 47, .18), inset 0 2px 0 rgba(255, 255, 255, .5); }
 .oh-pad-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; color: var(--st-muted, #64796f); font-size: 12px; }
 .oh-pad-head em { color: var(--st-accent, #3e7a68); font: 9px "DM Mono", monospace; font-style: normal; opacity: .65; }
