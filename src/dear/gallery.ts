@@ -3,6 +3,17 @@ import { Activity, Heart, Home, MessageCircle, Target } from "lucide-react";
 
 export type SpaceId = "home" | "chat" | "us" | "goals" | "usage";
 
+/** Low-fi painting theme tokens (docs/design/painting-themes.md contract). */
+export type SpaceTheme = {
+  background: string;
+  surface: string;
+  surfaceRaised: string;
+  text: string;
+  textMuted: string;
+  accent: string;
+  accentSoft: string;
+};
+
 export type GallerySpace = {
   id: SpaceId;
   number: string;
@@ -16,6 +27,7 @@ export type GallerySpace = {
   paintingPosition: string;
   paintingAlt: string;
   paintingCredit: string;
+  theme?: SpaceTheme;
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
 };
 
@@ -33,6 +45,16 @@ export const EAST_WING_SPACES: GallerySpace[] = [
     paintingPosition: "50% 48%",
     paintingAlt: "克劳德·莫奈《睡莲》原作",
     paintingCredit: "CLAUDE MONET · PUBLIC DOMAIN",
+    theme: {
+      // 《睡莲》低样板：湖绿水面、雾蓝晨光、柔粉睡莲、暖光倒影
+      background: "#dce8e0",
+      surface: "#eaf0e9",
+      surfaceRaised: "#f4f1e8",
+      text: "#24413c",
+      textMuted: "#5f756c",
+      accent: "#3e7a68",
+      accentSoft: "#d5e6da",
+    },
     icon: Home,
   },
   {

@@ -112,8 +112,7 @@ function GalleryFrame({ space, featured = false }: { space: GallerySpace; featur
   return <NavLink to={`/gallery/space/${space.id}`} className={`oh-gallery-item oh-gallery-item-${space.id} ${featured ? "oh-gallery-item-featured" : ""}`} aria-label={`进入 ${space.englishTitle}：${space.subtitle}`} style={{ "--painting-accent": space.accent } as CSSProperties}>
     <span className="oh-gallery-frame" aria-hidden="true">
       <span className="oh-frame-void">
-        {featured && <img className="oh-frame-painting" src={space.paintingImage} alt="" loading="eager" decoding="async" />}
-        {!featured && <span className="oh-void-core" />}
+        <img className="oh-frame-painting" src={space.paintingImage} alt="" loading={featured ? "eager" : "lazy"} decoding="async" />
       </span>
     </span>
     <span className="oh-frame-label"><SpaceLabel space={space} /></span>
@@ -396,7 +395,16 @@ function UsageSpace({ space }: { space: GallerySpace }) {
 
 function SpacePage({ space }: { space: GallerySpace }) {
   const body = { home: <HomeSpace space={space} />, chat: <ChatSpace />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
-  return <div className={`oh-page oh-space-page oh-space-${space.id}`}><SpaceTopbar space={space} /><main className="oh-space-main">{body[space.id]}</main><AmbientBackdrop /></div>;
+  const themeVars = space.theme ? {
+    "--st-background": space.theme.background,
+    "--st-surface": space.theme.surface,
+    "--st-raised": space.theme.surfaceRaised,
+    "--st-text": space.theme.text,
+    "--st-muted": space.theme.textMuted,
+    "--st-accent": space.theme.accent,
+    "--st-accent-soft": space.theme.accentSoft,
+  } as CSSProperties : undefined;
+  return <div className={`oh-page oh-space-page oh-space-${space.id}`} style={themeVars}><SpaceTopbar space={space} /><main className="oh-space-main">{body[space.id]}</main><AmbientBackdrop /></div>;
 }
 
 export function OurHomeExperience() {

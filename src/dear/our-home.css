@@ -592,8 +592,8 @@
 .oh-wall-cornice { position: absolute; top: 0; right: 0; left: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(201, 168, 106, .22) 18%, rgba(201, 168, 106, .22) 82%, transparent); }
 .oh-wall-floor { position: absolute; right: 0; bottom: 0; left: 0; height: clamp(90px, 10vw, 130px); background: linear-gradient(180deg, rgba(201, 168, 106, .07), transparent 2px), linear-gradient(180deg, #0d0b09 0%, #040303 60%, #020202 100%); border-top: 1px solid rgba(201, 168, 106, .1); }
 .oh-wall-spot, .oh-wall-dim { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
-.oh-wall-spot { background: radial-gradient(620px circle at var(--lamp-x, 50%) var(--lamp-y, 45%), rgba(255, 200, 124, .26), rgba(255, 184, 104, .15) 40%, rgba(255, 172, 92, .07) 64%, transparent 86%); mix-blend-mode: screen; }
-.oh-wall-dim { background: radial-gradient(760px circle at var(--lamp-x, 50%) var(--lamp-y, 45%), transparent 0 34%, rgba(0, 0, 0, .5) 78%); }
+.oh-wall-spot { background: radial-gradient(400px circle at var(--lamp-x, 50%) var(--lamp-y, 45%), rgba(255, 200, 124, .3), rgba(255, 184, 104, .17) 42%, rgba(255, 172, 92, .07) 66%, transparent 88%); mix-blend-mode: screen; }
+.oh-wall-dim { background: radial-gradient(520px circle at var(--lamp-x, 50%) var(--lamp-y, 45%), transparent 0 32%, rgba(0, 0, 0, .5) 78%); }
 .oh-gallery-wall.is-lit .oh-wall-spot, .oh-gallery-wall.is-lit .oh-wall-dim { opacity: 1; }
 .oh-wall-topbar { display: flex; justify-content: flex-end; padding: 0 clamp(6px, 1.4vw, 24px) clamp(20px, 3vw, 40px); }
 .oh-wall-topbar .oh-directory-card { min-height: 0; padding: 12px 16px; }
@@ -610,9 +610,12 @@
   -webkit-mask-composite: xor; mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000); mask-composite: exclude; padding: 3px; }
 .oh-frame-void { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: radial-gradient(120% 95% at 50% 28%, #060606, #010101 72%); box-shadow: inset 0 0 46px rgba(0, 0, 0, .95), inset 0 0 10px rgba(201, 168, 106, .04); }
 .oh-gallery-item-featured .oh-frame-void { aspect-ratio: 1 / 1.04; }
+.oh-gallery-item-chat .oh-frame-void { aspect-ratio: 13 / 10; }
+.oh-gallery-item-us .oh-frame-void { aspect-ratio: 4 / 5; }
+.oh-gallery-item-goals .oh-frame-void { aspect-ratio: 13 / 10; }
+.oh-gallery-item-usage .oh-frame-void { aspect-ratio: 11 / 9; }
 .oh-frame-void::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 52px rgba(0, 0, 0, .55); background: linear-gradient(180deg, rgba(0, 0, 0, .12), transparent 30%, rgba(0, 0, 0, .2)); }
 .oh-frame-painting { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) brightness(.82) contrast(1.06); }
-.oh-void-core { position: absolute; inset: 0; margin: auto; width: 46%; height: 58%; border-radius: 50%; background: radial-gradient(closest-side, rgba(64, 52, 34, .16), transparent 72%); filter: blur(8px); }
 .oh-frame-label { display: flex; justify-content: center; padding-top: 15px; color: #c9a86a; }
 .oh-frame-label .oh-space-label { gap: 10px; align-items: baseline; }
 .oh-frame-label .oh-space-number { color: rgba(201, 168, 106, .5); font: 11px "DM Mono", monospace; }
@@ -636,3 +639,25 @@
 /* UI audit fixes */
 .oh-home-message > small { display: block; }
 .oh-home-message .oh-text-link { margin-top: 12px; }
+
+/* Painting theme — 《睡莲》Home low-fi sample.
+   Theme tokens arrive as --st-* vars from SpacePage; remap the generic
+   ink/muted/line tokens so every existing rule picks the palette up. */
+.oh-space-home {
+  --oh-ink: var(--st-text, #24413c);
+  --oh-muted: var(--st-muted, #64796f);
+  --oh-line: color-mix(in srgb, var(--st-accent, #3e7a68) 20%, transparent);
+  background: var(--st-background, #eff4ef);
+}
+.oh-space-home .oh-space-topbar { border-bottom-color: var(--oh-line); }
+.oh-space-home .oh-kicker, .oh-space-home .oh-agent-mark, .oh-space-home .oh-text-link, .oh-space-home .oh-timeline-item > span { color: var(--st-accent, #a85d4c) !important; }
+.oh-space-home .oh-panel { background: var(--st-surface, rgba(255, 255, 255, .29)); border-color: var(--oh-line); box-shadow: 0 12px 30px rgba(45, 78, 68, .06); }
+.oh-space-home .oh-muted-label { color: var(--st-muted, #97a6a1); }
+.oh-space-home .oh-home-presence-card { border-left-color: var(--st-accent, #ad6251); background: color-mix(in srgb, var(--st-surface, #fff) 55%, transparent); }
+.oh-space-home .oh-home-presence-card strong { color: var(--st-accent, #ad6251); background: none; }
+.oh-space-home .oh-home-presence-dot { color: var(--st-accent, #ad6251); background-color: var(--st-accent, #ad6251); }
+.oh-space-home .oh-home-message { background: var(--st-raised, #f1e8d9); border-color: color-mix(in srgb, var(--st-accent, #ad6251) 24%, transparent); }
+.oh-space-home .oh-home-message blockquote { color: var(--st-text, #5f4e44); }
+.oh-space-home .oh-home-message > small, .oh-space-home .oh-diary-card small { color: var(--st-muted, #a58d7b); }
+.oh-space-home .oh-home-you { background: color-mix(in srgb, var(--st-raised, #fff) 45%, transparent); }
+.oh-space-home .oh-home-now-body > strong { color: var(--st-text, var(--oh-ink)); }
