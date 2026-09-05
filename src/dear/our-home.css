@@ -610,14 +610,15 @@
   -webkit-mask-composite: xor; mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000); mask-composite: exclude; padding: 3px; }
 .oh-frame-void { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: radial-gradient(120% 95% at 50% 28%, #060606, #010101 72%); box-shadow: inset 0 0 46px rgba(0, 0, 0, .95), inset 0 0 10px rgba(201, 168, 106, .04); }
 .oh-gallery-item-featured .oh-frame-void { aspect-ratio: 1 / 1.04; }
+.oh-frame-void::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 52px rgba(0, 0, 0, .55); background: linear-gradient(180deg, rgba(0, 0, 0, .12), transparent 30%, rgba(0, 0, 0, .2)); }
+.oh-frame-painting { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) brightness(.82) contrast(1.06); }
 .oh-void-core { position: absolute; inset: 0; margin: auto; width: 46%; height: 58%; border-radius: 50%; background: radial-gradient(closest-side, rgba(64, 52, 34, .16), transparent 72%); filter: blur(8px); }
 .oh-frame-label { display: flex; justify-content: center; padding-top: 15px; color: #c9a86a; }
-.oh-frame-label .oh-space-label { gap: 9px; }
-.oh-frame-label .oh-space-number { color: rgba(201, 168, 106, .5); }
-.oh-frame-label .oh-space-icon { width: 24px; height: 24px; border-color: rgba(201, 168, 106, .4); }
-.oh-frame-label .oh-space-icon svg { width: 12px; }
-.oh-frame-label .oh-space-label strong { color: #cbb98f; font-size: 13px; letter-spacing: .04em; }
-.oh-frame-label .oh-space-label small { color: rgba(201, 168, 106, .5); letter-spacing: .06em; }
+.oh-frame-label .oh-space-label { gap: 10px; align-items: baseline; }
+.oh-frame-label .oh-space-number { color: rgba(201, 168, 106, .5); font: 11px "DM Mono", monospace; }
+.oh-space-label-copy strong, .oh-space-label-copy small { display: block; }
+.oh-space-label-copy strong { color: #cbb98f; font-size: 13px; letter-spacing: .06em; }
+.oh-space-label-copy small { margin-top: 4px; color: rgba(201, 168, 106, .5); font-size: 11px; letter-spacing: .08em; }
 .oh-wall-page .oh-directory-card { border-color: rgba(201, 168, 106, .28); background: rgba(201, 168, 106, .04); color: #b6ae9f; }
 .oh-wall-page .oh-directory-card strong { color: #e2d5b8; }
 .oh-wall-page .oh-directory-card small { color: #797266; }

@@ -105,13 +105,17 @@ function AmbientBackdrop() {
 }
 
 function SpaceLabel({ space }: { space: GallerySpace }) {
-  const Icon = space.icon;
-  return <div className="oh-space-label"><span className="oh-space-number">{space.number}</span><span className="oh-space-icon" style={{ color: space.accent }}><Icon aria-hidden="true" /></span><span><strong>{space.title}</strong><small>{space.subtitle}</small></span></div>;
+  return <div className="oh-space-label"><span className="oh-space-number">{space.number}</span><span className="oh-space-label-copy"><strong>{space.title}</strong><small>{space.subtitle}</small></span></div>;
 }
 
 function GalleryFrame({ space, featured = false }: { space: GallerySpace; featured?: boolean }) {
   return <NavLink to={`/gallery/space/${space.id}`} className={`oh-gallery-item oh-gallery-item-${space.id} ${featured ? "oh-gallery-item-featured" : ""}`} aria-label={`进入 ${space.englishTitle}：${space.subtitle}`} style={{ "--painting-accent": space.accent } as CSSProperties}>
-    <span className="oh-gallery-frame" aria-hidden="true"><span className="oh-frame-void"><span className="oh-void-core" /></span></span>
+    <span className="oh-gallery-frame" aria-hidden="true">
+      <span className="oh-frame-void">
+        {featured && <img className="oh-frame-painting" src={space.paintingImage} alt="" loading="eager" decoding="async" />}
+        {!featured && <span className="oh-void-core" />}
+      </span>
+    </span>
     <span className="oh-frame-label"><SpaceLabel space={space} /></span>
   </NavLink>;
 }
