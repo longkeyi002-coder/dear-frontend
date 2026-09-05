@@ -10,12 +10,7 @@
     <title>Dear · Monet Gallery</title>
   </head>
   <body>
-    <script>
-    window.__loadErrs = [];
-    window.addEventListener("error", (e) => window.__loadErrs.push(String(e.message || e).slice(0, 200) + " || " + String(e.error && e.error.stack ? e.error.stack : "").slice(0, 900)));
-    window.addEventListener("unhandledrejection", (e) => window.__loadErrs.push("rej: " + String(e.reason).slice(0, 400)));
-  </script>
-  <div id="root"></div>
+<div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
