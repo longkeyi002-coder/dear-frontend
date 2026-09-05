@@ -54,3 +54,32 @@ export async function copyTextToClipboard(text: string): Promise<boolean> {
 
   return copied;
 }
+
+
+/**
+ * Copy an image (data URI or remote URL) to the clipboard as an image blob.
+ * The async Clipboard API has no legacy fallback for images, so callers must
+ * feature-detect and surface a soft error, mirroring copyTextToClipboard.
+ */
+export async function copyImageToClipboard(image: string): Promise<void> {
+  if (
+    typeof navigator === "undefined" ||
+    !navigator.clipboard?.write ||
+    typeof ClipboardItem === "undefined"
+  ) {
+    throw new Error("Clipboard API is not available in this environment.");
+  }
+  const dataUriToBlob = (uri: string): Blob => {
+    const [meta, base64] = uri.split(",");
+    const mime = meta.match(/^data:([^;,]+)/i)?.[1] ?? "image/png";
+    const bin = atob(base64 ?? "");
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i += 1) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  };
+  const blob = /^data:/i.test(image)
+    ? dataUriToBlob(image)
+    : await fetch(image).then((r) => r.blob());
+  const mime = blob.type || image.match(/^data:([^;,]+)/i)?.[1] || "image/png";
+  await navigator.clipboard.write([new ClipboardItem({ [mime]: blob })]);
+}
