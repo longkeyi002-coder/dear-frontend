@@ -88,6 +88,41 @@ export const ThreadListRoot: FC<
   );
 };
 
+/**
+ * Upstream lists a thread only after its first message (remote-adapter
+ * semantics), so "+ New Thread" looks like a dead click while the main
+ * thread is still empty. Show the fresh thread as the top, active row —
+ * ChatGPT-style — until it is sent and becomes a regular item.
+ */
+const ThreadListNewIndicator: FC = () => {
+  const isNewThreadMain = useAuiState(
+    (s) =>
+      s.threads.newThreadId !== null &&
+      s.threads.mainThreadId === s.threads.newThreadId,
+  );
+  if (!isNewThreadMain) return null;
+  return (
+    <div
+      data-slot="aui_thread-list-item"
+      data-active
+      aria-current="true"
+      className="group relative flex h-8 items-center rounded-md bg-muted"
+    >
+      <div
+        data-slot="aui_thread-list-item-trigger"
+        className="flex h-full min-w-0 flex-1 items-center rounded-md px-2.5 text-start text-sm"
+      >
+        <span
+          data-slot="aui_thread-list-item-title"
+          className="min-w-0 flex-1 truncate"
+        >
+          New Chat
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export const ThreadListItems: FC<
   ComponentPropsWithoutRef<"div"> & { searchQuery?: string }
 > = ({ className, searchQuery = "", ...props }) => {
@@ -101,6 +136,7 @@ export const ThreadListItems: FC<
         <ThreadListSkeleton />
       </AuiIf>
       <AuiIf condition={(s) => !s.threads.isLoading}>
+        <ThreadListNewIndicator />
         <ThreadListItemGroups searchQuery={searchQuery} />
       </AuiIf>
     </div>
