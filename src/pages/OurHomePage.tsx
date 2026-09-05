@@ -129,9 +129,8 @@ function GalleryWall() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         frame = 0;
-        const rect = wall.getBoundingClientRect();
-        wall.style.setProperty("--lamp-x", `${(((event.clientX - rect.left) / rect.width) * 100).toFixed(2)}%`);
-        wall.style.setProperty("--lamp-y", `${(((event.clientY - rect.top) / rect.height) * 100).toFixed(2)}%`);
+        wall.style.setProperty("--lamp-x", `${event.clientX}px`);
+        wall.style.setProperty("--lamp-y", `${event.clientY}px`);
         wall.classList.add("is-lit");
       });
     };
@@ -142,11 +141,11 @@ function GalleryWall() {
       }
       wall.classList.remove("is-lit");
     };
-    wall.addEventListener("pointermove", onMove);
-    wall.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointermove", onMove);
+    document.documentElement.addEventListener("pointerleave", onLeave);
     return () => {
-      wall.removeEventListener("pointermove", onMove);
-      wall.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -158,10 +157,16 @@ function GalleryWall() {
         <div className="oh-wall-topbar">
           <NavLink to="/directory" className="oh-directory-card"><BookOpen aria-hidden="true" /><span><strong>打开目录</strong><small>按功能快速进入</small></span><ArrowRight aria-hidden="true" /></NavLink>
         </div>
-        <div className="oh-gallery-wall-grid">
-          <GalleryFrame space={home} featured />
-          <div className="oh-gallery-stack">{rest.slice(0, 2).map((space) => <GalleryFrame key={space.id} space={space} />)}</div>
-          <div className="oh-gallery-stack oh-gallery-stack-offset">{rest.slice(2).map((space) => <GalleryFrame key={space.id} space={space} />)}</div>
+        <div className="oh-gallery-hang">
+          <div className="oh-gallery-row oh-gallery-row-main">
+            <GalleryFrame space={rest[0]} />
+            <GalleryFrame space={home} featured />
+            <GalleryFrame space={rest[1]} />
+          </div>
+          <div className="oh-gallery-row oh-gallery-row-sub">
+            <GalleryFrame space={rest[2]} />
+            <GalleryFrame space={rest[3]} />
+          </div>
         </div>
         <span className="oh-wall-cornice" aria-hidden="true" /><span className="oh-wall-floor" aria-hidden="true" /><span className="oh-wall-spot" aria-hidden="true" /><span className="oh-wall-dim" aria-hidden="true" />
       </section>
