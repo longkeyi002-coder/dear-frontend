@@ -556,38 +556,71 @@
   .oh-command-palette-v02 button small { display: none; }
 }
 
-/* Desktop Gallery V0.4 — lamplit vintage room; the cursor is the gallery light. */
-.oh-wall-page { display: flex; flex-direction: column; background: #a99c85; }
-.oh-wall-page::before { opacity: .14; }
+/* Desktop Gallery V0.5 — near-black salon. Matte black lacquer frames with
+   chased gold engraving, void instead of canvas, brass chain barrier, and a
+   sharp saturated cursor spotlight cutting through heavy shadow. */
+.oh-wall-page { display: flex; flex-direction: column; background: #08070a; color: #c9c2b4; }
+.oh-wall-page::before { opacity: .3; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .5) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .014) 0 1px, transparent 1px 3px); mix-blend-mode: normal; }
+.oh-wall-page .oh-ambient { display: none; }
+.oh-wall-page .oh-header { color: #b6ae9f; }
+.oh-wall-page .oh-brand-mark { border-color: #8d8577; }
+.oh-wall-page .oh-brand small, .oh-wall-page .oh-header-nav a, .oh-wall-page .oh-header-status { color: #736c60; }
+.oh-wall-page .oh-header-nav a.active, .oh-wall-page .oh-header-nav a:hover { color: #e6dcc8; }
+.oh-wall-page .oh-west-link { border-left-color: rgba(201, 168, 106, .22); }
+.oh-wall-page .oh-status-dot { background: #8a6f35; box-shadow: 0 0 0 4px rgba(138, 111, 53, .14); }
+.oh-wall-page .oh-source-pill { border-color: rgba(201, 168, 106, .3); color: #8d8577; }
+.oh-wall-page .oh-icon-button { border-color: rgba(201, 168, 106, .24) !important; color: #9a9284; }
 .oh-wall-main { flex: 1; display: flex; flex-direction: column; width: min(1420px, calc(100% - 40px)); }
-.oh-gallery-wall { flex: 1; display: flex; flex-direction: column; align-items: stretch; min-height: calc(100dvh - 168px); }
+.oh-gallery-wall { flex: 1; display: flex; flex-direction: column; align-items: stretch; min-height: calc(100dvh - 110px); overflow: hidden; position: relative; padding: clamp(30px, 4vw, 60px) clamp(26px, 5vw, 88px) clamp(240px, 26vw, 320px); background:
+  radial-gradient(120% 90% at 50% 0%, rgba(66, 58, 44, .2), transparent 55%),
+  repeating-linear-gradient(0deg, rgba(255, 255, 255, .012) 0 1px, transparent 1px 3px),
+  repeating-linear-gradient(90deg, rgba(0, 0, 0, .35) 0 1px, transparent 1px 3px),
+  linear-gradient(180deg, #121014 0%, #0b0a0d 52%, #060507 100%);
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, .92), inset 0 0 40px rgba(0, 0, 0, .8); }
 .oh-gallery-wall::before { content: none; }
-.oh-wall-plaque { max-width: 560px; padding: 2px 0 20px 20px; border-left: 3px solid rgba(112, 84, 55, .55); }
-.oh-wall-plaque .oh-kicker { margin: 0 0 9px; }
-.oh-wall-plaque h1 { font-family: Georgia, "Noto Serif SC", "Songti SC", serif; font-size: 21px; font-weight: 500; letter-spacing: .02em; line-height: 1.3; }
-.oh-wall-plaque h1 em { color: #7d5540; font-style: normal; }
-.oh-wall-plaque-note { display: flex; align-items: center; gap: 7px; margin: 9px 0 0; color: #5d5644; font-size: 11px; }
-.oh-wall-plaque-note svg { width: 14px; color: #77704f; }
-.oh-gallery-wall-grid { flex: 1; display: grid; grid-template-columns: 1.25fr .92fr .92fr; gap: 22px; align-content: center; align-items: start; padding: clamp(18px, 2.5vw, 36px) clamp(8px, 1.6vw, 26px) 0; }
-.oh-gallery-wall { overflow: hidden; padding: clamp(24px, 3vw, 44px) clamp(26px, 5vw, 72px) clamp(112px, 12vw, 150px); background: linear-gradient(180deg, #c6b89d 0%, #bfaf92 55%, #b1a081 100%); box-shadow: inset 0 0 90px rgba(64, 50, 33, .22), 0 26px 60px rgba(50, 42, 30, .28); }
-.oh-wall-cornice { position: absolute; top: 0; right: 0; left: 0; height: 16px; background: linear-gradient(180deg, rgba(255, 243, 210, .42), rgba(255, 243, 210, 0) 48%), linear-gradient(180deg, #b5a484, #998765); border-bottom: 1px solid rgba(64, 50, 33, .5); box-shadow: 0 2px 6px rgba(64, 50, 33, .22); }
-.oh-wall-floor { position: absolute; right: 0; bottom: 0; left: 0; height: clamp(86px, 9vw, 118px); background: linear-gradient(180deg, rgba(40, 30, 20, .28), transparent 34%), repeating-linear-gradient(90deg, rgba(43, 32, 21, .15) 0 2px, transparent 2px 54px), linear-gradient(180deg, #7a6246, #5d4934); border-top: 1px solid rgba(40, 30, 20, .55); }
-.oh-wall-spot, .oh-wall-dim { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .5s ease; }
-.oh-wall-spot { background: radial-gradient(360px circle at var(--lamp-x, 50%) var(--lamp-y, 42%), rgba(255, 215, 148, .55), rgba(255, 205, 138, .17) 46%, transparent 72%); mix-blend-mode: soft-light; }
-.oh-wall-dim { background: radial-gradient(470px circle at var(--lamp-x, 50%) var(--lamp-y, 42%), transparent 0 34%, rgba(41, 32, 21, .12) 78%); }
+.oh-gallery-wall::after { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(201, 168, 106, .3), transparent); }
+.oh-gallery-wall-grid { flex: 1; display: grid; grid-template-columns: 1.25fr .92fr .92fr; gap: clamp(28px, 3.5vw, 52px); align-content: center; align-items: start; padding: 0 clamp(6px, 1.4vw, 24px); }
+.oh-gallery-stack { display: grid; gap: clamp(28px, 3.5vw, 52px); }
+.oh-wall-cornice { position: absolute; top: 0; right: 0; left: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(201, 168, 106, .22) 18%, rgba(201, 168, 106, .22) 82%, transparent); }
+.oh-wall-floor { position: absolute; right: 0; bottom: 0; left: 0; height: clamp(90px, 10vw, 130px); background: linear-gradient(180deg, rgba(201, 168, 106, .07), transparent 2px), linear-gradient(180deg, #0d0b09 0%, #040303 60%, #020202 100%); border-top: 1px solid rgba(201, 168, 106, .1); }
+.oh-wall-spot, .oh-wall-dim { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
+.oh-wall-spot { background: radial-gradient(460px circle at var(--lamp-x, 50%) var(--lamp-y, 45%), rgba(255, 200, 124, .26), rgba(255, 184, 104, .15) 40%, rgba(255, 172, 92, .07) 64%, transparent 86%); mix-blend-mode: screen; }
+.oh-wall-dim { background: radial-gradient(560px circle at var(--lamp-x, 50%) var(--lamp-y, 45%), transparent 0 34%, rgba(0, 0, 0, .5) 78%); }
 .oh-gallery-wall.is-lit .oh-wall-spot, .oh-gallery-wall.is-lit .oh-wall-dim { opacity: 1; }
-.oh-gallery-frame { position: relative; }
-.oh-frame-lamp { position: absolute; top: -17px; left: 50%; width: 92px; height: 26px; transform: translateX(-50%); pointer-events: none; }
-.oh-frame-lamp::before { content: ""; position: absolute; top: 0; left: 50%; width: 58px; height: 11px; transform: translateX(-50%); border-radius: 4px 4px 0 0; background: linear-gradient(180deg, #a8814e, #54401f); box-shadow: inset 0 1px 0 rgba(255, 236, 190, .55); }
-.oh-frame-lamp::after { content: ""; position: absolute; top: 9px; left: 50%; width: 132px; height: 60px; transform: translateX(-50%); background: radial-gradient(58% 100% at 50% 0, rgba(255, 208, 138, .58), rgba(255, 202, 132, .15) 56%, transparent 78%); opacity: .62; transition: opacity .25s ease; }
-.oh-gallery-frame:hover .oh-frame-lamp::after, .oh-gallery-frame:focus-visible .oh-frame-lamp::after { opacity: 1; }
+.oh-wall-topbar { display: flex; justify-content: flex-end; padding: 0 clamp(6px, 1.4vw, 24px) clamp(20px, 3vw, 40px); }
+.oh-wall-topbar .oh-directory-card { min-height: 0; padding: 12px 16px; }
+.oh-gallery-item { position: relative; display: block; transition: transform .25s ease, filter .25s ease; }
+.oh-gallery-item:hover, .oh-gallery-item:focus-visible { transform: translateY(-5px); }
+.oh-gallery-item:hover .oh-gallery-frame, .oh-gallery-item:focus-visible .oh-gallery-frame { box-shadow: 0 44px 84px rgba(0, 0, 0, .9), 0 16px 34px rgba(0, 0, 0, .65), 0 0 46px rgba(201, 168, 106, .14), inset 0 0 0 1px rgba(201, 168, 106, .1); }
+.oh-gallery-frame { display: block; padding: clamp(12px, 1.2vw, 16px); border: 7px solid transparent; border-image: repeating-linear-gradient(135deg, rgba(120, 92, 42, .95) 0 2px, rgba(14, 12, 10, .98) 2px 5px, rgba(168, 134, 66, .85) 5px 7px, rgba(14, 12, 10, .98) 7px 10px) 7; background: linear-gradient(155deg, #191614 0%, #0e0c0b 55%, #080707 100%); box-shadow: 0 36px 70px rgba(0, 0, 0, .88), 0 12px 26px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(201, 168, 106, .07); }
+.oh-gallery-frame:hover { transform: none; }
+.oh-gallery-frame::before { content: ""; position: absolute; inset: 9px; pointer-events: none; border: 1px solid rgba(201, 168, 106, .26); box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .65), inset 0 0 0 3px rgba(201, 168, 106, .12); }
+.oh-gallery-frame::after { content: ""; position: absolute; inset: 12px; pointer-events: none; background:
+  repeating-linear-gradient(0deg, rgba(201, 168, 106, .16) 0 1px, transparent 1px 5px),
+  repeating-linear-gradient(90deg, rgba(201, 168, 106, .12) 0 1px, transparent 1px 5px);
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask-composite: xor; mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000); mask-composite: exclude; padding: 3px; }
+.oh-frame-void { position: relative; display: block; min-height: 170px; overflow: hidden; background: radial-gradient(120% 95% at 50% 28%, #060606, #010101 72%); box-shadow: inset 0 0 46px rgba(0, 0, 0, .95), inset 0 0 10px rgba(201, 168, 106, .04); }
+.oh-gallery-item-featured .oh-frame-void { min-height: 340px; }
+.oh-void-core { position: absolute; inset: 0; margin: auto; width: 46%; height: 58%; border-radius: 50%; background: radial-gradient(closest-side, rgba(64, 52, 34, .16), transparent 72%); filter: blur(8px); }
+.oh-frame-label { display: flex; justify-content: center; padding-top: 15px; color: #c9a86a; }
+.oh-frame-label .oh-space-label { gap: 9px; }
+.oh-frame-label .oh-space-number { color: rgba(201, 168, 106, .5); }
+.oh-frame-label .oh-space-icon { width: 24px; height: 24px; border-color: rgba(201, 168, 106, .4); }
+.oh-frame-label .oh-space-icon svg { width: 12px; }
+.oh-frame-label .oh-space-label strong { color: #cbb98f; font-size: 13px; letter-spacing: .04em; }
+.oh-frame-label .oh-space-label small { color: rgba(201, 168, 106, .5); letter-spacing: .06em; }
+.oh-wall-page .oh-directory-card { border-color: rgba(201, 168, 106, .28); background: rgba(201, 168, 106, .04); color: #b6ae9f; }
+.oh-wall-page .oh-directory-card strong { color: #e2d5b8; }
+.oh-wall-page .oh-directory-card small { color: #797266; }
+.oh-wall-page .oh-directory-card > svg:first-child { color: #c9a86a; }
 @media (max-width: 760px) {
   .oh-wall-cornice, .oh-wall-floor { display: none; }
-  .oh-gallery-wall { min-height: 0; padding-bottom: 42px; }
-  .oh-gallery-wall-grid { display: flex; flex-direction: column; gap: 16px; }
+  .oh-gallery-wall { min-height: 0; padding-bottom: 48px; }
+  .oh-gallery-wall-grid { display: flex; flex-direction: column; gap: 24px; }
   .oh-gallery-stack { display: contents; }
   .oh-gallery-stack-offset { padding-top: 0; }
-  .oh-frame-lamp { top: -14px; transform: translateX(-50%) scale(.85); }
+  .oh-wall-topbar { justify-content: flex-start; }
 }
 
 /* UI audit fixes */
