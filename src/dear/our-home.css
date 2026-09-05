@@ -28,6 +28,7 @@
 .oh-status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #6eaa83; box-shadow: 0 0 0 4px rgba(110, 170, 131, .16); }
 .oh-source-pill { display: inline-flex; align-items: center; min-height: 22px; padding: 4px 7px; border: 1px solid rgba(35, 61, 58, .22); border-radius: 4px; color: var(--oh-muted); font: 10px/1 "DM Mono", monospace; letter-spacing: .05em; white-space: nowrap; }
 .oh-menu-button, .oh-mobile-menu { display: none; }
+.oh-header .oh-menu-button { display: none; }
 .oh-icon-button { display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 1px solid var(--oh-line) !important; border-radius: 50%; }
 .oh-icon-button svg { width: 18px; }
 .oh-wall-main, .oh-directory-main, .oh-space-main { width: min(1260px, calc(100% - 48px)); margin: 0 auto; position: relative; z-index: 1; }
@@ -244,6 +245,7 @@
   .oh-brand small { display: none; }
   .oh-header-nav { display: none; }
   .oh-menu-button { display: grid; margin-left: auto; }
+  .oh-header .oh-menu-button { display: grid; }
   .oh-mobile-menu { position: absolute; top: 64px; right: 18px; display: grid; min-width: 160px; padding: 7px; border: 1px solid var(--oh-line); background: #f4f8f3; box-shadow: var(--oh-shadow); }
   .oh-mobile-menu a { padding: 11px; color: var(--oh-muted); font-size: 12px; }
   .oh-mobile-menu a:hover { background: rgba(126, 177, 154, .13); color: var(--oh-ink); }
@@ -553,3 +555,41 @@
   .oh-command-palette-v02 button { grid-template-columns: 82px 1fr; }
   .oh-command-palette-v02 button small { display: none; }
 }
+
+/* Desktop Gallery V0.4 — lamplit vintage room; the cursor is the gallery light. */
+.oh-wall-page { display: flex; flex-direction: column; background: #a99c85; }
+.oh-wall-page::before { opacity: .14; }
+.oh-wall-main { flex: 1; display: flex; flex-direction: column; width: min(1420px, calc(100% - 40px)); }
+.oh-gallery-wall { flex: 1; display: flex; flex-direction: column; align-items: stretch; min-height: calc(100dvh - 168px); }
+.oh-gallery-wall::before { content: none; }
+.oh-wall-plaque { max-width: 560px; padding: 2px 0 20px 20px; border-left: 3px solid rgba(112, 84, 55, .55); }
+.oh-wall-plaque .oh-kicker { margin: 0 0 9px; }
+.oh-wall-plaque h1 { font-family: Georgia, "Noto Serif SC", "Songti SC", serif; font-size: 21px; font-weight: 500; letter-spacing: .02em; line-height: 1.3; }
+.oh-wall-plaque h1 em { color: #7d5540; font-style: normal; }
+.oh-wall-plaque-note { display: flex; align-items: center; gap: 7px; margin: 9px 0 0; color: #5d5644; font-size: 11px; }
+.oh-wall-plaque-note svg { width: 14px; color: #77704f; }
+.oh-gallery-wall-grid { flex: 1; display: grid; grid-template-columns: 1.25fr .92fr .92fr; gap: 22px; align-content: center; align-items: start; padding: clamp(18px, 2.5vw, 36px) clamp(8px, 1.6vw, 26px) 0; }
+.oh-gallery-wall { overflow: hidden; padding: clamp(24px, 3vw, 44px) clamp(26px, 5vw, 72px) clamp(112px, 12vw, 150px); background: linear-gradient(180deg, #c6b89d 0%, #bfaf92 55%, #b1a081 100%); box-shadow: inset 0 0 90px rgba(64, 50, 33, .22), 0 26px 60px rgba(50, 42, 30, .28); }
+.oh-wall-cornice { position: absolute; top: 0; right: 0; left: 0; height: 16px; background: linear-gradient(180deg, rgba(255, 243, 210, .42), rgba(255, 243, 210, 0) 48%), linear-gradient(180deg, #b5a484, #998765); border-bottom: 1px solid rgba(64, 50, 33, .5); box-shadow: 0 2px 6px rgba(64, 50, 33, .22); }
+.oh-wall-floor { position: absolute; right: 0; bottom: 0; left: 0; height: clamp(86px, 9vw, 118px); background: linear-gradient(180deg, rgba(40, 30, 20, .28), transparent 34%), repeating-linear-gradient(90deg, rgba(43, 32, 21, .15) 0 2px, transparent 2px 54px), linear-gradient(180deg, #7a6246, #5d4934); border-top: 1px solid rgba(40, 30, 20, .55); }
+.oh-wall-spot, .oh-wall-dim { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .5s ease; }
+.oh-wall-spot { background: radial-gradient(360px circle at var(--lamp-x, 50%) var(--lamp-y, 42%), rgba(255, 215, 148, .55), rgba(255, 205, 138, .17) 46%, transparent 72%); mix-blend-mode: soft-light; }
+.oh-wall-dim { background: radial-gradient(470px circle at var(--lamp-x, 50%) var(--lamp-y, 42%), transparent 0 34%, rgba(41, 32, 21, .12) 78%); }
+.oh-gallery-wall.is-lit .oh-wall-spot, .oh-gallery-wall.is-lit .oh-wall-dim { opacity: 1; }
+.oh-gallery-frame { position: relative; }
+.oh-frame-lamp { position: absolute; top: -17px; left: 50%; width: 92px; height: 26px; transform: translateX(-50%); pointer-events: none; }
+.oh-frame-lamp::before { content: ""; position: absolute; top: 0; left: 50%; width: 58px; height: 11px; transform: translateX(-50%); border-radius: 4px 4px 0 0; background: linear-gradient(180deg, #a8814e, #54401f); box-shadow: inset 0 1px 0 rgba(255, 236, 190, .55); }
+.oh-frame-lamp::after { content: ""; position: absolute; top: 9px; left: 50%; width: 132px; height: 60px; transform: translateX(-50%); background: radial-gradient(58% 100% at 50% 0, rgba(255, 208, 138, .58), rgba(255, 202, 132, .15) 56%, transparent 78%); opacity: .62; transition: opacity .25s ease; }
+.oh-gallery-frame:hover .oh-frame-lamp::after, .oh-gallery-frame:focus-visible .oh-frame-lamp::after { opacity: 1; }
+@media (max-width: 760px) {
+  .oh-wall-cornice, .oh-wall-floor { display: none; }
+  .oh-gallery-wall { min-height: 0; padding-bottom: 42px; }
+  .oh-gallery-wall-grid { display: flex; flex-direction: column; gap: 16px; }
+  .oh-gallery-stack { display: contents; }
+  .oh-gallery-stack-offset { padding-top: 0; }
+  .oh-frame-lamp { top: -14px; transform: translateX(-50%) scale(.85); }
+}
+
+/* UI audit fixes */
+.oh-home-message > small { display: block; }
+.oh-home-message .oh-text-link { margin-top: 12px; }

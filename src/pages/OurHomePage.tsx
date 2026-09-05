@@ -20,7 +20,6 @@ import {
   Plus,
   Search,
   Send,
-  Sparkles,
   X,
 } from "lucide-react";
 import { NavLink, Navigate, useLocation, useNavigate } from "react-router";
@@ -120,18 +119,61 @@ function OriginalPainting({ space, large = false }: { space: GallerySpace; large
 
 function GalleryFrame({ space, featured = false }: { space: GallerySpace; featured?: boolean }) {
   return <NavLink to={`/gallery/space/${space.id}`} className={`oh-gallery-frame oh-gallery-frame-${space.id} ${featured ? "oh-gallery-frame-featured" : ""}`} aria-label={`进入 ${space.englishTitle}：${space.subtitle}`} style={{ "--painting-accent": space.accent } as CSSProperties}>
-    <div className="oh-frame-inner"><OriginalPainting space={space} large={featured} /></div><div className="oh-frame-caption"><SpaceLabel space={space} /><ArrowRight aria-hidden="true" /></div>
+    <span className="oh-frame-lamp" aria-hidden="true" /><div className="oh-frame-inner"><OriginalPainting space={space} large={featured} /></div><div className="oh-frame-caption"><SpaceLabel space={space} /><ArrowRight aria-hidden="true" /></div>
   </NavLink>;
 }
 
 function GalleryWall() {
   const home = EAST_WING_SPACES[0];
   const rest = EAST_WING_SPACES.slice(1);
+  const wallRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const wall = wallRef.current;
+    if (!wall || !window.matchMedia("(hover: hover)").matches) return;
+    let frame = 0;
+    const onMove = (event: PointerEvent) => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const rect = wall.getBoundingClientRect();
+        wall.style.setProperty("--lamp-x", `${(((event.clientX - rect.left) / rect.width) * 100).toFixed(2)}%`);
+        wall.style.setProperty("--lamp-y", `${(((event.clientY - rect.top) / rect.height) * 100).toFixed(2)}%`);
+        wall.classList.add("is-lit");
+      });
+    };
+    const onLeave = () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      wall.classList.remove("is-lit");
+    };
+    wall.addEventListener("pointermove", onMove);
+    wall.addEventListener("pointerleave", onLeave);
+    return () => {
+      wall.removeEventListener("pointermove", onMove);
+      wall.removeEventListener("pointerleave", onLeave);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return <div className="oh-page oh-wall-page">
     <GalleryHeader mode="wall" />
     <main className="oh-wall-main">
-      <section className="oh-wall-intro"><div><p className="oh-kicker">EAST WING / 01—05</p><h1>我们的家，<em>今天</em>也开着门。</h1><p className="oh-intro-copy">五个可以停留的生活空间。画廊负责观看，目录负责抵达。</p></div><div className="oh-intro-note"><Leaf aria-hidden="true" /><span>先从一幅画开始</span><small>生活数据仍来自 Mock Adapter</small></div></section>
-      <section className="oh-gallery-wall" aria-label="东馆画廊墙"><GalleryFrame space={home} featured /><div className="oh-gallery-stack">{rest.slice(0, 2).map((space) => <GalleryFrame key={space.id} space={space} />)}</div><div className="oh-gallery-stack oh-gallery-stack-offset">{rest.slice(2).map((space) => <GalleryFrame key={space.id} space={space} />)}<NavLink to="/directory" className="oh-directory-card"><BookOpen aria-hidden="true" /><span><strong>打开目录</strong><small>按功能快速进入</small></span><ArrowRight aria-hidden="true" /></NavLink></div></section>
+      <section ref={wallRef} className="oh-gallery-wall" aria-label="东馆画廊墙">
+        <header className="oh-wall-plaque">
+          <p className="oh-kicker">EAST WING · 01—05</p>
+          <h1>我们的家，<em>今天</em>也开着门。</h1>
+          <p className="oh-wall-plaque-note"><Leaf aria-hidden="true" />先从一幅画开始 · 生活数据来自 Mock Adapter</p>
+        </header>
+        <div className="oh-gallery-wall-grid">
+          <GalleryFrame space={home} featured />
+          <div className="oh-gallery-stack">{rest.slice(0, 2).map((space) => <GalleryFrame key={space.id} space={space} />)}</div>
+          <div className="oh-gallery-stack oh-gallery-stack-offset">{rest.slice(2).map((space) => <GalleryFrame key={space.id} space={space} />)}<NavLink to="/directory" className="oh-directory-card"><BookOpen aria-hidden="true" /><span><strong>打开目录</strong><small>按功能快速进入</small></span><ArrowRight aria-hidden="true" /></NavLink></div>
+        </div>
+        <span className="oh-wall-cornice" aria-hidden="true" /><span className="oh-wall-floor" aria-hidden="true" /><span className="oh-wall-spot" aria-hidden="true" /><span className="oh-wall-dim" aria-hidden="true" />
+      </section>
     </main>
     <footer className="oh-wall-footer"><span>MONET GALLERY · OUR HOME</span><span>Desktop Gallery V0.3 <span className="oh-footer-divider">/</span> 原画展示</span></footer><AmbientBackdrop />
   </div>;
@@ -178,7 +220,7 @@ function HomeSpace({ space }: { space: GallerySpace }) {
   </section></>;
 }
 
-function ChatSpace({ space: _space }: { space: GallerySpace }) {
+function ChatSpace() {
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_CHAT_MESSAGES);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -353,7 +395,7 @@ function UsageSpace({ space }: { space: GallerySpace }) {
 }
 
 function SpacePage({ space }: { space: GallerySpace }) {
-  const body = { home: <HomeSpace space={space} />, chat: <ChatSpace space={space} />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
+  const body = { home: <HomeSpace space={space} />, chat: <ChatSpace />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
   return <div className={`oh-page oh-space-page oh-space-${space.id}`}><SpaceTopbar space={space} /><main className="oh-space-main">{body[space.id]}</main><AmbientBackdrop /></div>;
 }
 

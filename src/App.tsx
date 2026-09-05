@@ -49,6 +49,7 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
+  Terminal,
   Users,
   Webhook,
   Wrench,
