@@ -212,7 +212,7 @@ function HomeSpace() {
   ] as const;
   return <>
     <section className="oh-pond-hero">
-      <div>
+      <div className="oh-pond-greeting">
         <p className="oh-pond-time">晚上 23:20 · 家里很安静</p>
         <h1>欢迎回来。</h1>
       </div>
