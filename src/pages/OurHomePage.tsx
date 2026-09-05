@@ -224,12 +224,6 @@ function HomeSpace() {
       </div>
     </section>
     <section className="oh-pond" aria-label="今天的生活">
-      <img className="oh-lilypad oh-lilypad-photo oh-lilypad-one" src="/assets/decor/lily-pads.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-      <img className="oh-lilypad oh-lilypad-photo oh-lilypad-two" src="/assets/decor/lily-pink.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-      <img className="oh-lilypad oh-lilypad-photo oh-lilypad-three" src="/assets/decor/lily-band.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-      <img className="oh-lilypad oh-lilypad-photo oh-lilypad-four" src="/assets/decor/lily-corner.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-      <img className="oh-lilypad oh-lilypad-photo oh-lilypad-five" src="/assets/decor/pads-mist.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-      <img className="oh-lilypad oh-lilypad-photo oh-lilypad-six" src="/assets/decor/water-green.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
       <span className="oh-pond-ripples" aria-hidden="true" />
       <article className="oh-pad oh-pad-now">
         <header className="oh-pad-head"><span>哥哥现在在做什么</span><em>AGENT_LIFE</em></header>

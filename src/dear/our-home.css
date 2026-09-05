@@ -405,25 +405,18 @@
    decorative pads are actual crops of the painting (public/assets/decor). */
 .oh-space-home .oh-space-main { width: min(1180px, calc(100% - 56px)); padding: 6px 0 60px; }
 .oh-pond-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 2px 0 20px; }
-.oh-pond-time { margin: 0 0 3px; color: var(--st-muted, #5f756c); font: italic 12.5px/1.5 Georgia, "Noto Serif SC", serif; }
-.oh-pond-hero h1 { margin: 0; color: var(--st-text, #24413c); font-family: Georgia, "Noto Serif SC", serif; font-size: 16px; font-weight: 500; letter-spacing: .04em; }
+.oh-pond-time { margin: 0 0 3px; color: var(--st-muted, #5f756c); font: italic 12.5px/1.5 Georgia, "Noto Serif SC", serif; text-shadow: 0 1px 10px rgba(240, 246, 240, .9); }
+.oh-pond-hero h1 { margin: 0; color: var(--st-text, #24413c); font-family: Georgia, "Noto Serif SC", serif; font-size: 16px; font-weight: 500; letter-spacing: .04em; text-shadow: 0 1px 10px rgba(240, 246, 240, .9); }
 .oh-pond { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; padding: 26px 6px 34px; }
 .oh-pond-ripples { position: absolute; inset: -40px; pointer-events: none; background:
   repeating-radial-gradient(circle at 12% 16%, transparent 0 30px, rgba(255, 255, 255, .12) 30px 32px, transparent 32px 62px),
   repeating-radial-gradient(circle at 88% 72%, transparent 0 26px, rgba(36, 65, 60, .05) 26px 28px, transparent 28px 56px); }
 .oh-lilypad { position: absolute; pointer-events: none; }
-.oh-lilypad-photo { height: auto; border-radius: 46% 54% 40% 60% / 55% 44% 56% 45%; opacity: .8; filter: saturate(.9); box-shadow: 0 14px 30px rgba(23, 48, 40, .14); -webkit-mask: radial-gradient(72% 72% at 50% 50%, #000 42%, transparent 76%); mask: radial-gradient(72% 72% at 50% 50%, #000 42%, transparent 76%); }
-.oh-lilypad-one { width: 250px; right: -30px; bottom: -40px; transform: rotate(3deg); }
-.oh-lilypad-two { width: 200px; left: -50px; top: 2%; transform: rotate(-5deg); }
-.oh-lilypad-three { width: 320px; left: 28%; bottom: -66px; transform: rotate(-2deg); opacity: .7; }
-.oh-lilypad-four { width: 230px; left: 38%; top: -46px; transform: rotate(4deg); opacity: .68; }
-.oh-lilypad-five { width: 250px; left: 45%; top: 34%; transform: rotate(-3deg); opacity: .62; }
-.oh-lilypad-six { width: 220px; right: 3%; top: 24%; transform: rotate(6deg); opacity: .6; }
-.oh-pad { position: relative; z-index: 1; padding: 22px 24px; background: var(--st-raised, #f4f1e8); border-radius: 26px 40px 30px 44px / 40px 28px 44px 30px; box-shadow: 0 18px 40px rgba(28, 56, 47, .18), inset 0 2px 0 rgba(255, 255, 255, .5); }
+.oh-pad { position: relative; z-index: 1; padding: 22px 24px; background: color-mix(in srgb, var(--st-raised, #f4f1e8) 62%, transparent); border: 1px solid rgba(255, 255, 255, .5); backdrop-filter: blur(16px) saturate(1.15); -webkit-backdrop-filter: blur(16px) saturate(1.15); border-radius: 26px 40px 30px 44px / 40px 28px 44px 30px; box-shadow: 0 18px 40px rgba(28, 56, 47, .14), inset 0 1px 0 rgba(255, 255, 255, .55); }
 .oh-pad-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; color: var(--st-muted, #64796f); font-size: 12px; }
 .oh-pad-head em { color: var(--st-accent, #3e7a68); font: 9px "DM Mono", monospace; font-style: normal; opacity: .65; }
 .oh-pad-now { grid-column: 1 / span 5; margin-top: 34px; border-radius: 34px 26px 40px 30px / 30px 42px 30px 44px; }
-.oh-pad-note { grid-column: 6 / span 4; margin-top: -8px; transform: rotate(-1.6deg); background: #f6e9e6; border-radius: 8px 26px 10px 30px; box-shadow: 0 16px 34px rgba(28, 56, 47, .2); }
+.oh-pad-note { grid-column: 6 / span 4; margin-top: -8px; transform: rotate(-1.6deg); background: color-mix(in srgb, #f6e3e0 58%, transparent); border-radius: 8px 26px 10px 30px; box-shadow: 0 16px 34px rgba(28, 56, 47, .16); }
 .oh-pad-note blockquote { margin: 8px 0 14px; color: var(--st-text, #24413c); font-size: 17px; line-height: 1.7; }
 .oh-pad-note small { display: block; color: var(--st-muted, #a58d7b); font-size: 10px; }
 .oh-pad-note .oh-text-link { margin-top: 16px; }
@@ -437,7 +430,7 @@
 .oh-pad-facts div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid color-mix(in srgb, var(--st-accent, #3e7a68) 16%, transparent); }
 .oh-pad-facts dt { color: var(--st-muted, #64796f); font-size: 10.5px; }
 .oh-pad-facts dd { margin: 0; color: var(--st-text, #24413c); font-size: 11px; text-align: right; }
-.oh-home-presence-card { min-width: 215px; padding: 18px 20px; border-radius: 30px 14px 34px 16px; background: color-mix(in srgb, var(--st-raised, #f4f1e8) 84%, transparent); box-shadow: 0 16px 34px rgba(28, 56, 47, .16); transform: rotate(1.4deg); }
+.oh-home-presence-card { min-width: 215px; padding: 18px 20px; border: 1px solid rgba(255, 255, 255, .5); border-radius: 30px 14px 34px 16px; background: color-mix(in srgb, var(--st-raised, #f4f1e8) 55%, transparent); backdrop-filter: blur(14px) saturate(1.15); -webkit-backdrop-filter: blur(14px) saturate(1.15); box-shadow: 0 16px 34px rgba(28, 56, 47, .14); transform: rotate(1.4deg); }
 .oh-home-presence-card strong, .oh-home-presence-card p, .oh-home-presence-card small { display: block; }
 .oh-home-presence-card strong { margin-top: -3px; color: var(--st-accent, #3e7a68); font: 11px "DM Mono", monospace; letter-spacing: .08em; }
 .oh-home-presence-card p { margin: 10px 0 8px; color: var(--st-text, #24413c); font-size: 15px; }
@@ -656,20 +649,19 @@
 .oh-home-message .oh-text-link { margin-top: 12px; }
 
 /* Painting theme — 《睡莲》Home low-fi sample.
-   Theme tokens arrive as --st-* vars from SpacePage; remap the generic
-   ink/muted/line tokens so existing rules pick up the palette. The
-   water-mist ambiance layer is a real crop of the painting. */
+   The painting itself is the page: a fixed, softly blurred backdrop with
+   a light veil, and every panel is frosted glass floating on it.
+   Theme tokens arrive as --st-* vars from SpacePage. */
 .oh-space-home {
   --oh-ink: var(--st-text, #24413c);
   --oh-muted: var(--st-muted, #64796f);
   --oh-line: color-mix(in srgb, var(--st-accent, #3e7a68) 20%, transparent);
   position: relative;
-  background:
-    radial-gradient(80% 50% at 82% 0%, rgba(226, 238, 230, .9), transparent 60%),
-    radial-gradient(60% 40% at 8% 16%, rgba(198, 221, 214, .85), transparent 62%),
-    linear-gradient(168deg, #cfe0d6 0%, #bcd3ca 36%, #a9c4bd 68%, #9cb7b2 100%);
+  background: var(--st-background, #dce8e0);
 }
-.oh-space-home::before { content: ""; position: absolute; top: 70px; right: 0; width: 54%; height: 460px; pointer-events: none; background: url("/assets/decor/water-mist.jpg") center / cover no-repeat; opacity: .45; filter: blur(1.5px) saturate(.9); -webkit-mask: radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 76%); mask: radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 76%); }
-.oh-space-home .oh-space-topbar { border-bottom-color: var(--oh-line); }
+.oh-space-home::before { content: ""; position: fixed; inset: -24px; z-index: 0; pointer-events: none; background: url("/assets/paintings/home-water-lilies.jpg") center / cover no-repeat; filter: blur(6px) saturate(1.05) brightness(1.04); transform: scale(1.05); }
+.oh-space-home::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(170deg, rgba(232, 241, 233, .5), rgba(214, 231, 221, .32) 45%, rgba(199, 222, 214, .42)); }
+.oh-space-home .oh-space-main, .oh-space-home .oh-space-topbar { position: relative; z-index: 1; }
+.oh-space-home .oh-space-topbar { border-bottom-color: rgba(255, 255, 255, .4); }
 .oh-space-home .oh-kicker, .oh-space-home .oh-agent-mark, .oh-space-home .oh-text-link, .oh-space-home .oh-timeline-item > span { color: var(--st-accent, #3e7a68) !important; }
 .oh-space-home .oh-muted-label { color: var(--st-muted, #97a6a1); }
