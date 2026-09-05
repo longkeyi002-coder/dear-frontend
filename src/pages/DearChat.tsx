@@ -54,13 +54,22 @@ const dearModel: ChatModelAdapter = {
   async *run({ abortSignal }) {
     const content: DearPart[] = [];
 
-    // 1. reasoning, streamed sentence by sentence so the content is visible
+    // 1. reasoning, streamed sentence by sentence so the content is visible.
+    //    Update the last part in place instead of appending, or every yield
+    //    renders as a separate block.
+    const setLast = (part: DearPart) => {
+      if (content.length > 0 && content[content.length - 1].type === part.type) {
+        content[content.length - 1] = part;
+      } else {
+        content.push(part);
+      }
+    };
     let acc = "";
     for (const sentence of REASONING_TEXT.split(/(?<=。)/)) {
       await sleep(420);
       if (abortSignal.aborted) throw new Error("canceled");
       acc += sentence;
-      content.push({ type: "reasoning", text: acc });
+      setLast({ type: "reasoning", text: acc });
       yield { content: [...content] };
     }
 
@@ -102,7 +111,7 @@ const dearModel: ChatModelAdapter = {
       await sleep(80);
       if (abortSignal.aborted) throw new Error("canceled");
       typed += chunk;
-      content.push({ type: "text", text: typed });
+      setLast({ type: "text", text: typed });
       yield { content: [...content] };
     }
   },

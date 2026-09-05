@@ -468,6 +468,36 @@
 /* Chat /《日出·印象》 Desktop Low-Fi V0.2. Conversation-first replacement.
    The painting is the backdrop; the conversation floats on frosted glass. */
 .oh-space-chat { --oh-chat-bg: var(--st-background, #202d35); --oh-chat-panel: color-mix(in srgb, var(--st-surface, #d3dadf) 66%, transparent); --oh-chat-thread: rgba(255, 255, 255, .8); --oh-chat-ink: var(--st-text, #1e3038); --oh-chat-muted: #6c818b; --oh-chat-line: rgba(50, 77, 88, .2); --oh-chat-sun: var(--st-accent, #d9684f); height: 100dvh; overflow: hidden; color: var(--oh-chat-ink); background: var(--oh-chat-bg); }
+/* Text-color fix only, no layout. The vendored assistant-ui components use
+   shadcn utilities (bg-background, text-foreground, …) that index.css
+   compiles into color-mix() expressions over the LENS_0 source vars
+   (--midground cream on --background-base #041c1c), so the slots can't be
+   recolored at runtime. Re-pointing the sources inside this space makes
+   every baked utility resolve to readable ink on light glass instead. */
+.oh-space-chat {
+  --midground: #26333c;
+  --midground-base: #26333c;
+  --background: #eef2f0;
+  --background-base: #eef2f0;
+  --text-primary: #26333c;
+  --text-secondary: #5f6e77;
+  --text-tertiary: #6c818b;
+  /* Slots that bake their color-mix at :root (--color-card feeds the
+     composer via --composer-bg) need explicit light values here. */
+  --color-card: #f4f6f3;
+  --color-popover: #ffffff;
+  --color-muted: #e5eae6;
+  --color-accent: #e9e4d7;
+  --color-secondary: #e2e9e4;
+  --color-foreground: #26333c;
+  --color-muted-foreground: #5f6e77;
+  --color-text-primary: #26333c;
+  --color-text-secondary: #5f6e77;
+  --color-text-tertiary: #6c818b;
+  --color-border: rgba(56, 78, 88, .18);
+  --color-input: rgba(56, 78, 88, .25);
+  --color-ring: #c95f38;
+}
 .oh-space-chat::before { content: ""; position: fixed; inset: -24px; z-index: 0; pointer-events: none; background: url("/assets/paintings/chat-impression-soleil-levant.jpg") center / cover no-repeat; filter: blur(8px) saturate(1.08) brightness(1.07); transform: scale(1.05); }
 .oh-space-chat::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(238, 242, 243, .36), rgba(238, 242, 243, .2) 45%, rgba(238, 242, 243, .3)); }
 .oh-space-chat .oh-space-main, .oh-space-chat .oh-space-topbar { position: relative; z-index: 1; }
