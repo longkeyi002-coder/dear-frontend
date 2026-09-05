@@ -525,6 +525,12 @@
 .oh-space-chat .oh-space-breadcrumb strong { color: var(--st-text, #26333c); }
 .oh-space-chat .oh-space-top-actions .oh-source-pill { border-color: rgba(56, 78, 88, .28); color: var(--st-muted, #5f6e77); }
 .oh-space-chat .oh-space-main { display: flex; width: var(--oh-content-w); height: calc(100dvh - 68px); min-height: 0; padding: 0 0 18px; }
+/* The official thread paints itself with bg-background, which turned the
+   whole conversation into one opaque slab and buried the painting — at
+   desktop widths it read as a huge featureless rectangle. Let the backdrop
+   show through; messages and composer stay on glass. */
+.oh-space-chat .aui-thread-root { background: transparent; }
+.oh-space-chat .aui-thread-viewport-footer { background: transparent; }
 .oh-chat-viewport { position: relative; display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid rgba(255, 255, 255, .55); background: color-mix(in srgb, var(--st-surface, #d3dadf) 86%, transparent); box-shadow: 0 22px 70px rgba(28, 56, 47, .2); }
 .oh-chat-sun, .oh-chat-reflection { position: absolute; z-index: -1; pointer-events: none; filter: saturate(1.15) blur(1px); }
 .oh-chat-sun { top: -60px; right: -50px; width: 280px; opacity: .55; border-radius: 50%; -webkit-mask: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 74%); mask: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 74%); }
