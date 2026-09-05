@@ -1,114 +1,28 @@
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
-  AlertCircle,
-  Bot,
-  Brain,
-  ChevronDown,
-  History,
-  Eye,
-  EyeOff,
-  RefreshCw,
-  Search,
-  Wrench,
   ArrowLeft,
   ArrowRight,
   BookOpen,
   Check,
-  Command,
   ExternalLink,
   Heart,
   Menu,
-  Mic,
-  Paperclip,
   Plus,
-  Send,
   X,
 } from "lucide-react";
 import { NavLink, Navigate, useLocation, useNavigate } from "react-router";
+import { DearChat } from "./DearChat";
 import { EAST_WING_SPACES, getSpace, type GallerySpace, type SpaceId } from "@/dear/gallery";
 
 import "@/dear/our-home.css";
 
 type GalleryMode = "wall" | "directory" | "space";
 const mockSourceLabel = "MOCK ADAPTER";
-type ChatMessageKind = "agent" | "user" | "proactive" | "tool" | "thinking" | "plan";
 
-type PlanStepStatus = "completed" | "in_progress" | "pending";
 
-interface ChatMessage {
-  id: string;
-  kind: ChatMessageKind;
-  text: string;
-  content?: string;
-  time: string;
-  source?: string;
-  steps?: Array<{ text: string; status: PlanStepStatus }>;
-}
 
-interface ChatCommand {
-  name: string;
-  description: string;
-  category: string;
-}
 
-const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
-  {
-    id: "welcome",
-    kind: "agent",
-    text: "龙龙，欢迎回来。今天的生活系统还在用 Mock 数据，不过我已经把客厅留给你了。",
-    time: "23:16",
-  },
-  {
-    id: "proactive-1",
-    kind: "proactive",
-    text: "我刚刚替你看了一眼今天的生活状态。没有急着打扰你，等你回来再说。",
-    time: "22:54",
-    source: "AGENT_LIFE",
-  },
-  {
-    id: "think-1",
-    kind: "thinking",
-    text: "分析了 store.ts 状态管理实现",
-    content: "会话和记忆挂在同一个 store 上，主动消息只是往同一条时间线追加记录，不需要新通道。",
-    time: "23:14",
-  },
-  {
-    id: "user-1",
-    kind: "user",
-    text: "那我们先把把这个家一点一点做起来。",
-    time: "23:17",
-  },
-  {
-    id: "plan-1",
-    kind: "plan",
-    text: "好，那我们把骨架搭稳：先把状态和更新的路走通，再往上面放生活。",
-    time: "23:17",
-    steps: [
-      { text: "分析 store.ts 状态管理实现", status: "completed" },
-      { text: "规划稳健的远程文件更新方案", status: "in_progress" },
-      { text: "更新生命状态冷却逻辑", status: "pending" },
-    ],
-  },
-];
 
-const CHAT_COMMANDS: ChatCommand[] = [
-  { name: "/home", description: "查看今天的家状态", category: "生活" },
-  { name: "/diary", description: "写一条日记", category: "记录" },
-  { name: "/remember", description: "记住这件事", category: "记忆" },
-  { name: "/status", description: "查看哥哥当前状态", category: "生活" },
-  { name: "/new", description: "开始一段新的对话", category: "会话" },
-];
-
-const CHAT_MODELS = ["GPT-5.2 / Mock", "Claude Sonnet / Mock", "GLM-4.7 / Mock", "自动选择 / Mock"];
-
-const CHAT_SESSIONS = [
-  { id: "s1", title: "今天的生活整理", time: "23:17" },
-  { id: "s2", title: "睡莲样板页讨论", time: "昨天" },
-  { id: "s3", title: "our-home-mcp 接口设计", time: "昨天" },
-  { id: "s4", title: "日记：一周的天气", time: "周一" },
-];
-
-const THINKING_KAOMOJI = ["(´･ω･`)", "(｀・ω・´)", "(´• ω •`)", "(˘•ω•˘)", "(｡･ω･｡)", "(￣ω￣)"];
 
 
 function sourcePill(label = mockSourceLabel) {
@@ -296,202 +210,6 @@ function HomeSpace() {
   </>;
 }
 
-function ChatSpace() {
-  const [draft, setDraft] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_CHAT_MESSAGES);
-  const [paletteOpen, setPaletteOpen] = useState(false);
-  const [modelOpen, setModelOpen] = useState(false);
-  const [model, setModel] = useState(CHAT_MODELS[0]);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [lastFailedMessage, setLastFailedMessage] = useState("");
-  const [showProcess, setShowProcess] = useState(true);
-  const [sessionsOpen, setSessionsOpen] = useState(false);
-  const [activeSession, setActiveSession] = useState("s1");
-  const [activeCommandIndex, setActiveCommandIndex] = useState(0);
-  const [kaomojiIndex, setKaomojiIndex] = useState(0);
-  const [parameterMode, setParameterMode] = useState<string | null>(null);
-  const [searchEnabled, setSearchEnabled] = useState(false);
-  const [composerNotice, setComposerNotice] = useState<string | null>(null);
-  const threadRef = useRef<HTMLDivElement>(null);
-  const shouldStickToBottom = useRef(true);
-
-  const filteredCommands = CHAT_COMMANDS.filter((command) =>
-    command.name.includes(draft.trim().toLowerCase()),
-  );
-
-  useEffect(() => {
-    if (!isStreaming) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => {
-      setKaomojiIndex((index) => (index + 1) % THINKING_KAOMOJI.length);
-    }, 700);
-    return () => window.clearInterval(timer);
-  }, [isStreaming]);
-
-  useEffect(() => {
-    if (!isStreaming) return;
-    const timer = window.setTimeout(() => {
-      setMessages((current) => [
-        ...current,
-        {
-          id: `agent-${Date.now()}`,
-          kind: "agent",
-          text: "好，我们就从今天这一句开始。这个回复也是 Mock 的，但它会沿着同一条对话继续留下来。",
-          time: "刚刚",
-        },
-      ]);
-      setIsStreaming(false);
-    }, 2600);
-    return () => window.clearTimeout(timer);
-  }, [isStreaming]);
-
-  useEffect(() => {
-    const thread = threadRef.current;
-    if (thread && shouldStickToBottom.current) thread.scrollTop = thread.scrollHeight;
-  }, [messages, isStreaming, errorMessage]);
-
-  const handleThreadScroll = () => {
-    const thread = threadRef.current;
-    if (!thread) return;
-    shouldStickToBottom.current = thread.scrollHeight - thread.scrollTop - thread.clientHeight < 56;
-  };
-
-  const startMockResponse = () => setIsStreaming(true);
-
-  const submitMessage = (value: string, retry = false) => {
-    if (!value) return;
-    setErrorMessage(null);
-    setComposerNotice(null);
-    if (!retry && value === "/new") {
-      setMessages([]);
-      setIsStreaming(false);
-      setDraft("");
-      setPaletteOpen(false);
-      setParameterMode(null);
-      return;
-    }
-    if (!retry && ["/diary", "/remember"].includes(value)) {
-      setParameterMode(value);
-      setDraft(`${value} `);
-      setPaletteOpen(false);
-      return;
-    }
-    if (!retry && value.includes("失败")) {
-      setLastFailedMessage(value);
-      setErrorMessage("这次 Mock 请求没有完成，原消息仍可通过重试重新发送。");
-      setMessages((current) => [
-        ...current,
-        { id: `user-${Date.now()}`, kind: "user", text: value, time: "刚刚" },
-      ]);
-      setDraft("");
-      setPaletteOpen(false);
-      setParameterMode(null);
-      return;
-    }
-    if (!retry) {
-      setMessages((current) => [
-        ...current,
-        { id: `user-${Date.now()}`, kind: "user", text: value, time: "刚刚" },
-      ]);
-    }
-    setDraft("");
-    setPaletteOpen(false);
-    setParameterMode(null);
-    startMockResponse();
-  };
-
-  const send = () => submitMessage(draft.trim());
-  const chooseCommand = (command: ChatCommand | undefined) => {
-    if (!command) return;
-    const needsParameter = command.name === "/diary" || command.name === "/remember";
-    setParameterMode(needsParameter ? command.name : null);
-    setDraft(`${command.name} `);
-    setPaletteOpen(false);
-  };
-  const handleDraft = (value: string) => {
-    setDraft(value);
-    setErrorMessage(null);
-    setComposerNotice(null);
-    setActiveCommandIndex(0);
-    setPaletteOpen(value.startsWith("/"));
-    if (parameterMode && !value.startsWith(`${parameterMode} `)) setParameterMode(null);
-  };
-  const handleComposerKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (paletteOpen && filteredCommands.length > 0) {
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        setActiveCommandIndex((index) => (index + 1) % filteredCommands.length);
-        return;
-      }
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        setActiveCommandIndex((index) => (index - 1 + filteredCommands.length) % filteredCommands.length);
-        return;
-      }
-      if (event.key === "Enter") {
-        event.preventDefault();
-        chooseCommand(filteredCommands[activeCommandIndex]);
-        return;
-      }
-    }
-    if (event.key === "Escape") {
-      setPaletteOpen(false);
-      return;
-    }
-    if (event.key === "Enter") send();
-  };
-
-  const renderMessage = (message: ChatMessage) => {
-    const isUser = message.kind === "user";
-    const isProactive = message.kind === "proactive";
-    const isTool = message.kind === "tool";
-    if ((message.kind === "tool" || message.kind === "thinking") && !showProcess) return null;
-    if (message.kind === "plan") {
-      const done = message.steps?.filter((step) => step.status === "completed").length ?? 0;
-      return <article key={message.id} className="oh-chat-plan">
-        <div className="oh-chat-plan-head"><span>计划 · {done}/{message.steps?.length ?? 0}</span><small>{message.time} · Mock</small></div>
-        <p className="oh-chat-plan-explanation">{message.text}</p>
-        {message.steps?.map((step) => <div key={step.text} className={`oh-plan-step ${step.status}`}>
-          <span className="oh-plan-glyph" aria-hidden="true">{step.status === "completed" ? "✔" : "□"}</span>
-          <span className="oh-plan-step-text">{step.text}</span>
-        </div>)}
-      </article>;
-    }
-    if (isTool || message.kind === "thinking") {
-      const Icon = isTool ? Wrench : Brain;
-      return <div key={message.id} className={`oh-chat-process-row ${message.kind === "thinking" ? "is-thinking" : ""}`}>
-        <span className="oh-chat-process-icon"><Icon aria-hidden="true" /></span>
-        <span className="oh-chat-process-text"><strong>{message.text}</strong>{message.content && <p>{message.content}</p>}</span>
-        <time>{message.time}</time>
-      </div>;
-    }
-    return <article key={message.id} className={`oh-chat-message oh-chat-message-${message.kind}`}>
-      <div className="oh-chat-message-meta"><span>{isUser ? "龙龙" : "哥哥"}</span><time>{message.time}</time>{isProactive && <small>{message.source}</small>}</div>
-      <p>{message.text}</p>
-      {isProactive && <span className="oh-chat-proactive-note">主动来到这里</span>}
-    </article>;
-  };
-
-  return <section className="oh-chat-viewport" aria-label="与哥哥的对话">
-    <img className="oh-chat-sun" src="/assets/decor/sunrise-sun.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <img className="oh-chat-reflection" src="/assets/decor/sunrise-reflection.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <div className="oh-chat-minibar"><button type="button" className="oh-chat-model-button" onClick={() => { setModelOpen((open) => !open); setSessionsOpen(false); }} aria-expanded={modelOpen} title="选择模型">{model}<ChevronDown aria-hidden="true" /></button><button type="button" className={`oh-chat-model-button ${sessionsOpen ? "is-on" : ""}`} onClick={() => { setSessionsOpen((open) => !open); setModelOpen(false); }} aria-expanded={sessionsOpen} title="会话列表"><History aria-hidden="true" /><span>会话</span></button><div><strong>Chat</strong><span>与你的生活对话</span></div><div className="oh-chat-minibar-status"><span className="oh-status-dot" />在线 · Mock</div><button type="button" className={`oh-chat-toggle ${showProcess ? "is-on" : ""}`} onClick={() => setShowProcess((visible) => !visible)} aria-pressed={showProcess} title="显示 / 隐藏思考与工具活动">{showProcess ? <Eye /> : <EyeOff />}<span>思考与工具</span></button><button type="button" className="oh-chat-new-button" onClick={() => { setMessages([]); setIsStreaming(false); setErrorMessage(null); setParameterMode(null); }}><Plus />新对话</button></div>
-    {sessionsOpen && <aside className="oh-chat-sessions" aria-label="会话列表">
-        <div className="oh-chat-sessions-head"><strong>会话</strong><span>Mock</span></div>
-        {CHAT_SESSIONS.map((session) => <button key={session.id} type="button" className={`oh-chat-session-row ${session.id === activeSession ? "is-active" : ""}`} onClick={() => { setActiveSession(session.id); setSessionsOpen(false); }}><strong>{session.title}</strong><small>{session.time}</small></button>)}
-      </aside>}
-      {modelOpen && <div className="oh-model-menu oh-model-menu-v02">{CHAT_MODELS.map((option) => <button key={option} type="button" onClick={() => { setModel(option); setModelOpen(false); }}><span>{option}</span>{option === model && <Check />}</button>)}</div>}
-      <div ref={threadRef} onScroll={handleThreadScroll} className="oh-chat-thread oh-chat-thread-v02" aria-live="polite">
-      {messages.length === 0 && !isStreaming && <div className="oh-chat-empty"><Bot /><strong>这里还没有消息</strong><span>从一句简单的话开始，Mock 对话会留在这条时间线上。</span><button type="button" onClick={() => { setDraft("你好，哥哥"); setComposerNotice(null); }}>开始说话</button></div>}
-      {messages.map(renderMessage)}
-      {isStreaming && <div className="oh-chat-streaming"><span className="oh-chat-kaomoji" aria-hidden="true">{THINKING_KAOMOJI[kaomojiIndex]}</span><span>哥哥正在整理回复…</span><button type="button" onClick={() => setIsStreaming(false)}><X />取消生成</button></div>}
-      {errorMessage && <div className="oh-chat-error" role="alert"><AlertCircle /><div><strong>这条消息没有送达</strong><span>{errorMessage}</span></div><button type="button" onClick={() => { setErrorMessage(null); submitMessage(lastFailedMessage, true); }}><RefreshCw />重试</button></div>}
-    </div>
-    <div className="oh-chat-composer-area">{paletteOpen && <div className="oh-command-palette oh-command-palette-v02" role="listbox" aria-label="Slash Command"><div className="oh-palette-heading"><Command />命令<span>↑↓ 选择 · Enter 使用</span></div>{filteredCommands.map((command, index) => <button key={command.name} type="button" className={index === activeCommandIndex ? "is-active" : ""} onClick={() => chooseCommand(command)}><strong>{command.name}</strong><span>{command.description}</span><small>{command.category}</small></button>)}</div>}{parameterMode && <div className="oh-command-parameter"><Command /><span>{parameterMode} 需要内容，继续输入后再发送。</span></div>}<div className="oh-composer oh-composer-v02"><button type="button" className="oh-composer-icon" aria-label="添加附件" onClick={() => setComposerNotice("附件功能当前为 Mock，占位交互已保留。 ")}><Paperclip /></button><button type="button" className={`oh-composer-icon ${searchEnabled ? "is-selected" : ""}`} aria-label="切换网页搜索" aria-pressed={searchEnabled} onClick={() => setSearchEnabled((enabled) => !enabled)}><Search /></button><input value={draft} onChange={(event) => handleDraft(event.target.value)} onKeyDown={handleComposerKeyDown} placeholder="说点什么，或输入 / 查看命令" aria-label="输入消息" /><button type="button" className="oh-composer-icon" aria-label="语音输入" onClick={() => setComposerNotice("语音输入当前为 Mock，占位交互已保留。 ")}><Mic /></button>{isStreaming ? <button type="button" className="oh-stop-button" onClick={() => setIsStreaming(false)} aria-label="停止生成"><X />停止</button> : <button type="button" className="oh-send-button" onClick={send} aria-label="发送消息"><Send /></button>}</div>{composerNotice && <div className="oh-composer-notice" role="status">{composerNotice}</div>}<div className="oh-composer-hint oh-composer-hint-v02"><span>{searchEnabled ? "搜索已开启 · Mock" : "搜索未开启"}</span><span>主动消息会留在同一条时间线里</span></div></div>
-  </section>;
-}
-
 function UsSpace({ space }: { space: GallerySpace }) {
   return <><SpaceHero space={space} eyebrow="03 / RELATIONSHIP" title="我们的故事，还在继续。"><div className="oh-ribbon-mark">♡<small>TOGETHER</small></div></SpaceHero><div className="oh-space-grid oh-us-grid"><article className="oh-panel oh-panel-wide"><div className="oh-panel-heading"><span>关系时间线</span>{sourcePill("RELATIONSHIP · MOCK")}</div><div className="oh-timeline"><div className="oh-timeline-item"><span>现在</span><div><strong>一起把生活系统做出来</strong><p>这是一个待共同确认的 Mock 事件。</p></div></div><div className="oh-timeline-item"><span>未来</span><div><strong>这里会留下真正被确认的节点</strong><p>重大关系事件在双方批准后进入正式时间线。</p></div></div></div></article><article className="oh-panel"><div className="oh-panel-heading"><span>共享日记</span><Plus /></div><div className="oh-diary-card"><span>今天</span><p>“家不是一个页面，是我们每次回来时都能继续的地方。”</p><small>共享日记 · Mock</small></div><button type="button" className="oh-outline-button">写一条</button></article><article className="oh-panel oh-panel-wide"><div className="oh-panel-heading"><span>纪念日</span><span className="oh-muted-label">尚未接入</span></div><div className="oh-empty-state oh-empty-state-horizontal"><Heart /><div><strong>还没有可展示的日期</strong><span>连接 Our Home 数据后，这里会显示共同确认的纪念日。</span></div></div></article></div></>;
 }
@@ -508,7 +226,7 @@ function UsageSpace({ space }: { space: GallerySpace }) {
 }
 
 function SpacePage({ space }: { space: GallerySpace }) {
-  const body = { home: <HomeSpace />, chat: <ChatSpace />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
+  const body = { home: <HomeSpace />, chat: <DearChat />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
   const themeVars = space.theme ? {
     "--st-background": space.theme.background,
     "--st-surface": space.theme.surface,
