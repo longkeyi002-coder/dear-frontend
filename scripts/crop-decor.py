@@ -24,6 +24,9 @@ CROPS = [
     ("home-water-lilies.jpg", "lily-corner.jpg", (60, 1150, 420, 1420), {}),
     ("home-water-lilies.jpg", "pads-mist.jpg", (150, 470, 580, 730), {}),
     ("home-water-lilies.jpg", "water-green.jpg", (880, 560, 1275, 900), {}),
+    ("chat-impression-soleil-levant.jpg", "sunrise-sun.jpg", (660, 210, 900, 400), {}),
+    ("chat-impression-soleil-levant.jpg", "sunrise-reflection.jpg", (690, 460, 870, 910), {}),
+    ("chat-impression-soleil-levant.jpg", "sunrise-boat.jpg", (510, 600, 730, 800), {}),
 ]
 
 

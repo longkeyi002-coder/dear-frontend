@@ -459,14 +459,21 @@
   .oh-lilypad-three { display: none; }
 }
 
-/* Chat /《日出·印象》 Desktop Low-Fi V0.2. Conversation-first replacement. */
-.oh-space-chat { --oh-chat-bg: #202d35; --oh-chat-panel: #273943; --oh-chat-thread: #d5e0e1; --oh-chat-ink: #1e3038; --oh-chat-muted: #6c818b; --oh-chat-line: rgba(50, 77, 88, .2); --oh-chat-sun: #d9684f; height: 100dvh; overflow: hidden; color: var(--oh-chat-ink); background: var(--oh-chat-bg); }
+/* Chat /《日出·印象》 Desktop Low-Fi V0.2. Conversation-first replacement.
+   The painting is the backdrop; the conversation floats on frosted glass. */
+.oh-space-chat { --oh-chat-bg: var(--st-background, #202d35); --oh-chat-panel: color-mix(in srgb, var(--st-surface, #273943) 74%, transparent); --oh-chat-thread: #d5e0e1; --oh-chat-ink: var(--st-text, #1e3038); --oh-chat-muted: #6c818b; --oh-chat-line: rgba(50, 77, 88, .2); --oh-chat-sun: var(--st-accent, #d9684f); height: 100dvh; overflow: hidden; color: var(--oh-chat-ink); background: var(--oh-chat-bg); }
+.oh-space-chat::before { content: ""; position: fixed; inset: -24px; z-index: 0; pointer-events: none; background: url("/assets/paintings/chat-impression-soleil-levant.jpg") center / cover no-repeat; filter: blur(10px) saturate(1.05) brightness(.9); transform: scale(1.05); }
+.oh-space-chat::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(24, 36, 44, .46), rgba(24, 36, 44, .3) 45%, rgba(24, 36, 44, .42)); }
+.oh-space-chat .oh-space-main, .oh-space-chat .oh-space-topbar { position: relative; z-index: 1; }
 .oh-space-chat .oh-space-topbar { width: min(100% - 44px, 1260px); min-height: 68px; border-bottom-color: rgba(196, 215, 219, .16); color: #d6e1e2; }
 .oh-space-chat .oh-space-topbar a, .oh-space-chat .oh-back-button { color: #b3c5ca; }
 .oh-space-chat .oh-space-breadcrumb strong { color: #edf3f1; }
 .oh-space-chat .oh-space-top-actions .oh-source-pill { border-color: rgba(196, 215, 219, .24); color: #a9bec3; }
 .oh-space-chat .oh-space-main { display: flex; width: min(100% - 44px, 1260px); height: calc(100dvh - 68px); min-height: 0; padding: 0 0 18px; }
-.oh-chat-viewport { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid rgba(169, 194, 201, .22); background: var(--oh-chat-panel); box-shadow: 0 22px 70px rgba(7, 15, 20, .28); }
+.oh-chat-viewport { position: relative; display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid rgba(169, 194, 201, .2); background: var(--oh-chat-panel); backdrop-filter: blur(20px) saturate(1.1); -webkit-backdrop-filter: blur(20px) saturate(1.1); box-shadow: 0 22px 70px rgba(7, 15, 20, .3); }
+.oh-chat-sun, .oh-chat-reflection { position: absolute; z-index: -1; pointer-events: none; filter: saturate(1.15) blur(1px); }
+.oh-chat-sun { top: -60px; right: -50px; width: 280px; opacity: .55; border-radius: 50%; -webkit-mask: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 74%); mask: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 74%); }
+.oh-chat-reflection { top: 110px; right: 26px; width: 96px; height: 54%; opacity: .32; border-radius: 60px; -webkit-mask: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 80%); mask: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 80%); }
 .oh-chat-minibar { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 16px; min-height: 54px; padding: 10px 18px; border-bottom: 1px solid rgba(188, 210, 214, .16); color: #d9e7e7; }
 .oh-chat-minibar > div:first-child { display: flex; align-items: baseline; gap: 11px; }
 .oh-chat-minibar strong { font-size: 14px; font-weight: 600; letter-spacing: .03em; }
@@ -490,7 +497,7 @@
 .oh-chat-message-proactive { max-width: min(760px, 84%); padding-left: 14px; border-left: 2px solid rgba(217, 104, 79, .5); }
 .oh-chat-message-proactive p { border-style: dashed; background: #cbd9db; }
 .oh-chat-proactive-note { display: block; margin-top: 6px; color: #c07861; font: 10px "DM Mono", monospace; }
-.oh-chat-tool-event { display: flex; flex: none; align-items: center; gap: 10px; width: min(100%, 560px); padding: 10px 12px; border: 1px solid rgba(110, 145, 157, .46) !important; background: #344b55; color: #d8e5e5; text-align: left; }
+.oh-chat-tool-event { display: flex; flex: none; align-items: center; gap: 10px; width: min(100%, 560px); padding: 10px 12px; border: 1px solid rgba(110, 145, 157, .46) !important; background: rgba(52, 75, 85, .6); color: #d8e5e5; text-align: left; }
 .oh-chat-tool-event:hover, .oh-chat-tool-event.is-open { border-color: #95b8bd !important; background: #3b5660; }
 .oh-chat-tool-icon { display: grid; place-items: center; width: 27px; height: 27px; color: #a7c4c6; }
 .oh-chat-tool-icon svg { width: 16px; }
@@ -518,8 +525,8 @@
 .oh-chat-empty strong { color: #dce9e8; font-size: 15px; font-weight: 600; }
 .oh-chat-empty span { max-width: 330px; font-size: 11px; line-height: 1.6; }
 .oh-chat-empty button { margin-top: 7px; padding: 8px 12px; border: 1px solid rgba(188, 210, 214, .3) !important; background: transparent; color: #e1b39a; font-size: 11px; }
-.oh-chat-composer-area { position: relative; flex: none; padding: 12px 14px 14px; border-top: 1px solid rgba(188, 210, 214, .16); background: #263941; }
-.oh-composer-v02 { display: flex; align-items: center; gap: 4px; min-height: 52px; padding: 6px; border: 1px solid rgba(172, 200, 203, .34); background: #1b2b32; }
+.oh-chat-composer-area { position: relative; flex: none; padding: 12px 14px 14px; border-top: 1px solid rgba(188, 210, 214, .16); background: rgba(22, 35, 42, .42); backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1); }
+.oh-composer-v02 { display: flex; align-items: center; gap: 4px; min-height: 52px; padding: 6px; border: 1px solid rgba(172, 200, 203, .34); background: rgba(20, 31, 37, .5); }
 .oh-composer-v02 input { flex: 1; min-width: 0; padding: 11px 6px; border: 0; outline: 0; background: transparent; color: #edf4f1; font-size: 13px; }
 .oh-composer-v02 input::placeholder { color: #799099; }
 .oh-composer-v02 .oh-composer-icon { display: grid; place-items: center; width: 38px; height: 38px; border: 0; background: transparent; color: #91a9ae; }

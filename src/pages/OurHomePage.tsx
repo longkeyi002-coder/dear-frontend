@@ -407,6 +407,8 @@ function ChatSpace() {
   };
 
   return <section className="oh-chat-viewport" aria-label="与哥哥的对话">
+    <img className="oh-chat-sun" src="/assets/decor/sunrise-sun.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+    <img className="oh-chat-reflection" src="/assets/decor/sunrise-reflection.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <div className="oh-chat-minibar"><div><strong>Chat</strong><span>与你的生活对话</span></div><div className="oh-chat-minibar-status"><span className="oh-status-dot" />在线 · Mock</div><button type="button" className="oh-chat-new-button" onClick={() => { setMessages([]); setIsStreaming(false); setErrorMessage(null); setToolOpen(false); setParameterMode(null); }}><Plus />新对话</button></div>
     <div ref={threadRef} onScroll={handleThreadScroll} className="oh-chat-thread oh-chat-thread-v02" aria-live="polite">
       {messages.length === 0 && !isStreaming && <div className="oh-chat-empty"><Bot /><strong>这里还没有消息</strong><span>从一句简单的话开始，Mock 对话会留在这条时间线上。</span><button type="button" onClick={() => { setDraft("你好，哥哥"); setComposerNotice(null); }}>开始说话</button></div>}

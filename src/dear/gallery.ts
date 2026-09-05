@@ -70,6 +70,16 @@ export const EAST_WING_SPACES: GallerySpace[] = [
     paintingPosition: "50% 50%",
     paintingAlt: "克劳德·莫奈《日出·印象》原作",
     paintingCredit: "CLAUDE MONET · PUBLIC DOMAIN",
+    theme: {
+      // 《日出·印象》低样板：晨雾蓝灰、勒阿弗尔港水面、日出橙
+      background: "#39424c",
+      surface: "#414d57",
+      surfaceRaised: "#4b5862",
+      text: "#eef3f2",
+      textMuted: "#9fb2b8",
+      accent: "#e8703f",
+      accentSoft: "#5a646d",
+    },
     icon: MessageCircle,
   },
   {
