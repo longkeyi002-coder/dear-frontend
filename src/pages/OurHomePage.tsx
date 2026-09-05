@@ -20,7 +20,6 @@ import {
   Plus,
   Search,
   Send,
-  Sparkles,
   X,
 } from "lucide-react";
 import { NavLink, Navigate, useLocation, useNavigate } from "react-router";
@@ -221,7 +220,7 @@ function HomeSpace({ space }: { space: GallerySpace }) {
   </section></>;
 }
 
-function ChatSpace({ space: _space }: { space: GallerySpace }) {
+function ChatSpace() {
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_CHAT_MESSAGES);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -396,7 +395,7 @@ function UsageSpace({ space }: { space: GallerySpace }) {
 }
 
 function SpacePage({ space }: { space: GallerySpace }) {
-  const body = { home: <HomeSpace space={space} />, chat: <ChatSpace space={space} />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
+  const body = { home: <HomeSpace space={space} />, chat: <ChatSpace />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
   return <div className={`oh-page oh-space-page oh-space-${space.id}`}><SpaceTopbar space={space} /><main className="oh-space-main">{body[space.id]}</main><AmbientBackdrop /></div>;
 }
 
