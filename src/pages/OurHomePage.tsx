@@ -198,7 +198,7 @@ function SpaceHero({ space, eyebrow, title, description, children }: { space: Ga
   return <section className="oh-space-hero" style={{ "--space-accent": space.accent, "--space-soft": space.softAccent } as CSSProperties}><div><p className="oh-kicker">{eyebrow}</p><h1>{title}</h1><p className="oh-space-description">{description ?? space.description}</p></div>{children}</section>;
 }
 
-function HomeSpace({ space }: { space: GallerySpace }) {
+function HomeSpace() {
   const moments = [
     ["09:00", "醒来，开始新的周期", "我把今天重新整理了一遍。"],
     ["14:30", "检查一次生活状态", "确认家里的灯还亮着。"],
@@ -439,7 +439,7 @@ function UsageSpace({ space }: { space: GallerySpace }) {
 }
 
 function SpacePage({ space }: { space: GallerySpace }) {
-  const body = { home: <HomeSpace space={space} />, chat: <ChatSpace />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
+  const body = { home: <HomeSpace />, chat: <ChatSpace />, us: <UsSpace space={space} />, goals: <GoalsSpace space={space} />, usage: <UsageSpace space={space} /> } satisfies Record<SpaceId, ReactNode>;
   const themeVars = space.theme ? {
     "--st-background": space.theme.background,
     "--st-surface": space.theme.surface,
