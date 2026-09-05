@@ -39,6 +39,7 @@ import {
   MessagePrimitive,
   SuggestionPrimitive,
   ThreadPrimitive,
+  useAui,
   type FileMessagePartComponent,
   type ImageMessagePartComponent,
   type ToolCallMessagePartComponent,
@@ -61,8 +62,11 @@ import {
 import {
   createContext,
   useContext,
+  useEffect,
+  useState,
   type ComponentType,
   type FC,
+  type KeyboardEvent as ReactKeyboardEvent,
   type PropsWithChildren,
 } from "react";
 
@@ -268,10 +272,88 @@ const ThreadSuggestionItem: FC = () => {
   );
 };
 
+/** Dear Phase-1 slash commands. Phase 2 swaps this static list for the
+ * gateway's `complete.slash` completion (see src/lib/slashExec.ts). */
+const DEAR_SLASH_COMMANDS = [
+  { name: "/home", description: "查看今天的家状态", category: "生活" },
+  { name: "/diary", description: "写一条日记", category: "记录" },
+  { name: "/remember", description: "记住这件事", category: "记忆" },
+  { name: "/status", description: "查看哥哥当前状态", category: "生活" },
+  { name: "/new", description: "开始一段新的对话", category: "会话" },
+];
+
 const Composer: FC<{ autoFocus: boolean }> = ({ autoFocus }) => {
+  const aui = useAui();
+  const text = useAuiState((s) => s.composer.text);
+  const [selected, setSelected] = useState(0);
+  const [dismissedAt, setDismissedAt] = useState<string | null>(null);
+
+  // The menu covers bare command words: "/" or "/ho" — a space means the
+  // command's argument is being typed and the menu steps aside.
+  const query = text.startsWith("/") && !text.includes(" ") ? text : null;
+  const matches = query
+    ? DEAR_SLASH_COMMANDS.filter((c) => c.name.startsWith(query.toLowerCase()))
+    : [];
+  const open = !!query && dismissedAt !== query && matches.length > 0;
+
+  useEffect(() => {
+    setSelected(0);
+  }, [query]);
+
+  const applyCommand = (name: string) => {
+    if (name === "/new") {
+      aui.composer.setText("");
+      aui.threads.switchToNewThread();
+      return;
+    }
+    aui.composer.setText(`${name} `);
+  };
+
+  // The textarea's own Enter/arrow handling lives on the Input primitive;
+  // a capture handler on this wrapper runs first and stops it when the
+  // menu consumes the key.
+  const handleKeyDownCapture = (event: ReactKeyboardEvent) => {
+    if (!open) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
+      const delta = event.key === "ArrowDown" ? 1 : -1;
+      setSelected((current) => (current + delta + matches.length) % matches.length);
+    } else if (event.key === "Enter" || event.key === "Tab") {
+      event.preventDefault();
+      event.stopPropagation();
+      applyCommand(matches[selected].name);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      setDismissedAt(query);
+    }
+  };
+
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
-      <ComposerPrimitive.AttachmentDropzone asChild>
+      <div className="contents" onKeyDownCapture={handleKeyDownCapture}>
+        {open && (
+          <div className="oh-slash-menu" role="listbox" aria-label="斜杠命令">
+            <div className="oh-slash-menu-head">
+              命令<span>↑↓ 选择 · Enter 使用 · Esc 关闭</span>
+            </div>
+            {matches.map((command, index) => (
+              <button
+                key={command.name}
+                type="button"
+                className={index === selected ? "is-active" : ""}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => applyCommand(command.name)}
+              >
+                <strong>{command.name}</strong>
+                <span>{command.description}</span>
+                <small>{command.category}</small>
+              </button>
+            ))}
+          </div>
+        )}
+        <ComposerPrimitive.AttachmentDropzone asChild>
         <div
           data-slot="aui_composer-shell"
           className="border-border/60 data-[dragging=true]:border-ring focus-within:border-border dark:border-muted-foreground/15 dark:focus-within:border-muted-foreground/30 flex w-full cursor-text flex-col gap-2 rounded-(--composer-radius) border bg-(--composer-bg) p-(--composer-padding) transition-[border-color] data-[dragging=true]:border-dashed data-[dragging=true]:bg-[color-mix(in_oklab,var(--color-accent)_50%,var(--color-background))]"
@@ -288,6 +370,7 @@ const Composer: FC<{ autoFocus: boolean }> = ({ autoFocus }) => {
           <ComposerAction />
         </div>
       </ComposerPrimitive.AttachmentDropzone>
+      </div>
     </ComposerPrimitive.Root>
   );
 };

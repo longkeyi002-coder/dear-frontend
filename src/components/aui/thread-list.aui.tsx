@@ -91,26 +91,32 @@ export const ThreadListRoot: FC<
 /**
  * Upstream lists a thread only after its first message (remote-adapter
  * semantics), so "+ New Thread" looks like a dead click while the main
- * thread is still empty. Show the fresh thread as the top, active row —
- * ChatGPT-style — until it is sent and becomes a regular item.
+ * thread is still empty, and the fresh thread vanishes once another
+ * conversation is opened. Show the unsent thread as the pinned top row —
+ * ChatGPT-style — until it is sent and becomes a regular item; clicking
+ * it returns to the fresh thread.
  */
 const ThreadListNewIndicator: FC = () => {
-  const isNewThreadMain = useAuiState(
+  const aui = useAui();
+  const newThreadId = useAuiState((s) => s.threads.newThreadId);
+  const isMain = useAuiState(
     (s) =>
       s.threads.newThreadId !== null &&
       s.threads.mainThreadId === s.threads.newThreadId,
   );
-  if (!isNewThreadMain) return null;
+  if (newThreadId === null) return null;
   return (
     <div
       data-slot="aui_thread-list-item"
-      data-active
-      aria-current="true"
-      className="group relative flex h-8 items-center rounded-md bg-muted"
+      data-active={isMain || undefined}
+      aria-current={isMain || undefined}
+      className="group relative flex h-8 items-center rounded-md data-active:bg-muted"
     >
-      <div
+      <button
+        type="button"
         data-slot="aui_thread-list-item-trigger"
-        className="flex h-full min-w-0 flex-1 items-center rounded-md px-2.5 text-start text-sm"
+        onClick={() => aui.threads.switchToNewThread()}
+        className="flex h-full min-w-0 flex-1 cursor-pointer items-center rounded-md px-2.5 text-start text-sm"
       >
         <span
           data-slot="aui_thread-list-item-title"
@@ -118,7 +124,7 @@ const ThreadListNewIndicator: FC = () => {
         >
           New Chat
         </span>
-      </div>
+      </button>
     </div>
   );
 };

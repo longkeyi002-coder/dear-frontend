@@ -178,6 +178,15 @@
 .oh-command-palette button strong { color: #a85d4c; font: var(--oh-fs-sm) var(--oh-font-mono); }
 .oh-command-palette button span { color: var(--oh-ink); font-size: var(--oh-fs-sm); }
 .oh-command-palette button small { color: var(--oh-muted); font: var(--oh-fs-2xs) var(--oh-font-mono); }
+/* Slash-command menu, rendered inside the official composer root. */
+.oh-slash-menu { position: absolute; right: 0; bottom: calc(100% + 10px); left: 0; z-index: 30; padding: 8px; border: 1px solid rgba(56, 78, 88, .2); border-radius: 14px; background: rgba(250, 251, 248, .96); box-shadow: var(--oh-shadow, 0 18px 50px rgba(46, 83, 73, .16)); }
+.oh-slash-menu-head { display: flex; align-items: center; gap: 7px; padding: 6px 9px 10px; color: #6c818b; font: var(--oh-fs-2xs) var(--oh-font-mono); }
+.oh-slash-menu-head span { margin-left: auto; color: #9aa9a4; }
+.oh-slash-menu button { display: grid; grid-template-columns: 94px 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border-radius: 9px; background: transparent; text-align: left; cursor: pointer; }
+.oh-slash-menu button:hover, .oh-slash-menu button.is-active { background: rgba(126, 148, 177, .12); }
+.oh-slash-menu button strong { color: #a85d4c; font: var(--oh-fs-sm) var(--oh-font-mono); }
+.oh-slash-menu button span { color: var(--oh-ink, #26333c); font-size: var(--oh-fs-sm); }
+.oh-slash-menu button small { color: #6c818b; font: var(--oh-fs-2xs) var(--oh-font-mono); }
 .oh-ribbon-mark { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 142px; height: 142px; border: 1px solid rgba(134, 169, 198, .5); border-radius: 50%; color: #6e9bb4; font-size: var(--oh-fs-display); transform: rotate(8deg); background: rgba(216, 230, 237, .4); }
 .oh-ribbon-mark small { margin-top: 7px; color: var(--oh-muted); font: var(--oh-fs-2xs) var(--oh-font-mono); }
 .oh-us-grid { grid-template-columns: 1.15fr .85fr; }
@@ -486,6 +495,7 @@
      composer via --composer-bg) need explicit light values here. */
   --color-card: #f4f6f3;
   --color-popover: #ffffff;
+  --color-background: #eef2f0;
   --color-muted: #e5eae6;
   --color-accent: #e9e4d7;
   --color-secondary: #e2e9e4;
